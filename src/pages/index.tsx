@@ -1,8 +1,6 @@
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
-import "./style.css";
 import Link from "next/link";
-import Layout from "./components/Layout";
-import { useState } from "react";
+import Layout from "@/components/Layout";
 
 export const getServerSideProps: GetServerSideProps<{
   text: string;
@@ -15,9 +13,9 @@ export default function Page({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <Layout>
-      <div className="red">
+      <div className="text-red-600">
         {text}
-        <Link href={"/products"}>Go to products</Link>
+        <Link className="text-green-600" href={"/products"}>Go to products</Link>
       </div>
     </Layout>
   );

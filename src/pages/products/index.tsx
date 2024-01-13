@@ -1,5 +1,5 @@
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
-import Layout from "../components/Layout";
+import Layout from "@/components/Layout";
 import style from "./products.module.css";
 
 export const getServerSideProps: GetServerSideProps<{
