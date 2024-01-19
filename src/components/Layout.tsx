@@ -2,6 +2,7 @@ import Head from "next/head";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import "@/app/globals.css";
+import Main from "@/components/Main";
 
 function Layout({ children }: any) {
   return (
@@ -14,6 +15,7 @@ function Layout({ children }: any) {
 
       <Header />
 
+      <Main />
       {children}
 
       <Footer />
