@@ -51,7 +51,7 @@ export default function Header() {
             </Link>
           </li>
           <li>
-            <Link href={"/"}>
+            <Link href={"/face"}>
               <p className="text-18 tracking-wide leading-5 text-gray-700 font-Noto Sans KR">Face</p>
             </Link>
           </li>
