@@ -1,12 +1,12 @@
 import Layout from "@/components/Layout";
-import Sub_visual from "@/components/Sub_visual";
+import SubVisual from "@/components/SubVisual";
 
 export default function Face() {
   return (
     <>
         <Layout>
         <div id="main">
-            <Sub_visual></Sub_visual>
+            <SubVisual />
         </div>
         </Layout>
     </>

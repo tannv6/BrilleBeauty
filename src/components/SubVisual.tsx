@@ -1,6 +1,6 @@
 import "@/app/globals.css";
 
-function Sub_visual({ children }: any) {
+function SubVisual({ children }: any) {
   return (
     <>
       {children}
@@ -14,4 +14,4 @@ function Sub_visual({ children }: any) {
   );
 }
 
-export default Sub_visual;
+export default SubVisual;
