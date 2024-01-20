@@ -15,10 +15,6 @@ export default function Page({
   return (
     <Layout>
       <Main />
-      <div className="text-red-600">
-        {text}
-        <Link className="text-green-600" href={"/products"}>Go to products</Link>
-      </div>
     </Layout>
   );
 }
