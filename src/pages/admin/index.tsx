@@ -2,16 +2,18 @@ import React, { FormEvent } from "react";
 import "@/app/globals.css";
 import Link from "next/link";
 import connectDB from "@/app/db";
+import { useRouter } from "next/router";
 function index() {
-    async function onSubmit(event: FormEvent<HTMLFormElement>) {
-        event.preventDefault()
+  const router = useRouter();
+  async function onSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
 
-        const formData = new FormData(event.currentTarget);
-        // const connect= await connectDB();
-        // const response = await connect.execute("SELECT * FROM admin");
-        // console.log(response);
-        
-      }
+    const formData = new FormData(event.currentTarget);
+    // const connect= await connectDB();
+    // const response = await connect.execute("SELECT * FROM admin");
+    // console.log(response);
+    router.push('/admin/category/list')
+  }
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
