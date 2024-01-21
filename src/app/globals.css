@@ -131,9 +131,6 @@ body {
   gap: 30px;
 }
 
-.h-50 {
-  height: 50px;
-}
 
 .gnb_active {
   color: #f1547c;
@@ -151,13 +148,6 @@ body {
   margin: 60px 0;
 }
 
-.w-286 {
-  width: 286px;
-}
-
-.h-294 {
-  height: 294px;
-}
 
 .color-25 {
   color: #252525;
@@ -167,9 +157,9 @@ body {
   color: #bbb;
 }
 
-.container-main {
+/* .container-main {
   max-width: 1920px;
-}
+} */
 
 @media (prefers-color-scheme: dark) {
   html {
