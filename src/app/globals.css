@@ -105,7 +105,8 @@
 
 @layer base {
   html {
-    @apply font-NotoSansKR;
+    /* @apply font-NotoSansKR; */
+    font-family: 'Times New Roman', Times, serif;
   }
 }
 
@@ -116,7 +117,7 @@
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
+  /* color: rgb(var(--foreground-rgb)); */
 }
 
 .custom-gap {

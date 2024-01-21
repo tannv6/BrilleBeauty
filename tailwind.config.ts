@@ -16,7 +16,13 @@ const config: Config = {
       },
       fontFamily: {
         'NotoSansCJKkr': ['NotoSansCJKkr', 'sans-serif'],
-        'NotoSansKR': ['NotoSansKR'],
+        'Arial': ['Arial', 'sans-serif'],
+      },
+      container: {
+        center: true,
+        screens: {
+          '2xl': '1200px',
+        },
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

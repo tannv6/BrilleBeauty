@@ -6,7 +6,7 @@ import localFont from '@next/font/local'
 
 function Layout({ children }: any) {
   return (
-    <div>
+    <>
       <Head>
         <title>BrilleBeauty</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -18,7 +18,7 @@ function Layout({ children }: any) {
       {children}
 
       <Footer />
-    </div>
+    </>
   );
 }
 
