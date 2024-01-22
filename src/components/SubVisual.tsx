@@ -14,6 +14,8 @@ function SubVisual({ title1, title2 }: any) {
             <i className="block w-[9px] h-4 bg-[url('/sub_face/main_visual_arrow.png')]"></i>
             <p className="text-[#757575]">{title2}</p>
           </div>
+          <p className="text-[#757575]">Sunscreen, which helps to protect your skin from harmful<br/>
+                          UV rays, is a must-have item in your face care routine.</p>
         </div>
       </div>
     </>

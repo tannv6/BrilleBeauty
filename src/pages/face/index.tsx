@@ -2,7 +2,7 @@ import Dropdown from "@/components/Dropdown";
 import Layout from "@/components/Layout";
 import ProductItem from "@/components/ProductItem";
 import SubVisual from "@/components/SubVisual";
-import Pagination from "@/components/Pagination";
+import Pagination from "@/components/Pagi";
 
 export default function Face() {
   return (

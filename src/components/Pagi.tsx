@@ -1,6 +1,6 @@
 import "@/app/globals.css";
 
-function Pagination({ }: any) {
+function Pagi({ }: any) {
     return (
         <>
             <div className="flex flex-row justify-center mt-20 mb-[70px] font-Arial">
@@ -28,4 +28,4 @@ function Pagination({ }: any) {
     );
 }
 
-export default Pagination;
+export default Pagi;

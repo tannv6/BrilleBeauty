@@ -142,7 +142,9 @@ body {
 /* .container-main {
   max-width: 1920px;
 } */
-
+.swiper-slide-thumb-active > div {
+  border: 2px solid #ef426f;
+}
 @media (prefers-color-scheme: white) {
   html {
     color-scheme: white;
