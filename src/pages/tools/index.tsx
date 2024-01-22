@@ -2,12 +2,12 @@ import Layout from "@/components/Layout";
 import ProductItem from "@/components/ProductItem";
 import SubVisual from "@/components/SubVisual";
 
-export default function Face() {
+export default function EyesLips() {
   return (
     <>
       <Layout>
         <div id="main">
-          <SubVisual title1="Face" title2="Sunscreen"></SubVisual>
+          <SubVisual title="Tools"></SubVisual>
           <div className="container mt-[50px]">
             <div className="w-full flex justify-between mb-[60px] text-[18px] text-[#656565]">
               <button className="w-[230px] h-14 bg-[#ef426f] rounded-md text-[#ffffff]">Sunscreen</button>
@@ -27,7 +27,7 @@ export default function Face() {
               <select
                 name="" id=""
                 className="text- border border-[#dbdbdb] h-12 w-[220px] px-4 appearance-none bg-[url('/dropdown_bg.png')] outline-none">
-                <option disabled selected>Sort by:  Popularity</option>
+                <option disabled selected>Brand Name</option>
                 <option value="">3CE (4)</option>
               </select>
             </div>

@@ -15,7 +15,6 @@ const config: Config = {
         '615': '615px',
       },
       fontFamily: {
-        'NotoSansCJKkr': ['NotoSansCJKkr', 'sans-serif'],
         'Arial': ['Arial', 'sans-serif'],
       },
       container: {

@@ -56,22 +56,22 @@ export default function Header() {
             </Link>
           </li>
           <li>
-            <Link href={"/"}>
+            <Link href={"/eyes_lips"}>
               <p className="text-18 tracking-wide leading-5 text-gray-700">Eyes & Lips</p>
             </Link>
           </li>
           <li>
-            <Link href={"/"}>
+            <Link href={"/hair_body"}>
               <p className="text-18 tracking-wide leading-5 text-gray-700"> Hair & Body</p>
             </Link>
           </li>
           <li>
-            <Link href={"/"}>
+            <Link href={"/tools"}>
               <p className="text-18 tracking-wide leading-5 text-gray-700">Tools</p>
             </Link>
           </li>
           <li>
-            <Link href={"/"}>
+            <Link href={""}>
               <p className="text-18 tracking-wide leading-5 text-gray-700">Sales</p>
             </Link>
           </li>
