@@ -4,13 +4,13 @@ function ProductItem({ }: any) {
     return (
         <>
             <div className="font-Arial flex flex-col">
-                <div className="h-[294px] border border-[#dbdbdb] rounded-t-2xl relative">
+                <div className="h-[294px] border border-[#dbdbdb] rounded-t-2xl relative group">
                     <img src="/product_img01.png" alt="" />
                     <span className="flex items-center justify-center w-[50px] h-[30px] absolute bottom-[10px] left-3 bg-[#ffffff] text-[#fe3a40] rounded-[15px] text-[14px]">NEW</span>
                     <span className="flex items-center justify-center w-[50px] h-[30px] absolute bottom-[50px] left-3 bg-[#fe3a40] text-[#ffffff] rounded-[15px] text-[14px]">SALE</span>
-                    <div className="absolute top-0 w-full h-full hover:bg-black-rgba z-10 rounded-t-2xl flex items-center justify-center">
-                        <button className="h-[60px]"></button>
-                        <button className=""></button>
+                    <div className="absolute hidden top-0 w-full h-full bg-black-rgba z-10 rounded-t-2xl items-center justify-center gap-x-5 group-hover:flex">
+                        <button className="w-[60px] h-[60px] bg-[url('/product_button_heart.png')]"></button>
+                        <button className="w-[60px] h-[60px] bg-[url('/product_button_cart.png')]"></button>
                     </div>
                 </div>
                 <div className="p-5 pb-10 border border-t-0 border-[#dbdbdb]">

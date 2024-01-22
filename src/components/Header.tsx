@@ -44,7 +44,7 @@ export default function Header() {
         </div>
       </div>
       <nav className="gnb inner-container">
-        <ul className="flex justify-center items-center custom-gap-45 h-[50px]">
+        <ul className="flex justify-center items-center custom-gap-45 h-[50px] font-medium">
           <li>
             <Link href={"/"}>
               <p className="text-18 tracking-wide leading-5 text-gray-700 gnb_active">Brands</p>

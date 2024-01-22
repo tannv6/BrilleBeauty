@@ -80,8 +80,8 @@
 
 @layer base {
   html {
-    /* @apply font-NotoSansKR; */
-    font-family: 'Times New Roman', Times, serif;
+    @apply font-Arial;
+    /* font-family: 'Times New Roman', Times, serif; */
   }
 }
 
