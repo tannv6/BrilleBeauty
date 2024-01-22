@@ -9,10 +9,10 @@ export const getServerSideProps = (async () => {
   const connect = await connectDB();
   const [response] = await connect.execute("SELECT * FROM admin");
   console.log(response);
-  return { props: { response: "kdkd" } };
+  return { props: { response: (response as any)[0]?.AdminUName } };
 }) satisfies GetServerSideProps<{ response: any }>;
 
-function Main() {
+function Main({response} : any) {
   const router = useRouter();
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -50,6 +50,7 @@ function Main() {
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Username"
                   required={true}
+                  value={response}
                 />
               </div>
               <div>
