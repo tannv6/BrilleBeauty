@@ -8,7 +8,7 @@ export default function Face() {
       <Layout>
         <div id="main">
           <SubVisual title1="Face" title2="Sunscreen"></SubVisual>
-          <div className="container mt-[50px]">
+          <div className="inner-container mt-[50px]">
             <div className="w-full flex justify-between mb-[60px] text-[18px] text-[#656565]">
               <button className="w-[230px] h-14 bg-[#ef426f] rounded-md text-[#ffffff]">Sunscreen</button>
               <button className="w-[230px] h-14 rounded-md border border-[#dbdbdb]">Moisturizer</button>

@@ -8,6 +8,10 @@ function ProductItem({ }: any) {
                     <img src="/product_img01.png" alt="" />
                     <span className="flex items-center justify-center w-[50px] h-[30px] absolute bottom-[10px] left-3 bg-[#ffffff] text-[#fe3a40] rounded-[15px] text-[14px]">NEW</span>
                     <span className="flex items-center justify-center w-[50px] h-[30px] absolute bottom-[50px] left-3 bg-[#fe3a40] text-[#ffffff] rounded-[15px] text-[14px]">SALE</span>
+                    <div className="absolute top-0 w-full h-full hover:bg-black-rgba z-10 rounded-t-2xl flex items-center justify-center">
+                        <button className="h-[60px]"></button>
+                        <button className=""></button>
+                    </div>
                 </div>
                 <div className="p-5 pb-10 border border-t-0 border-[#dbdbdb]">
                     <p className="font-bold text-[18px]">Damage Care Perfect Serum Original (New) - 80ml</p>

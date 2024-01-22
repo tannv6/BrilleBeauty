@@ -10,6 +10,7 @@ const config: Config = {
     extend: {
       colors: {
         f04b76: '#f04b76',
+        'black-rgba': 'rgba(0, 0, 0, 0.54)',
       },
       width: {
         '615': '615px',
