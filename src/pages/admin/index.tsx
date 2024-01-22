@@ -3,7 +3,7 @@ import "@/app/globals.css";
 import Link from "next/link";
 import connectDB from "@/app/db";
 import { useRouter } from "next/router";
-function index() {
+function Main() {
   const router = useRouter();
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -103,4 +103,4 @@ function index() {
   );
 }
 
-export default index;
+export default Main;

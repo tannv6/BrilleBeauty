@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { useEffect } from 'react';
 import Swiper from 'swiper';
