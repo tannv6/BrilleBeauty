@@ -3,13 +3,13 @@ import "@/app/globals.css";
 import Link from "next/link";
 // import connectDB from "@/app/db";
 import { useRouter } from "next/router";
-// import { GetServerSideProps } from "next";
+import { GetServerSideProps } from "next";
 
-// export const getServerSideProps = (async () => {
-//   const connect = await connectDB();
-//   const [response] = await connect.execute("SELECT * FROM admin");
-//   return { props: { response: (response as any)[0]?.AdminUName } };
-// }) satisfies GetServerSideProps<{ response: any }>;
+export const getServerSideProps = (async () => {
+  // const connect = await connectDB();
+  // const [response] = await connect.execute("SELECT * FROM admin");
+  return { props: { response: "ammam" } };
+}) satisfies GetServerSideProps<{ response: any }>;
 
 function Main() {
   const router = useRouter();
