@@ -8,7 +8,6 @@ import { GetServerSideProps } from "next";
 export const getServerSideProps = (async () => {
   const connect = await connectDB();
   const [response] = await connect.execute("SELECT * FROM admin");
-  console.log(response);
   return { props: { response: (response as any)[0]?.AdminUName } };
 }) satisfies GetServerSideProps<{ response: any }>;
 
@@ -33,7 +32,7 @@ function Main({response} : any) {
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Sign in to your manager system
+              Sign in to your manager system {response}
             </h1>
             <form className="space-y-4 md:space-y-6" onSubmit={onSubmit}>
               <div>
@@ -50,7 +49,6 @@ function Main({response} : any) {
                   className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Username"
                   required={true}
-                  value={response}
                 />
               </div>
               <div>
