@@ -1,17 +1,17 @@
 import React, { FormEvent } from "react";
 import "@/app/globals.css";
 import Link from "next/link";
-import connectDB from "@/app/db";
+// import connectDB from "@/app/db";
 import { useRouter } from "next/router";
-import { GetServerSideProps } from "next";
+// import { GetServerSideProps } from "next";
 
-export const getServerSideProps = (async () => {
-  const connect = await connectDB();
-  const [response] = await connect.execute("SELECT * FROM admin");
-  return { props: { response: (response as any)[0]?.AdminUName } };
-}) satisfies GetServerSideProps<{ response: any }>;
+// export const getServerSideProps = (async () => {
+//   const connect = await connectDB();
+//   const [response] = await connect.execute("SELECT * FROM admin");
+//   return { props: { response: (response as any)[0]?.AdminUName } };
+// }) satisfies GetServerSideProps<{ response: any }>;
 
-function Main({response} : any) {
+function Main() {
   const router = useRouter();
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -32,7 +32,7 @@ function Main({response} : any) {
         <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-              Sign in to your manager system {response}
+              Sign in to your manager system
             </h1>
             <form className="space-y-4 md:space-y-6" onSubmit={onSubmit}>
               <div>
