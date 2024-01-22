@@ -3,16 +3,22 @@ import "@/app/globals.css";
 import Link from "next/link";
 import connectDB from "@/app/db";
 import { useRouter } from "next/router";
+import { GetServerSideProps } from "next";
+
+export const getServerSideProps = (async () => {
+  const connect = await connectDB();
+  const [response] = await connect.execute("SELECT * FROM admin");
+  console.log(response);
+  return { props: { response: "kdkd" } };
+}) satisfies GetServerSideProps<{ response: any }>;
+
 function Main() {
   const router = useRouter();
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
-    // const connect= await connectDB();
-    // const response = await connect.execute("SELECT * FROM admin");
-    // console.log(response);
-    router.push('/admin/category/list')
+    router.push("/admin/category/list");
   }
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
