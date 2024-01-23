@@ -80,8 +80,8 @@
 
 @layer base {
   html {
-    /* @apply font-NotoSansKR; */
-    font-family: 'Times New Roman', Times, serif;
+    @apply font-Arial;
+    /* font-family: 'Times New Roman', Times, serif; */
   }
 }
 
@@ -121,7 +121,7 @@ body {
 
 .inner-container {
   position: relative;
-  margin: 0 auto;
+  margin-inline: auto;
   max-width: 1200px;
   width: calc(100% - 1.875rem);
 }
@@ -142,7 +142,9 @@ body {
 /* .container-main {
   max-width: 1920px;
 } */
-
+.swiper-slide-thumb-active > div {
+  border: 2px solid #ef426f;
+}
 @media (prefers-color-scheme: white) {
   html {
     color-scheme: white;

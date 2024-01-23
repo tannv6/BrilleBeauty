@@ -2,6 +2,7 @@ import Dropdown from "@/components/Dropdown";
 import Layout from "@/components/Layout";
 import ProductItem from "@/components/ProductItem";
 import SubVisual from "@/components/SubVisual";
+import Pagination from "@/components/Pagi";
 
 export default function Face() {
   return (
@@ -9,7 +10,7 @@ export default function Face() {
       <Layout>
         <div id="main">
           <SubVisual title1="Face" title2="Sunscreen"></SubVisual>
-          <div className="container mt-[50px]">
+          <div className="inner-container mt-[50px]">
             <div className="w-full flex justify-between mb-[60px] text-[18px] text-[#656565]">
               <button className="w-[230px] h-14 bg-[#ef426f] rounded-md text-[#ffffff]">
                 Sunscreen
@@ -167,27 +168,7 @@ export default function Face() {
                 heartCount={69}
               />
             </div>
-            <div className="flex flex-row justify-center mt-20 mb-[70px]">
-              <div className="block w-[36px] h-[36px] bg-[url('/pagination_LL.png')] mr-[10px] cursor-pointer"></div>
-              <div className="block w-[36px] h-[36px] bg-[url('/pagination_L.png')] mr-[20px] cursor-pointer"></div>
-              <div className="flex items-center justify-center w-[36px] h-[36px] rounded-lg bg-[#ef4370] text-[#ffffff] mr-[10px]">
-                <a href="">1</a>
-              </div>
-              <div className="flex items-center justify-center w-[36px] h-[36px] rounded-lg mr-[10px]">
-                <a href="">2</a>
-              </div>
-              <div className="flex items-center justify-center w-[36px] h-[36px] rounded-lg mr-[10px]">
-                <a href="">3</a>
-              </div>
-              <div className="flex items-center justify-center w-[36px] h-[36px] rounded-lg mr-[10px]">
-                <a href="">4</a>
-              </div>
-              <div className="flex items-center justify-center w-[36px] h-[36px] rounded-lg">
-                <a href="">5</a>
-              </div>
-              <div className="block w-[36px] h-[36px] bg-[url('/pagination_R.png')] ml-[20px] cursor-pointer"></div>
-              <div className="block w-[36px] h-[36px] bg-[url('/pagination_RR.png')] ml-[10px] cursor-pointer"></div>
-            </div>
+            <Pagination></Pagination>
           </div>
         </div>
       </Layout>
