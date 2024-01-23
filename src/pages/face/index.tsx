@@ -58,7 +58,27 @@ export default function Face() {
                 heartCount={69}
               />
               <ProductItem
-                image={"/product_img01.png"}
+                image={"/product_img02.png"}
+                name="Damage Care Perfect Serum Original (New) - 80ml"
+                oriPrice={"A$19.65"}
+                salePrice={"A$16.25"}
+                discount={"10%"}
+                star={"4.7"}
+                starCount={150}
+                heartCount={69}
+              />
+              <ProductItem
+                image={"/product_img03.png"}
+                name="Damage Care Perfect Serum Original (New) - 80ml"
+                oriPrice={"A$19.65"}
+                salePrice={"A$16.25"}
+                discount={"10%"}
+                star={"4.7"}
+                starCount={150}
+                heartCount={69}
+              />
+              <ProductItem
+                image={"/product_img04.png"}
                 name="Damage Care Perfect Serum Original (New) - 80ml"
                 oriPrice={"A$19.65"}
                 salePrice={"A$16.25"}
@@ -78,7 +98,27 @@ export default function Face() {
                 heartCount={69}
               />
               <ProductItem
-                image={"/product_img01.png"}
+                image={"/product_img02.png"}
+                name="Damage Care Perfect Serum Original (New) - 80ml"
+                oriPrice={"A$19.65"}
+                salePrice={"A$16.25"}
+                discount={"10%"}
+                star={"4.7"}
+                starCount={150}
+                heartCount={69}
+              />
+              <ProductItem
+                image={"/product_img03.png"}
+                name="Damage Care Perfect Serum Original (New) - 80ml"
+                oriPrice={"A$19.65"}
+                salePrice={"A$16.25"}
+                discount={"10%"}
+                star={"4.7"}
+                starCount={150}
+                heartCount={69}
+              />
+              <ProductItem
+                image={"/product_img04.png"}
                 name="Damage Care Perfect Serum Original (New) - 80ml"
                 oriPrice={"A$19.65"}
                 salePrice={"A$16.25"}
@@ -98,7 +138,7 @@ export default function Face() {
                 heartCount={69}
               />
               <ProductItem
-                image={"/product_img01.png"}
+                image={"/product_img02.png"}
                 name="Damage Care Perfect Serum Original (New) - 80ml"
                 oriPrice={"A$19.65"}
                 salePrice={"A$16.25"}
@@ -108,7 +148,7 @@ export default function Face() {
                 heartCount={69}
               />
               <ProductItem
-                image={"/product_img01.png"}
+                image={"/product_img03.png"}
                 name="Damage Care Perfect Serum Original (New) - 80ml"
                 oriPrice={"A$19.65"}
                 salePrice={"A$16.25"}
@@ -118,47 +158,7 @@ export default function Face() {
                 heartCount={69}
               />
               <ProductItem
-                image={"/product_img01.png"}
-                name="Damage Care Perfect Serum Original (New) - 80ml"
-                oriPrice={"A$19.65"}
-                salePrice={"A$16.25"}
-                discount={"10%"}
-                star={"4.7"}
-                starCount={150}
-                heartCount={69}
-              />
-              <ProductItem
-                image={"/product_img01.png"}
-                name="Damage Care Perfect Serum Original (New) - 80ml"
-                oriPrice={"A$19.65"}
-                salePrice={"A$16.25"}
-                discount={"10%"}
-                star={"4.7"}
-                starCount={150}
-                heartCount={69}
-              />
-              <ProductItem
-                image={"/product_img01.png"}
-                name="Damage Care Perfect Serum Original (New) - 80ml"
-                oriPrice={"A$19.65"}
-                salePrice={"A$16.25"}
-                discount={"10%"}
-                star={"4.7"}
-                starCount={150}
-                heartCount={69}
-              />
-              <ProductItem
-                image={"/product_img01.png"}
-                name="Damage Care Perfect Serum Original (New) - 80ml"
-                oriPrice={"A$19.65"}
-                salePrice={"A$16.25"}
-                discount={"10%"}
-                star={"4.7"}
-                starCount={150}
-                heartCount={69}
-              />
-              <ProductItem
-                image={"/product_img01.png"}
+                image={"/product_img04.png"}
                 name="Damage Care Perfect Serum Original (New) - 80ml"
                 oriPrice={"A$19.65"}
                 salePrice={"A$16.25"}

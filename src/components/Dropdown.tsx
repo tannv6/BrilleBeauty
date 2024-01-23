@@ -1,12 +1,13 @@
 import { useState } from "react";
 
 type Props = {
+  className?: string;
   options: { id: number; name: string }[];
   onChange: Function;
   activeItem: number;
 };
 
-function Dropdown({ options, activeItem, onChange }: Props) {
+function Dropdown({ className,options, activeItem, onChange }: Props) {
   const activeOption = options.find((e) => e.id === activeItem);
   const [isOpen, setIsOpen] = useState(false);
   const handleClick = (id:number) => {
@@ -15,7 +16,7 @@ function Dropdown({ options, activeItem, onChange }: Props) {
   }
   return (
     <div className="relative z-50" style={{}}>
-      <button onClick={() => setIsOpen(!isOpen)} className="text-left text- border border-[#dbdbdb] h-12 w-[220px] px-4 appearance-none bg-[url('/dropdown_bg.png')] outline-none">
+      <button onClick={() => setIsOpen(!isOpen)} className={`text-left text- border border-[#dbdbdb] h-12 bg-[url('/dropdown_bg.png')] ${className} px-4 appearance-none outline-none`}>
         <span className="mr-1">{activeOption?.name || "--Select--"}</span>
       </button>
       <ul className={`dropdown-menu absolute text-gray-700 pt-1 min-w-full ${isOpen ? "" : 'hidden'}`}>
