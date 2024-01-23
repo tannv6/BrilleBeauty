@@ -20,14 +20,14 @@ export default function EyesLips() {
               <select
                 name="" id=""
                 className="border border-[#dbdbdb] h-12 w-[220px] px-4 appearance-none bg-[url('/dropdown_bg.png')] outline-none">
-                <option disabled selected>Brand Name</option>
+                <option disabled>Brand Name</option>
                 <option value="">3CE (4)</option>
                 <option value="">3W Clinic (8)</option>
               </select>
               <select
                 name="" id=""
                 className="text- border border-[#dbdbdb] h-12 w-[220px] px-4 appearance-none bg-[url('/dropdown_bg.png')] outline-none">
-                <option disabled selected>Brand Name</option>
+                <option disabled>Brand Name</option>
                 <option value="">3CE (4)</option>
               </select>
             </div>

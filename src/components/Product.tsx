@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export default function Product() {
@@ -5,13 +6,13 @@ export default function Product() {
             <div className="flex mt-10 gap-4">
                 <div className="popular_product_element w-1/4 sm:w-1/4 md:w-1/4 lg:w-1/4 xl:w-1/4 relative">
                     <div className="thumbnail relative">
-                        <img className="thumb_image w-[289px] h-[294px] object-cover rounded-16" src="product_img01.png" alt="" />
+                        <Image className="thumb_image w-[289px] h-[294px] object-cover rounded-16" src="/product_img01.png" alt="" width={100} height={100} />
                         <div className="product_types absolute bottom-5 left-5 flex flex-col gap-2">
                         <span className="ico">
-                            <img src="sale_ic.png" alt="" />
+                            <Image src="/sale_ic.png" alt="" width={100} height={100} />
                         </span>
                         <span className="ico">
-                            <img src="new_ic.png" alt="" />
+                            <Image src="/new_ic.png" alt="" width={100} height={100} />
                         </span>
                         </div>
                     </div>
@@ -25,11 +26,11 @@ export default function Product() {
                             <span className="discount text-red-600 font-semibold text-2xl ml-2">10% </span>
                         </div>
                         <div className="product_props_bot flex items-center">
-                            <img className="icon_star" src="start_ic.png" alt="" />
+                            <Image className="icon_star" src="/start_ic.png" alt="" width={100} height={100} />
                             <span className="star_num text-base color-25 mx-2">5.00</span>
                             <span className="num_of_people text-base text-zinc-500 ml-1 mr-7">(31)</span>
                             <span className="num_of_heart text-22 flex items-center gap-2.5">
-                                <img src="heart_ic_main.png" alt="" />
+                                <Image src="/heart_ic_main.png" alt="" width={100} height={100} />
                                 <span className="like_cnt text-gray-700">11</span>
                             </span>
                         </div>
@@ -37,13 +38,13 @@ export default function Product() {
                 </div>
                 <div className="popular_product_element w-1/4 sm:w-1/4 md:w-1/4 lg:w-1/4 xl:w-1/4 relative">
                     <div className="thumbnail relative">
-                        <img className="thumb_image w-[289px] h-[294px] object-cover rounded-16" src="product_img02.png" alt="" />
+                        <Image className="thumb_image w-[289px] h-[294px] object-cover rounded-16" src="/product_img02.png" alt="" width={100} height={100} />
                         <div className="product_types absolute bottom-5 left-5 flex flex-col gap-2">
                         <span className="ico">
-                            <img src="sale_ic.png" alt="" />
+                            <Image src="/sale_ic.png" alt="" width={100} height={100} />
                         </span>
                         <span className="ico">
-                            <img src="new_ic.png" alt="" />
+                            <Image src="/new_ic.png" alt="" width={100} height={100} />
                         </span>
                         </div>
                     </div>
@@ -57,11 +58,11 @@ export default function Product() {
                             <span className="discount text-red-600 font-semibold text-2xl ml-2">10% </span>
                         </div>
                         <div className="product_props_bot flex items-center">
-                            <img className="icon_star" src="start_ic.png" alt="" />
+                            <Image className="icon_star" src="/start_ic.png" alt="" width={100} height={100} />
                             <span className="star_num text-base color-25 mx-2">5.00</span>
                             <span className="num_of_people text-base text-zinc-500 ml-1 mr-7">(31)</span>
                             <span className="num_of_heart text-22 flex items-center gap-2.5">
-                                <img src="heart_ic_main.png" alt="" />
+                                <Image src="/heart_ic_main.png" alt="" width={100} height={100} />
                                 <span className="like_cnt text-gray-700">11</span>
                             </span>
                         </div>
@@ -69,13 +70,13 @@ export default function Product() {
                 </div>
                 <div className="popular_product_element w-1/4 sm:w-1/4 md:w-1/4 lg:w-1/4 xl:w-1/4 relative">
                     <div className="thumbnail relative">
-                        <img className="thumb_image w-[289px] h-[294px] object-cover rounded-16" src="product_img03.png" alt="" />
+                        <Image className="thumb_image w-[289px] h-[294px] object-cover rounded-16" src="/product_img03.png" alt="" width={100} height={100} />
                         <div className="product_types absolute bottom-5 left-5 flex flex-col gap-2">
                         <span className="ico">
-                            <img src="sale_ic.png" alt="" />
+                            <Image src="/sale_ic.png" alt="" width={100} height={100} />
                         </span>
                         <span className="ico">
-                            <img src="new_ic.png" alt="" />
+                            <Image src="/new_ic.png" alt="" width={100} height={100} />
                         </span>
                         </div>
                     </div>
@@ -89,11 +90,11 @@ export default function Product() {
                             <span className="discount text-red-600 font-semibold text-2xl ml-2">10% </span>
                         </div>
                         <div className="product_props_bot flex items-center">
-                            <img className="icon_star" src="start_ic.png" alt="" />
+                            <Image className="icon_star" src="/start_ic.png" alt="" width={100} height={100} />
                             <span className="star_num text-base color-25 mx-2">5.00</span>
                             <span className="num_of_people text-base text-zinc-500 ml-1 mr-7">(31)</span>
                             <span className="num_of_heart text-22 flex items-center gap-2.5">
-                                <img src="heart_ic_main.png" alt="" />
+                                <Image src="/heart_ic_main.png" alt="" width={100} height={100} />
                                 <span className="like_cnt text-gray-700">11</span>
                             </span>
                         </div>
@@ -101,13 +102,13 @@ export default function Product() {
                 </div>
                 <div className="popular_product_element w-1/4 sm:w-1/4 md:w-1/4 lg:w-1/4 xl:w-1/4 relative">
                     <div className="thumbnail relative">
-                        <img className="thumb_image w-[289px] h-[294px] object-cover rounded-16" src="product_img04.png" alt="" />
+                        <Image className="thumb_image w-[289px] h-[294px] object-cover rounded-16" src="/product_img04.png" alt="" width={100} height={100} />
                         <div className="product_types absolute bottom-5 left-5 flex flex-col gap-2">
                         <span className="ico">
-                            <img src="sale_ic.png" alt="" />
+                            <Image src="/sale_ic.png" alt="" width={100} height={100} />
                         </span>
                         <span className="ico">
-                            <img src="new_ic.png" alt="" />
+                            <Image src="/new_ic.png" alt="" width={100} height={100} />
                         </span>
                         </div>
                     </div>
@@ -121,11 +122,11 @@ export default function Product() {
                             <span className="discount text-red-600 font-semibold text-2xl ml-2">10% </span>
                         </div>
                         <div className="product_props_bot flex items-center">
-                            <img className="icon_star" src="start_ic.png" alt="" />
+                            <Image className="icon_star" src="/start_ic.png" alt="" width={100} height={100} />
                             <span className="star_num text-base color-25 mx-2">5.00</span>
                             <span className="num_of_people text-base text-zinc-500 ml-1 mr-7">(31)</span>
                             <span className="num_of_heart text-22 flex items-center gap-2.5">
-                                <img src="heart_ic_main.png" alt="" />
+                                <Image src="/heart_ic_main.png" alt="" width={100} height={100} />
                                 <span className="like_cnt text-gray-700">11</span>
                             </span>
                         </div>
@@ -135,13 +136,13 @@ export default function Product() {
             <div className="flex mt-10 gap-4">
                 <div className="popular_product_element w-1/4 sm:w-1/4 md:w-1/4 lg:w-1/4 xl:w-1/4 relative">
                     <div className="thumbnail relative">
-                        <img className="thumb_image w-[289px] h-[294px] object-cover rounded-16" src="product_img01.png" alt="" />
+                        <Image className="thumb_image w-[289px] h-[294px] object-cover rounded-16" src="/product_img01.png" alt="" width={100} height={100} />
                         <div className="product_types absolute bottom-5 left-5 flex flex-col gap-2">
                         <span className="ico">
-                            <img src="sale_ic.png" alt="" />
+                            <Image src="/sale_ic.png" alt="" width={100} height={100} />
                         </span>
                         <span className="ico">
-                            <img src="new_ic.png" alt="" />
+                            <Image src="/new_ic.png" alt="" width={100} height={100} />
                         </span>
                         </div>
                     </div>
@@ -155,11 +156,11 @@ export default function Product() {
                             <span className="discount text-red-600 font-semibold text-2xl ml-2">10% </span>
                         </div>
                         <div className="product_props_bot flex items-center">
-                            <img className="icon_star" src="start_ic.png" alt="" />
+                            <Image className="icon_star" src="/start_ic.png" alt="" width={100} height={100} />
                             <span className="star_num text-base color-25 mx-2">5.00</span>
                             <span className="num_of_people text-base text-zinc-500 ml-1 mr-7">(31)</span>
                             <span className="num_of_heart text-22 flex items-center gap-2.5">
-                                <img src="heart_ic_main.png" alt="" />
+                                <Image src="/heart_ic_main.png" alt="" width={100} height={100} />
                                 <span className="like_cnt text-gray-700">11</span>
                             </span>
                         </div>
@@ -167,13 +168,13 @@ export default function Product() {
                 </div>
                 <div className="popular_product_element w-1/4 sm:w-1/4 md:w-1/4 lg:w-1/4 xl:w-1/4 relative">
                     <div className="thumbnail relative">
-                        <img className="thumb_image w-[289px] h-[294px] object-cover rounded-16" src="product_img02.png" alt="" />
+                        <Image className="thumb_image w-[289px] h-[294px] object-cover rounded-16" src="/product_img02.png" alt="" width={100} height={100} />
                         <div className="product_types absolute bottom-5 left-5 flex flex-col gap-2">
                         <span className="ico">
-                            <img src="sale_ic.png" alt="" />
+                            <Image src="/sale_ic.png" alt="" width={100} height={100} />
                         </span>
                         <span className="ico">
-                            <img src="new_ic.png" alt="" />
+                            <Image src="/new_ic.png" alt="" width={100} height={100} />
                         </span>
                         </div>
                     </div>
@@ -187,11 +188,11 @@ export default function Product() {
                             <span className="discount text-red-600 font-semibold text-2xl ml-2">10% </span>
                         </div>
                         <div className="product_props_bot flex items-center">
-                            <img className="icon_star" src="start_ic.png" alt="" />
+                            <Image className="icon_star" src="/start_ic.png" alt="" width={100} height={100} />
                             <span className="star_num text-base color-25 mx-2">5.00</span>
                             <span className="num_of_people text-base text-zinc-500 ml-1 mr-7">(31)</span>
                             <span className="num_of_heart text-22 flex items-center gap-2.5">
-                                <img src="heart_ic_main.png" alt="" />
+                                <Image src="/heart_ic_main.png" alt="" width={100} height={100} />
                                 <span className="like_cnt text-gray-700">11</span>
                             </span>
                         </div>
@@ -199,13 +200,13 @@ export default function Product() {
                 </div>
                 <div className="popular_product_element w-1/4 sm:w-1/4 md:w-1/4 lg:w-1/4 xl:w-1/4 relative">
                     <div className="thumbnail relative">
-                        <img className="thumb_image w-[289px] h-[294px] object-cover rounded-16" src="product_img03.png" alt="" />
+                        <Image className="thumb_image w-[289px] h-[294px] object-cover rounded-16" src="/product_img03.png" alt="" width={100} height={100} />
                         <div className="product_types absolute bottom-5 left-5 flex flex-col gap-2">
                         <span className="ico">
-                            <img src="sale_ic.png" alt="" />
+                            <Image src="/sale_ic.png" alt="" width={100} height={100} />
                         </span>
                         <span className="ico">
-                            <img src="new_ic.png" alt="" />
+                            <Image src="/new_ic.png" alt="" width={100} height={100} />
                         </span>
                         </div>
                     </div>
@@ -219,11 +220,11 @@ export default function Product() {
                             <span className="discount text-red-600 font-semibold text-2xl ml-2">10% </span>
                         </div>
                         <div className="product_props_bot flex items-center">
-                            <img className="icon_star" src="start_ic.png" alt="" />
+                            <Image className="icon_star" src="/start_ic.png" alt="" width={100} height={100} />
                             <span className="star_num text-base color-25 mx-2">5.00</span>
                             <span className="num_of_people text-base text-zinc-500 ml-1 mr-7">(31)</span>
                             <span className="num_of_heart text-22 flex items-center gap-2.5">
-                                <img src="heart_ic_main.png" alt="" />
+                                <Image src="/heart_ic_main.png" alt="" width={100} height={100} />
                                 <span className="like_cnt text-gray-700">11</span>
                             </span>
                         </div>
@@ -231,13 +232,13 @@ export default function Product() {
                 </div>
                 <div className="popular_product_element w-1/4 sm:w-1/4 md:w-1/4 lg:w-1/4 xl:w-1/4 relative">
                     <div className="thumbnail relative">
-                        <img className="thumb_image w-[289px] h-[294px] object-cover rounded-16" src="product_img04.png" alt="" />
+                        <Image className="thumb_image w-[289px] h-[294px] object-cover rounded-16" src="/product_img04.png" alt="" width={100} height={100} />
                         <div className="product_types absolute bottom-5 left-5 flex flex-col gap-2">
                         <span className="ico">
-                            <img src="sale_ic.png" alt="" />
+                            <Image src="/sale_ic.png" alt="" width={100} height={100} />
                         </span>
                         <span className="ico">
-                            <img src="new_ic.png" alt="" />
+                            <Image src="/new_ic.png" alt="" width={100} height={100} />
                         </span>
                         </div>
                     </div>
@@ -251,11 +252,11 @@ export default function Product() {
                             <span className="discount text-red-600 font-semibold text-2xl ml-2">10% </span>
                         </div>
                         <div className="product_props_bot flex items-center">
-                            <img className="icon_star" src="start_ic.png" alt="" />
+                            <Image className="icon_star" src="/start_ic.png" alt="" width={100} height={100} />
                             <span className="star_num text-base color-25 mx-2">5.00</span>
                             <span className="num_of_people text-base text-zinc-500 ml-1 mr-7">(31)</span>
                             <span className="num_of_heart text-22 flex items-center gap-2.5">
-                                <img src="heart_ic_main.png" alt="" />
+                                <Image src="/heart_ic_main.png" alt="" width={100} height={100} />
                                 <span className="like_cnt text-gray-700">11</span>
                             </span>
                         </div>

@@ -8,6 +8,7 @@ import 'swiper/css/thumbs';
 import "@/app/globals.css";
 import Dropdown from "@/components/Dropdown";
 import ProductDetailNav from "@/components/ProductDetailNav";
+import Image from "next/image";
 export default function Face() {
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   const [NumProduct, setNumProduct] = useState(1);
@@ -32,11 +33,11 @@ export default function Face() {
                     disableOnInteraction: true,
                   }}
                 >
-                  <SwiperSlide><div className=""><img src="/product_detail/product_img_01.png" alt="" /></div></SwiperSlide>
-                  <SwiperSlide><div className=""><img src="/product_detail/product_img_01.png" alt="" /></div></SwiperSlide>
-                  <SwiperSlide><div className=""><img src="/product_detail/product_img_01.png" alt="" /></div></SwiperSlide>
-                  <SwiperSlide><div className=""><img src="/product_detail/product_img_01.png" alt="" /></div></SwiperSlide>
-                  <SwiperSlide><div className=""><img src="/product_detail/product_img_01.png" alt="" /></div></SwiperSlide>
+                  <SwiperSlide><div className=""><Image src="/product_detail/product_img_01.png" alt="" width={100} height={100} /></div></SwiperSlide>
+                  <SwiperSlide><div className=""><Image src="/product_detail/product_img_01.png" alt="" width={100} height={100} /></div></SwiperSlide>
+                  <SwiperSlide><div className=""><Image src="/product_detail/product_img_01.png" alt="" width={100} height={100} /></div></SwiperSlide>
+                  <SwiperSlide><div className=""><Image src="/product_detail/product_img_01.png" alt="" width={100} height={100} /></div></SwiperSlide>
+                  <SwiperSlide><div className=""><Image src="/product_detail/product_img_01.png" alt="" width={100} height={100} /></div></SwiperSlide>
                 </Swiper>
                 <div className="mt-[10px] mx-auto">
                   <Swiper
@@ -47,11 +48,11 @@ export default function Face() {
                     slidesPerView={5}
                     spaceBetween={10}
                   >
-                    <SwiperSlide><div className="rounded"><img src="/product_detail/product_img_01.png" alt="" /></div></SwiperSlide>
-                    <SwiperSlide><div className="rounded"><img src="/product_detail/product_img_01.png" alt="" /></div></SwiperSlide>
-                    <SwiperSlide><div className="rounded"><img src="/product_detail/product_img_01.png" alt="" /></div></SwiperSlide>
-                    <SwiperSlide><div className="rounded"><img src="/product_detail/product_img_01.png" alt="" /></div></SwiperSlide>
-                    <SwiperSlide><div className="rounded"><img src="/product_detail/product_img_01.png" alt="" /></div></SwiperSlide>
+                    <SwiperSlide><div className="rounded"><Image src="/product_detail/product_img_01.png" alt="" width={100} height={100} /></div></SwiperSlide>
+                    <SwiperSlide><div className="rounded"><Image src="/product_detail/product_img_01.png" alt="" width={100} height={100} /></div></SwiperSlide>
+                    <SwiperSlide><div className="rounded"><Image src="/product_detail/product_img_01.png" alt="" width={100} height={100} /></div></SwiperSlide>
+                    <SwiperSlide><div className="rounded"><Image src="/product_detail/product_img_01.png" alt="" width={100} height={100} /></div></SwiperSlide>
+                    <SwiperSlide><div className="rounded"><Image src="/product_detail/product_img_01.png" alt="" width={100} height={100} /></div></SwiperSlide>
                   </Swiper>
                 </div>
               </div>
@@ -144,7 +145,7 @@ export default function Face() {
               <ProductDetailNav tab="1"></ProductDetailNav>
             </div>
             <div className="flex justify-center">
-              <img src="/product_detail/description_content_img.png" alt="" />
+              <Image src="/product_detail/description_content_img.png" alt="" width={100} height={100} />
             </div>
             <div className="mt-[120px] mb-[60px]">
               <ProductDetailNav tab="2"></ProductDetailNav>
@@ -169,7 +170,7 @@ export default function Face() {
                       <i className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_off.png')]"></i>
                     </div>
                     <p className="text-xl font-medium">Contour Powder</p>
-                    <p className="text-[#999999]">I've been absolutely obsessed with this lip stain lately. '16 Baked...
+                    <p className="text-[#999999]">Ive been absolutely obsessed with this lip stain lately. 16 Baked...
                     </p>
                     <p>
                       <span className="font-medium text-[17px]">uwa***</span>
