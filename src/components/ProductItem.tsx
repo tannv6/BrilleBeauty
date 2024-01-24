@@ -1,5 +1,6 @@
 import "@/app/globals.css";
 import Image from "next/image";
+import Link from "next/link";
 
 function ProductItem({
   image,
@@ -28,7 +29,7 @@ function ProductItem({
           </div>
         </div>
         <div className="p-5 pb-10 border border-t-0 border-[#dbdbdb]">
-          <p className="font-bold text-[18px]">{name}</p>
+          <Link href={`/product_detail`} className="font-bold text-[18px]">{name}</Link>
           <p className="pt-2">
             <span className="line-through text-[#bbbbbb]">{oriPrice}</span>
             <span className="pl-[10px] text-[20px] font-bold">{salePrice}</span>
