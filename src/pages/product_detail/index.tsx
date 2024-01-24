@@ -151,7 +151,7 @@ export default function Face() {
             <div className="">
               <div className="flex justify-between pb-5">
                 <p className="text-xl">
-                  <span>PRODUCT REVIEWS</span>
+                  <span className="font-bold">PRODUCT REVIEWS</span>
                   <span className="text-[#757575]">(12)</span>
                 </p>
                 <button className="w-[130px] h-[35px] border border-[#ef426f] rounded text-[#ef426f] font-medium">Write review</button>
@@ -204,7 +204,7 @@ export default function Face() {
             <div id="product_rlt" className="mt-[120px] mb-[60px]">
               <ProductDetailNav tab="3"></ProductDetailNav>
             </div>
-            <p className="text-xl mb-[30px]">RELATED PRODUCTS</p>
+            <p className="text-xl mb-[30px] font-bold">RELATED PRODUCTS</p>
             <div className="relative">
               <Swiper className="select-none"
                 modules={[Autoplay]}
