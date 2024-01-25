@@ -28,7 +28,7 @@ function list({ response }: any) {
     <Layout>
       <div className="flex justify-between items-center">
       <h1 className="text-2xl font-bold mb-4">Products List</h1>
-      <Link href={"/admin/products/write"} className="bg-blue-600 text-white p-2 rounded w-[200px] h-[50px]">Add Product</Link>
+      <Link href={"/admin/products/write"} className="bg-blue-600 flex justify-center items-center text-white rounded w-[150px] h-[40px]">Add Product</Link>
       </div>
       <div className="flex items-center justify-center">
         <div className="min-w-full overflow-x-auto">
@@ -54,7 +54,7 @@ function list({ response }: any) {
                     <td className="py-3 px-4">{e.SellPrice}</td>
                     <td className="py-3 px-4">{e.CategoryID}</td>
                     <td className="py-3 px-4">
-                      <Image src={"/products/8a2a76f94cda4e950b3a19205.jpg"} alt="" width={100} height={100}/>
+                      <Image src={e.ProductImage} alt="" width={100} height={100}/>
                     </td>
                     <td className="py-3 px-4">
                       <Link

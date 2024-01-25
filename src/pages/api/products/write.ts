@@ -54,10 +54,10 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     SaleDate = '${SaleDate}', 
     IsBest = '${IsBest}', 
     IsBigSale = '${IsBigSale}', 
-    IsNew = '${IsNew}', 
+    IsNew = '${IsNew}',
     ProductImage = '${
       image
-        ? image.newFilename + getFileExtension(image.originalFilename || "")
+        ? `/products/${image.newFilename}.${getFileExtension(image.originalFilename || "")}`
         : ""
     }',
     CategoryID = '${CategoryID}'`;
