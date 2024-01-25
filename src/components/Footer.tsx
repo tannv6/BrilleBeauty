@@ -35,7 +35,7 @@ function Footer() {
         <div className="inner-container flex justify-between">
           <div className="flex gap-[75px]">
             <div className="logo">
-              <Image src="/logo_main.png" alt="" width={100} height={100} />
+              <Image src="/logo_main.png" alt="" width={234} height={33} />
             </div>
             <div>
               <p className="text-[15px] text-[#999] leading-6">
