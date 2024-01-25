@@ -3,6 +3,7 @@ import Layout from "../components/Layout";
 import { GetServerSideProps } from "next";
 import connectDB from "@/app/db";
 import Link from "next/link";
+import Image from "next/image";
 export const getServerSideProps = (async () => {
   const connect = await connectDB();
   const [response] = await connect.execute("SELECT * FROM products");
@@ -52,7 +53,9 @@ function list({ response }: any) {
                     <td className="py-3 px-4">{e.InitPrice}</td>
                     <td className="py-3 px-4">{e.SellPrice}</td>
                     <td className="py-3 px-4">{e.CategoryID}</td>
-                    <td className="py-3 px-4">{e.ProductImage}</td>
+                    <td className="py-3 px-4">
+                      <Image src={"/products/8a2a76f94cda4e950b3a19205.jpg"} alt="" width={100} height={100}/>
+                    </td>
                     <td className="py-3 px-4">
                       <Link
                         href=""

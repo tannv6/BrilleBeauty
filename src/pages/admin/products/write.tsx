@@ -1,12 +1,59 @@
-import React from "react";
+import React, { FormEvent, useState } from "react";
 import Layout from "../components/Layout";
 import Dropdown from "@/components/Dropdown";
+import axios from "axios";
+import connectDB from "@/app/db";
+import { GetServerSideProps } from "next";
+import { convertDatesToNumbers } from "@/utils/function";
+export const getServerSideProps = (async () => {
+  const connect = await connectDB();
+  const [categories] = await connect.execute("SELECT * FROM menu");
+  return {
+    props: {
+      categories: convertDatesToNumbers(categories).map((e: any) => ({
+        id: e.MenuID,
+        name: e.MenuName,
+      })),
+    },
+  };
+}) satisfies GetServerSideProps<{ categories: any }>;
+function write({ categories }: any) {
+  const [product, setProduct] = useState({
+    ProductName: "fff",
+    InitPrice: "",
+    SellPrice: "",
+    Description: "",
+    SaleDate: "",
+    IsBest: "",
+    IsBigSale: "",
+    IsNew: "",
+    ProductImage: "",
+    CategoryID: "",
+  });
+  function handleChange(e: any) {
+    if (e.target.files) {
+      setProduct({ ...product, [e.target.name]: e.target.files[0] });
+    } else {
+      setProduct({ ...product, [e.target.name]: e.target.value });
+    }
+  }
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
 
-function write() {
+    let formData = new FormData();
+
+    for (let [key, value] of Object.entries(product)) {
+      formData.append(key, value);
+    }
+    const response = await axios.post("/api/products/write", formData);
+  }
+
+  console.log(categories);
+
   return (
     <Layout>
       <h1 className="text-2xl font-bold mb-4">Add New Product</h1>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="relative overflow-x-auto">
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <colgroup>
@@ -26,8 +73,8 @@ function write() {
                     type="text"
                     name="ProductName"
                     id="ProductName"
+                    onChange={handleChange}
                     className="h-[40px] outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    required
                   />
                 </td>
               </tr>
@@ -41,8 +88,8 @@ function write() {
                 <td className="px-6 py-4">
                   <Dropdown
                     containerClassName="w-[150px]"
-                    className="w-full h-[40px]"
-                    options={[{ id: 1, name: "Ves" }]}
+                    className="w-full h-[40px] rounded-md"
+                    options={categories}
                     onChange={() => {}}
                     activeItem={0}
                   />
@@ -75,6 +122,57 @@ function write() {
                     />
                   </div>
                 </td>
+              </tr>
+              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th
+                  scope="row"
+                  className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  Image
+                </th>
+                <td className="px-6 py-4">
+                  <input
+                    type="file"
+                    name="ProductImage"
+                    onChange={handleChange}
+                  />
+                </td>
+              </tr>
+              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th
+                  scope="row"
+                  className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  Category
+                </th>
+                <td className="px-6 py-4"></td>
+              </tr>
+              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th
+                  scope="row"
+                  className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  Category
+                </th>
+                <td className="px-6 py-4"></td>
+              </tr>
+              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th
+                  scope="row"
+                  className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  Category
+                </th>
+                <td className="px-6 py-4"></td>
+              </tr>
+              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th
+                  scope="row"
+                  className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  Category
+                </th>
+                <td className="px-6 py-4"></td>
               </tr>
             </tbody>
           </table>

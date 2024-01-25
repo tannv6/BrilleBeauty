@@ -8,7 +8,6 @@ const connectDB = async () => {
       password: 'B.@vZWMly_qW',
       database: 'brillebe_root',
     });
-
     console.log('Connected to the database');
     return connection;
   } catch (error) {
