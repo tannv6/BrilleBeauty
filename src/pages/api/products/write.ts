@@ -22,7 +22,12 @@ const saveFile = async (file: formidable.File) => {
     data
   );
   await fs.unlinkSync(file.filepath);
-  return;
+  return {
+    ufile: `/products/${file.newFilename}.${getFileExtension(
+      file.originalFilename || ""
+    )}`,
+    rfile: file.originalFilename,
+  };
 };
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
@@ -30,21 +35,25 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     const form = formidable({});
     const [fields, files] = await form.parse(req);
     const image = files.ProductImage?.[0];
-    console.log(image);
-    if (image) {
-      await saveFile(image);
-    }
+    const detailImages = files["detailImage[]"];
     const {
       ProductName,
       InitPrice,
       SellPrice,
       Description,
       SaleDate,
-      IsBest,
-      IsBigSale,
-      IsNew,
+      IsBest=0,
+      IsBigSale=0,
+      IsNew=0,
       CategoryID,
+      SaleEndDate,
     } = fields;
+
+    let ProductImage = "";
+
+    if (image) {
+      ProductImage = (await saveFile(image)).ufile;
+    }
     const connect = await connectDB();
     const query = `INSERT INTO products SET 
     ProductName = '${ProductName}', 
@@ -52,17 +61,28 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     SellPrice = '${SellPrice}',
     Description = '${Description}', 
     SaleDate = '${SaleDate}', 
-    IsBest = '${IsBest}', 
-    IsBigSale = '${IsBigSale}', 
-    IsNew = '${IsNew}', 
-    ProductImage = '${
-      image
-        ? image.newFilename + getFileExtension(image.originalFilename || "")
-        : ""
-    }',
+    SaleEndDate = '${SaleEndDate}',
+    IsBest = ${IsBest}, 
+    IsBigSale = ${IsBigSale}, 
+    IsNew = ${IsNew},
+    ProductImage = '${ProductImage}',
     CategoryID = '${CategoryID}'`;
-    const [result] = await connect.execute(query);
-    return res.status(200).json({ result: fields });
+    
+    const [results] = await connect.execute(query);
+    const lastInsertedId = (results as any).insertId;
+    let queryImage = "";
+    if (detailImages && detailImages?.length > 0) {
+      queryImage += "INSERT INTO productimages(ProductID,ImageURL, FileName) VALUES ";
+      for (let index = 0; index < detailImages.length; index++) {
+        const imgName = await saveFile(detailImages[index]);
+        if (index > 0) {
+          queryImage += ",";
+        }
+        queryImage += `('${lastInsertedId}', '${imgName.ufile}', '${imgName.rfile}')`;
+      }
+    }
+    await connect.execute(queryImage);
+    return res.status(201).json({ result: "OK" });
   } catch (err) {
     return res.status(500).json({ error: err });
   }

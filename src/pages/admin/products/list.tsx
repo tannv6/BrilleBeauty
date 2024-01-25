@@ -36,11 +36,11 @@ function list({ response }: any) {
             <thead>
               <tr className="bg-blue-gray-100 text-gray-700">
                 <th className="py-3 px-4 text-left">ID</th>
+                <th className="py-3 px-4 text-left">Thumb Image</th>
                 <th className="py-3 px-4 text-left">Product Name</th>
                 <th className="py-3 px-4 text-left">Original Price</th>
                 <th className="py-3 px-4 text-left">Sell Price</th>
                 <th className="py-3 px-4 text-left">Category</th>
-                <th className="py-3 px-4 text-left">Thumb Image</th>
                 <th className="py-3 px-4 text-left">Action</th>
               </tr>
             </thead>
@@ -49,13 +49,13 @@ function list({ response }: any) {
                 return (
                   <tr key={i} className="border-b border-blue-gray-200">
                     <td className="py-3 px-4">{e.ProductID}</td>
+                    <td className="py-3 px-4">
+                      <Image src={e.ProductImage} alt="" width={100} height={100}/>
+                    </td>
                     <td className="py-3 px-4">{e.ProductName}</td>
                     <td className="py-3 px-4">{e.InitPrice}</td>
                     <td className="py-3 px-4">{e.SellPrice}</td>
                     <td className="py-3 px-4">{e.CategoryID}</td>
-                    <td className="py-3 px-4">
-                      <Image src={"/products/8a2a76f94cda4e950b3a19205.jpg"} alt="" width={100} height={100}/>
-                    </td>
                     <td className="py-3 px-4">
                       <Link
                         href=""
