@@ -74,12 +74,10 @@ function write({ categories }: any) {
     });
     const response = await axios.post("/api/products/write", formData);
 
-    // if (response.status === 201) {
-    //   router.push("/admin/products/list");
-    // }
+    if (response.status === 201) {
+      router.push("/admin/products/list");
+    }
   }
-
-  console.log(categories);
 
   return (
     <Layout>
@@ -91,7 +89,9 @@ function write({ categories }: any) {
             className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
           >
             <colgroup>
-              <col width={"200px"} />
+              <col width={"140px"} />
+              <col width={"*"} />
+              <col width={"140px"} />
               <col width={"*"} />
             </colgroup>
             <tbody>
@@ -132,8 +132,6 @@ function write({ categories }: any) {
                     activeItem={Number(product.CategoryID)}
                   />
                 </td>
-              </tr>
-              <tr className="bg-white dark:bg-gray-800">
                 <th
                   scope="row"
                   className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"

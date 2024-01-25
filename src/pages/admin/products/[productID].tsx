@@ -6,7 +6,7 @@ function index() {
     const query = useRouter().query;
     return (
         <Layout>
-            <div>lklk{query.productID}</div>
+            <div>ID: {query.productID}</div>
         </Layout>
     );
 }
