@@ -45,11 +45,11 @@ export default function Face() {
                     slidesPerView={5}
                     spaceBetween={10}
                   >
-                    <SwiperSlide><div className="rounded"><Image src="/product_detail/product_img_01.png" alt="" width={104} height={104} /></div></SwiperSlide>
-                    <SwiperSlide><div className="rounded"><Image src="/product_detail/product_img_01.png" alt="" width={104} height={104} /></div></SwiperSlide>
-                    <SwiperSlide><div className="rounded"><Image src="/product_detail/product_img_01.png" alt="" width={104} height={104} /></div></SwiperSlide>
-                    <SwiperSlide><div className="rounded"><Image src="/product_detail/product_img_01.png" alt="" width={104} height={104} /></div></SwiperSlide>
-                    <SwiperSlide><div className="rounded"><Image src="/product_detail/product_img_01.png" alt="" width={104} height={100} /></div></SwiperSlide>
+                    <SwiperSlide><div className="rounded cursor-pointer"><Image src="/product_detail/product_img_01.png" alt="" width={104} height={104} /></div></SwiperSlide>
+                    <SwiperSlide><div className="rounded cursor-pointer"><Image src="/product_detail/product_img_01.png" alt="" width={104} height={104} /></div></SwiperSlide>
+                    <SwiperSlide><div className="rounded cursor-pointer"><Image src="/product_detail/product_img_01.png" alt="" width={104} height={104} /></div></SwiperSlide>
+                    <SwiperSlide><div className="rounded cursor-pointer"><Image src="/product_detail/product_img_01.png" alt="" width={104} height={104} /></div></SwiperSlide>
+                    <SwiperSlide><div className="rounded cursor-pointer"><Image src="/product_detail/product_img_01.png" alt="" width={104} height={100} /></div></SwiperSlide>
                   </Swiper>
                 </div>
               </div>

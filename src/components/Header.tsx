@@ -7,9 +7,9 @@ export default function Header() {
 
   return <div className='header container-main'>
     <div className="header_top flex justify-between items-center px-[120px] h-[120px] border-b border-gray-200">
-      <div className="logo">
+      <Link href="/" className="logo">
         <Image src="/logo_main.png" alt="" width={234} height={33} />
-      </div>
+      </Link>
       <div className="search-container flex items-center mx-5">
         <div className="relative">
           <input
@@ -53,8 +53,8 @@ export default function Header() {
       <ul className="flex justify-center items-center custom-gap-45 h-[50px] font-medium">
         <li className="relative group">
           <Link
-            className={`${pathname === '/' ? 'gnb_active' : ''} text-18 tracking-wide leading-[50px] text-gray-700`}
-            href={"/"}
+            className={`${pathname === '/brands' ? 'gnb_active' : ''} text-18 tracking-wide leading-[50px] text-gray-700`}
+            href={"/brands"}
           >
             Brands
           </Link>
@@ -126,7 +126,7 @@ export default function Header() {
             href={"/face"}>
             Face
           </Link>
-          <div className="absolute hidden top-[36px] left-0 transform min-[1920px]:-translate-x-[40%] transform 2xl:-translate-x-[38%] bg-white w-full xl:w-[100vw] h-[400px] border-t border-gray-200 group-hover:block z-[100]">
+          <div className="absolute hidden top-[36px] left-0 transform min-[1920px]:-translate-x-[40%] 2xl:-translate-x-[38%] bg-white w-full xl:w-[100vw] h-[400px] border-t border-gray-200 group-hover:block z-[100]">
             <div className="inner-container flex gap-[150px] mt-[55px]">
                 <div>
                   <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">Facecare</h3>
