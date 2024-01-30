@@ -131,6 +131,19 @@ body {
   width: calc(100% - 1.875rem);
 }
 
+.inner-530 {
+  position: relative;
+  margin-inline: auto;
+  max-width: 530px;
+  width: calc(100% - 1.875rem);
+}
+
+.btn_on {
+  border: 1px solid #252525;
+  border-bottom: 0;
+  color: #252525;
+}
+
 .my-6 {
   margin: 60px 0;
 }
