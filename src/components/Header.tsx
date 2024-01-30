@@ -230,7 +230,7 @@ export default function Header() {
                   <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">Oral</h3>
                   <p className="text-[20px] text-[#252525] leading-[35px] font-medium">Oral Care</p>
                   <p className="text-[20px] text-[#252525] leading-[35px] font-medium">Manual Toothbrushes</p>
-                  <p className="text-[20px] text-[#252525] leading-[35px] font-medium">Kid's Oral Care</p>
+                  <p className="text-[20px] text-[#252525] leading-[35px] font-medium">Kids Oral Care</p>
                 </div>
                 <div>
                   <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">Nail</h3>

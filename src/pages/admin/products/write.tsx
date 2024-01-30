@@ -23,7 +23,7 @@ export const getServerSideProps = (async () => {
     },
   };
 }) satisfies GetServerSideProps<{ categories: any }>;
-function write({ categories }: any) {
+function ProductWrite({ categories }: any) {
   const router = useRouter();
   const [product, setProduct] = useState({
     ProductName: "",
@@ -363,4 +363,4 @@ function write({ categories }: any) {
   );
 }
 
-export default write;
+export default ProductWrite;

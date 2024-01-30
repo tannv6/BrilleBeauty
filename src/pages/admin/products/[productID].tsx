@@ -2,7 +2,7 @@ import React from 'react';
 import Layout from '../components/Layout';
 import { useRouter } from 'next/router';
 
-function index() {
+function GroductDetail() {
     const query = useRouter().query;
     return (
         <Layout>
@@ -11,4 +11,4 @@ function index() {
     );
 }
 
-export default index;
+export default GroductDetail;
