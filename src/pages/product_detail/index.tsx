@@ -88,7 +88,7 @@ export default function Face() {
                   <div className="flex items-center">
                     <span className="text-lg min-w-[190px]">Volume / Weight</span>
                     <Dropdown
-                      className="w-[397px] bg-[url('/dropdown_bg_long.png')] text-[#757575]"
+                      className="w-[397px] text-[#757575]"
                       options={[
                         { id: 1, name: "80ml" },
                         { id: 2, name: "100ml" },

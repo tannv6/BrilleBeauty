@@ -8,7 +8,7 @@ export default function Account() {
     <>
       <Layout>
         <div id="main">
-          <SubNav title="My Account" />
+          <SubNav title1="My Account" />
           <div className="inner-container mt-[75px] mb-[200px]">
             <div className="flex flex-row gap-[60px]">
               <MypageNav></MypageNav>

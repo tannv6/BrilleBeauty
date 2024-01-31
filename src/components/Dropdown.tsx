@@ -19,7 +19,7 @@ function Dropdown({ className,options, activeItem, onChange, containerClassName 
   }
   return (
     <div className={`relative z-50 ${containerClassName || ""}`} tabIndex={-1} onBlur={handleBlur}>
-      <button type="button" onClick={() => setIsOpen(!isOpen)} className={`text-left text- border border-[#dbdbdb] h-12 bg-[url('/dropdown_bg.png')] ${className} px-4 appearance-none outline-none`}>
+      <button type="button" onClick={() => setIsOpen(!isOpen)} className={`text-left text- border border-[#dbdbdb] h-12 bg-no-repeat bg-[center_right_1rem] bg-[url('/dropdown_bg_arrow.png')] ${className} px-4 appearance-none outline-none`}>
         <span className="mr-1">{activeOption?.name || "--Select--"}</span>
       </button>
       <ul className={`dropdown-menu absolute text-gray-700 pt-1 min-w-full ${isOpen ? "" : 'hidden'}`}>
