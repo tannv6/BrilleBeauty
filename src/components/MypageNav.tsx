@@ -14,13 +14,13 @@ function MypageNav({ }: any) {
                   <Link href="/account/aboutme" className={`${pathname === '/account/aboutme' ? 'text-[#ef426f]' : ''}`}>About Me</Link>
                 </p>
                 <p className="text-xl py-6 pl-5 border-b">
-                  <Link href="/account/aboutme">My Orders</Link>
+                  <Link href="/account/myorders" className={`${pathname === '/account/myorders' ? 'text-[#ef426f]' : ''}`}>My Orders</Link>
                 </p>
                 <p className="text-xl py-6 pl-5 border-b">
-                  <Link href="/account/aboutme">My Addresses</Link>
+                  <Link href="/account/myaddresses" className={`${pathname === '/account/myaddresses' ? 'text-[#ef426f]' : ''}`}>My Addresses</Link>
                 </p>
                 <p className="text-xl py-6 pl-5 border-b">
-                  <Link href="/account/aboutme">My Wish List</Link>
+                  <Link href="/account/mywishlist" className={`${pathname === '/account/mywishlist' ? 'text-[#ef426f]' : ''}`}>My Wish List</Link>
                 </p>
                 <p className="text-xl py-6 pl-5 border-b">
                   <span className="flex items-center gap-2 cursor-pointer max-w-fit">Sign Out<i className="w-[20px] h-[20px] bg-[url('/account/signout_ico.png')]"></i></span>

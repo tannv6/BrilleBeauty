@@ -1,9 +1,9 @@
 import Layout from "@/components/Layout";
 import MypageNav from "@/components/MypageNav";
 import SubNav from "@/components/SubNav";
-import Link from "next/link";
+import Image from "next/image";
 
-export default function Account() {
+export default function MyOrders() {
   return (
     <>
       <Layout>
@@ -16,54 +16,65 @@ export default function Account() {
                 <p className="text-2xl pb-4 border-b border-black">About Me</p>
                 <table className="table-auto min-w-full">
                   <colgroup>
-                    <col width="25%" />
-                    <col width="*" />
+                    <col className="w-[50%]" />
+                    <col className="w-[20%]" />
+                    <col className="w-[20%]" />
+                    <col className="w-[10%]" />
                   </colgroup>
-                  <tbody>
-                    <tr className="border-b border-[#757575]">
-                      <th scope="row" className="text-lg bg-[#fefafa]">Personal Info</th>
-                      <td>
-                        <div className="flex flex-col">
-                          <div className="flex items-center py-5 pl-5 justify-between border-b">
-                            <p>Name<span className="text-[#ef426f]">*</span></p>
-                            <div className="flex gap-[10px]">
-                              <input type="text" placeholder="My" className="px-[10px] w-[220px] h-[50px] border rounded-[2px]" />
-                              <input type="text" placeholder="Huyen" className="px-[10px] w-[220px] h-[50px] border rounded-[2px]" />
-                            </div>
-                          </div>
-                          <div className="py-5 pl-5 flex items-center justify-between">
-                            <p>Date of Birth<span className="text-[#ef426f]">*</span></p>
-                            <input type="datetime-local" className="px-[10px] w-[450px] h-[50px] border rounded-[2px]"></input>
-                          </div>
-                        </div>
-                      </td>
+                  <thead className="h-[80px] border-b text-lg">
+                    <tr>
+                      <th className="text-start">Product</th>
+                      <th>Quantity</th>
+                      <th>Price</th>
                     </tr>
-                    <tr className="border-b border-[#757575]">
-                      <th scope="row" className="text-lg bg-[#fefafa]">Change Password</th>
-                      <td>
-                        <div className="flex flex-col">
-                          <div className="py-5 pl-5 flex items-center justify-between border-b">
-                            <p>Current Password<span className="text-[#ef426f]">*</span></p>
-                            <input type="password" className="px-[10px] w-[450px] h-[50px] border rounded-[2px]"></input>
-                          </div>
-                          <div className="py-5 pl-5 border-b">
-                            <div className="flex items-center justify-between">
-                              <p>New Password<span className="text-[#ef426f]">*</span></p>
-                              <input type="password" className="px-[10px] w-[450px] h-[50px] border rounded-[2px]"></input>
-                            </div>
-                            <p className="pl-[162px] pt-1">Password Strength: No Password</p>
-                          </div>
-                          <div className="py-5 pl-5 flex items-center justify-between border-b">
-                            <p>Confirm New Password<span className="text-[#ef426f]">*</span></p>
-                            <input type="password" className="shrink-0 px-[10px] w-[450px] h-[50px] border rounded-[2px]"></input>
+                  </thead>
+                  <tbody>
+                    <tr className="border-b">
+                      <td className="py-5">
+                        <div className="flex items-center gap-[25px]">
+                          <Image className="rounded" src="/cart/product_img.png" width={100} height={100} alt=""></Image>
+                          <div className="flex flex-col pr-8">
+                            <p>Damage Care Perfect Serum Original (New) - 80ml</p>
+                            <p className="text-[15px] text-[#999999]">- [Required selection]</p>
                           </div>
                         </div>
                       </td>
+                      <td className="py-5 text-center">1</td>
+                      <td className="py-5 text-xl font-bold text-center">A$16.25</td>
+                      <td className="py-5 text-right"><button className="w-[33px] h-[33px] rounded bg-[url('/cart/product_delete_btn.png')]"></button></td>
+                    </tr>
+                    <tr className="border-b">
+                      <td className="py-5">
+                        <div className="flex items-center gap-[25px]">
+                          <Image className="rounded" src="/cart/product_img.png" width={100} height={100} alt=""></Image>
+                          <div className="flex flex-col pr-8">
+                            <p>Damage Care Perfect Serum Original (New) - 80ml</p>
+                            <p className="text-[15px] text-[#999999]">- [Required selection]</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-5 text-center">1</td>
+                      <td className="py-5 text-xl font-bold text-center">A$16.25</td>
+                      <td className="py-5 text-right"><button className="w-[33px] h-[33px] rounded bg-[url('/cart/product_delete_btn.png')]"></button></td>
+                    </tr>
+                    <tr className="border-b">
+                      <td className="py-5">
+                        <div className="flex items-center gap-[25px]">
+                          <Image className="rounded" src="/cart/product_img.png" width={100} height={100} alt=""></Image>
+                          <div className="flex flex-col pr-8">
+                            <p>Damage Care Perfect Serum Original (New) - 80ml</p>
+                            <p className="text-[15px] text-[#999999]">- [Required selection]</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="py-5 text-center">1</td>
+                      <td className="py-5 text-xl font-bold text-center">A$16.25</td>
+                      <td className="py-5 text-right"><button className="w-[33px] h-[33px] rounded bg-[url('/cart/product_delete_btn.png')]"></button></td>
                     </tr>
                   </tbody>
                 </table>
                 <div className="flex justify-end mt-[50px]">
-                  <button className="w-[220px] h-[60px] rounded bg-[#f04b76] text-lg text-[#fff]">Update</button>
+                  <button className="w-[220px] h-[60px] rounded bg-[#f04b76] text-lg text-[#fff]">Contact Seller</button>
                 </div>
               </div>
             </div>

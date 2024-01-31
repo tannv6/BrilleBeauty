@@ -1,9 +1,8 @@
 import Layout from "@/components/Layout";
 import MypageNav from "@/components/MypageNav";
 import SubNav from "@/components/SubNav";
-import Link from "next/link";
 
-export default function Account() {
+export default function AboutMe() {
   return (
     <>
       <Layout>
