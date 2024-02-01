@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
+import "@/app/globals.css";
 function Layout({ children }: any) {
   const [activeMenu, setActiveMenu] = useState(0);
   const handleChangeMenu = (id: number) => {
@@ -14,10 +15,6 @@ function Layout({ children }: any) {
     <>
       <Head>
         <title>Brille Beauty CMS</title>
-        <link
-          href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-          rel="stylesheet"
-        />
         <link
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
           rel="stylesheet"
@@ -90,7 +87,7 @@ function Layout({ children }: any) {
                 >
                   <li>
                     <Link
-                      href=""
+                      href="/admin/products/list"
                       className="block p-2 hover:bg-gray-700 flex items-center"
                     >
                       <i className="fas fa-chevron-right mr-2 text-xs" />

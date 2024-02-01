@@ -15,7 +15,7 @@ function ProductItem({
     <>
       <div className="font-Arial flex flex-col">
         <div className="h-[294px] border border-[#dbdbdb] rounded-t-2xl relative group">
-          <Image src={image} alt="" width={100} height={100} />
+          <Image src={image} alt="" width={286} height={294} />
           <span className="flex items-center justify-center w-[50px] h-[30px] absolute bottom-[10px] left-3 bg-[#ffffff] text-[#fe3a40] rounded-[15px] text-[14px]">
             NEW
           </span>

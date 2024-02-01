@@ -1,25 +1,27 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Layout from "@/components/Layout";
 import SubNav from "@/components/SubNav";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, Thumbs } from 'swiper/modules';
+import { Swiper as SwiperCore } from 'swiper/types';
 import 'swiper/css';
 import 'swiper/css/thumbs';
 import "@/app/globals.css";
 import Dropdown from "@/components/Dropdown";
 import ProductDetailNav from "@/components/ProductDetailNav";
 import Image from "next/image";
+import Pagi from "@/components/Pagi";
 export default function Face() {
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   const [NumProduct, setNumProduct] = useState(1);
   const [isHeart, setIsHeart] = useState<boolean>(true);
-
+  const swiperRef = useRef<SwiperCore>();
   return (
     <>
       <Layout>
         <div id="main">
           <SubNav />
-          <div className="inner-container mt-[70px]">
+          <div className="inner-container mt-[70px] mb-[60px]">
             <div className="flex flex-row justify-between">
               <div className="basis-[556px]">
                 <Swiper
@@ -28,16 +30,12 @@ export default function Face() {
                   slidesPerView={1}
                   modules={[Thumbs, Autoplay]}
                   thumbs={{ swiper: thumbsSwiper }}
-                  autoplay={{
-                    delay: 2500,
-                    disableOnInteraction: true,
-                  }}
                 >
-                  <SwiperSlide><div className=""><Image src="/product_detail/product_img_01.png" alt="" width={100} height={100} /></div></SwiperSlide>
-                  <SwiperSlide><div className=""><Image src="/product_detail/product_img_01.png" alt="" width={100} height={100} /></div></SwiperSlide>
-                  <SwiperSlide><div className=""><Image src="/product_detail/product_img_01.png" alt="" width={100} height={100} /></div></SwiperSlide>
-                  <SwiperSlide><div className=""><Image src="/product_detail/product_img_01.png" alt="" width={100} height={100} /></div></SwiperSlide>
-                  <SwiperSlide><div className=""><Image src="/product_detail/product_img_01.png" alt="" width={100} height={100} /></div></SwiperSlide>
+                  <SwiperSlide><div><Image src="/product_detail/product_img_01.png" alt="" width={556} height={555} /></div></SwiperSlide>
+                  <SwiperSlide><div><Image src="/product_detail/product_img_01.png" alt="" width={556} height={555} /></div></SwiperSlide>
+                  <SwiperSlide><div><Image src="/product_detail/product_img_01.png" alt="" width={556} height={555} /></div></SwiperSlide>
+                  <SwiperSlide><div><Image src="/product_detail/product_img_01.png" alt="" width={556} height={555} /></div></SwiperSlide>
+                  <SwiperSlide><div><Image src="/product_detail/product_img_01.png" alt="" width={556} height={555} /></div></SwiperSlide>
                 </Swiper>
                 <div className="mt-[10px] mx-auto">
                   <Swiper
@@ -48,11 +46,11 @@ export default function Face() {
                     slidesPerView={5}
                     spaceBetween={10}
                   >
-                    <SwiperSlide><div className="rounded"><Image src="/product_detail/product_img_01.png" alt="" width={100} height={100} /></div></SwiperSlide>
-                    <SwiperSlide><div className="rounded"><Image src="/product_detail/product_img_01.png" alt="" width={100} height={100} /></div></SwiperSlide>
-                    <SwiperSlide><div className="rounded"><Image src="/product_detail/product_img_01.png" alt="" width={100} height={100} /></div></SwiperSlide>
-                    <SwiperSlide><div className="rounded"><Image src="/product_detail/product_img_01.png" alt="" width={100} height={100} /></div></SwiperSlide>
-                    <SwiperSlide><div className="rounded"><Image src="/product_detail/product_img_01.png" alt="" width={100} height={100} /></div></SwiperSlide>
+                    <SwiperSlide><div className="rounded"><Image src="/product_detail/product_img_01.png" alt="" width={104} height={104} /></div></SwiperSlide>
+                    <SwiperSlide><div className="rounded"><Image src="/product_detail/product_img_01.png" alt="" width={104} height={104} /></div></SwiperSlide>
+                    <SwiperSlide><div className="rounded"><Image src="/product_detail/product_img_01.png" alt="" width={104} height={104} /></div></SwiperSlide>
+                    <SwiperSlide><div className="rounded"><Image src="/product_detail/product_img_01.png" alt="" width={104} height={104} /></div></SwiperSlide>
+                    <SwiperSlide><div className="rounded"><Image src="/product_detail/product_img_01.png" alt="" width={104} height={100} /></div></SwiperSlide>
                   </Swiper>
                 </div>
               </div>
@@ -145,20 +143,21 @@ export default function Face() {
               <ProductDetailNav tab="1"></ProductDetailNav>
             </div>
             <div className="flex justify-center">
-              <Image src="/product_detail/description_content_img.png" alt="" width={100} height={100} />
+              <Image src="/product_detail/description_content_img.png" alt="" width={860} height={860} />
             </div>
-            <div className="mt-[120px] mb-[60px]">
+            <div id="product_rvw" className="mt-[120px] mb-[60px]">
               <ProductDetailNav tab="2"></ProductDetailNav>
             </div>
             <div className="">
               <div className="flex justify-between pb-5">
                 <p className="text-xl">
-                  <span>PRODUCT REVIEWS</span>
+                  <span className="font-bold">PRODUCT REVIEWS</span>
                   <span className="text-[#757575]">(12)</span>
                 </p>
                 <button className="w-[130px] h-[35px] border border-[#ef426f] rounded text-[#ef426f] font-medium">Write review</button>
               </div>
               <hr />
+
               <div className="">
                 <div className="py-5 flex flex-row">
                   <div className="flex flex-col basis-[80%] ml-5 gap-y-3">
@@ -169,21 +168,192 @@ export default function Face() {
                       <i className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_on.png')]"></i>
                       <i className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_off.png')]"></i>
                     </div>
-                    <p className="text-xl font-medium">Contour Powder</p>
+                    <p className="text-xl font-medium">CONTOUR POWDER</p>
                     <p className="text-[#999999]">Ive been absolutely obsessed with this lip stain lately. 16 Baked...
                     </p>
                     <p>
                       <span className="font-medium text-[17px]">uwa***</span>
                       <span className="text-[15px] text-[#999999] pl-3">2022.11.15</span>
                     </p>
+                    <div className="flex gap-[10px]">
+                      <div className="w-[110px] h-[110px] bg-[#eeeeee] rounded-[5px]"></div>
+                      <div className="w-[110px] h-[110px] bg-[#eeeeee] rounded-[5px]"></div>
+                    </div>
+                    <div className="flex gap-[10px]">
+                      <button className="w-[140px] h-[36px] bg-[url('/product_detail/comment_show_btn.png')] rounded-[5px] text-[15px] text-[#757575] pl-3 pt-0.5">COMMENT</button>
+                      <button className="w-[140px] h-[36px] rounded-[5px] text-[15px] text-[#757575] border">WRITE COMMENT</button>
+                    </div>
                   </div>
-                  <div className="flex basis-[20%] items-start justify-end">
-                    <button className="">EDIT</button>
-                    <button className="">DELETE</button>
+                  <div className="flex basis-[20%] items-start justify-end gap-[10px]">
+                    <button className="w-[100px] h-7 text-[15px] text-[#999999] border rounded">EDIT</button>
+                    <button className="w-[100px] h-7 text-[15px] text-[#999999] border rounded">DELETE</button>
                   </div>
                 </div>
                 <hr />
+                <div className="flex items-center justify-center h-[123px] bg-[#f9f9f9] border-b">
+                  <div className="flex w-[1131px] h-[82px]">
+                    <textarea placeholder="Please enter your comment." className="focus:outline-none placeholder:text-lg p-5 pt-3 border rounded-l-[5px] grow resize-none" />
+                    <button className="w-[120px] rounded-r bg-[#ef426f] text-lg text-[#ffffff]">OK</button>
+                  </div>
+                </div>
               </div>
+
+              <Pagi></Pagi>
+
+            </div>
+            <div id="product_rlt" className="mt-[120px] mb-[60px]">
+              <ProductDetailNav tab="3"></ProductDetailNav>
+            </div>
+            <p className="text-xl mb-[30px] font-bold">RELATED PRODUCTS</p>
+            <div className="relative">
+              <Swiper className="select-none"
+                modules={[Autoplay]}
+                slidesPerView={5}
+                spaceBetween={20}
+                loop={true}
+                onBeforeInit={(swiper) => {
+                  swiperRef.current = swiper;
+                }}
+                autoplay={{
+                  delay: 2500,
+                  disableOnInteraction: true,
+                }}
+              >
+                <SwiperSlide>
+                  <div className="flex flex-col">
+                    <Image src="/product_rlt_img_01.png" width={224} height={225} alt="1"></Image>
+                    <p className="font-bold">Damage Care Perfect Serum Original (New) - 80ml</p>
+                    <p className="pt-1">
+                      <span className="line-through text-[15px] text-[#bbbbbb]">A$19.65</span>
+                      <span className="pl-2 text-lg">A$16.25</span>
+                      <span className="pl-4 text-xl text-[#fe3a40]">10%</span>
+                    </p>
+                    <div className="flex items-center gap-[26px] pt-1.5">
+                      <div className="flex items-center gap-1">
+                        <Image className="pb-1" src="/product_rlt_star_ico.png" width={16} height={16} alt=""></Image>
+                        <span className="text-[14px] font-bold">4.7</span>
+                        <span className="text-[14px] text-[#999999]">(150)</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <Image src="/product_rlt_heart_ico.png" width={15} height={12} alt=""></Image>
+                        <span className="text-[14px] text-[#555555]">764</span>
+                      </div>
+                    </div>
+                  </div>
+                </SwiperSlide>
+                <SwiperSlide>
+                  <div className="flex flex-col">
+                    <Image src="/product_rlt_img_01.png" width={224} height={225} alt="1"></Image>
+                    <p className="font-bold">Damage Care Perfect Serum Original (New) - 80ml</p>
+                    <p className="pt-1">
+                      <span className="line-through text-[15px] text-[#bbbbbb]">A$19.65</span>
+                      <span className="pl-2 text-lg">A$16.25</span>
+                      <span className="pl-4 text-xl text-[#fe3a40]">10%</span>
+                    </p>
+                    <div className="flex items-center gap-[26px] pt-1.5">
+                      <div className="flex items-center gap-1">
+                        <Image className="pb-1" src="/product_rlt_star_ico.png" width={16} height={16} alt=""></Image>
+                        <span className="text-[14px] font-bold">4.7</span>
+                        <span className="text-[14px] text-[#999999]">(150)</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <Image src="/product_rlt_heart_ico.png" width={15} height={12} alt=""></Image>
+                        <span className="text-[14px] text-[#555555]">764</span>
+                      </div>
+                    </div>
+                  </div>
+                </SwiperSlide>
+                <SwiperSlide>
+                  <div className="flex flex-col">
+                    <Image src="/product_rlt_img_01.png" width={224} height={225} alt="1"></Image>
+                    <p className="font-bold">Damage Care Perfect Serum Original (New) - 80ml</p>
+                    <p className="pt-1">
+                      <span className="line-through text-[15px] text-[#bbbbbb]">A$19.65</span>
+                      <span className="pl-2 text-lg">A$16.25</span>
+                      <span className="pl-4 text-xl text-[#fe3a40]">10%</span>
+                    </p>
+                    <div className="flex items-center gap-[26px] pt-1.5">
+                      <div className="flex items-center gap-1">
+                        <Image className="pb-1" src="/product_rlt_star_ico.png" width={16} height={16} alt=""></Image>
+                        <span className="text-[14px] font-bold">4.7</span>
+                        <span className="text-[14px] text-[#999999]">(150)</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <Image src="/product_rlt_heart_ico.png" width={15} height={12} alt=""></Image>
+                        <span className="text-[14px] text-[#555555]">764</span>
+                      </div>
+                    </div>
+                  </div>
+                </SwiperSlide>
+                <SwiperSlide>
+                  <div className="flex flex-col">
+                    <Image src="/product_rlt_img_01.png" width={224} height={225} alt="1"></Image>
+                    <p className="font-bold">Damage Care Perfect Serum Original (New) - 80ml</p>
+                    <p className="pt-1">
+                      <span className="line-through text-[15px] text-[#bbbbbb]">A$19.65</span>
+                      <span className="pl-2 text-lg">A$16.25</span>
+                      <span className="pl-4 text-xl text-[#fe3a40]">10%</span>
+                    </p>
+                    <div className="flex items-center gap-[26px] pt-1.5">
+                      <div className="flex items-center gap-1">
+                        <Image className="pb-1" src="/product_rlt_star_ico.png" width={16} height={16} alt=""></Image>
+                        <span className="text-[14px] font-bold">4.7</span>
+                        <span className="text-[14px] text-[#999999]">(150)</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <Image src="/product_rlt_heart_ico.png" width={15} height={12} alt=""></Image>
+                        <span className="text-[14px] text-[#555555]">764</span>
+                      </div>
+                    </div>
+                  </div>
+                </SwiperSlide>
+                <SwiperSlide>
+                  <div className="flex flex-col">
+                    <Image src="/product_rlt_img_01.png" width={224} height={225} alt="1"></Image>
+                    <p className="font-bold">Damage Care Perfect Serum Original (New) - 80ml</p>
+                    <p className="pt-1">
+                      <span className="line-through text-[15px] text-[#bbbbbb]">A$19.65</span>
+                      <span className="pl-2 text-lg">A$16.25</span>
+                      <span className="pl-4 text-xl text-[#fe3a40]">10%</span>
+                    </p>
+                    <div className="flex items-center gap-[26px] pt-1.5">
+                      <div className="flex items-center gap-1">
+                        <Image className="pb-1" src="/product_rlt_star_ico.png" width={16} height={16} alt=""></Image>
+                        <span className="text-[14px] font-bold">4.7</span>
+                        <span className="text-[14px] text-[#999999]">(150)</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <Image src="/product_rlt_heart_ico.png" width={15} height={12} alt=""></Image>
+                        <span className="text-[14px] text-[#555555]">764</span>
+                      </div>
+                    </div>
+                  </div>
+                </SwiperSlide>
+                <SwiperSlide>
+                  <div className="flex flex-col">
+                    <Image src="/product_rlt_img_01.png" width={224} height={225} alt="1"></Image>
+                    <p className="font-bold">Damage Care Perfect Serum Original (New) - 80ml</p>
+                    <p className="pt-1">
+                      <span className="line-through text-[15px] text-[#bbbbbb]">A$19.65</span>
+                      <span className="pl-2 text-lg">A$16.25</span>
+                      <span className="pl-4 text-xl text-[#fe3a40]">10%</span>
+                    </p>
+                    <div className="flex items-center gap-[26px] pt-1.5">
+                      <div className="flex items-center gap-1">
+                        <Image className="pb-1" src="/product_rlt_star_ico.png" width={16} height={16} alt=""></Image>
+                        <span className="text-[14px] font-bold">4.7</span>
+                        <span className="text-[14px] text-[#999999]">(150)</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <Image src="/product_rlt_heart_ico.png" width={15} height={12} alt=""></Image>
+                        <span className="text-[14px] text-[#555555]">764</span>
+                      </div>
+                    </div>
+                  </div>
+                </SwiperSlide>
+              </Swiper>
+              <button className="absolute top-1/4 left-[-56px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_prev.png')]" onClick={() => swiperRef.current?.slidePrev()}></button>
+              <button className="absolute top-1/4 right-[-56px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_next.png')]" onClick={() => swiperRef.current?.slideNext()}></button>
             </div>
           </div>
         </div>
