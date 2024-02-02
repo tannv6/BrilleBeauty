@@ -36,6 +36,7 @@ export default function HairBody() {
                 ]}
                 onChange={() => {}}
                 activeItem={1}
+                className="w-[220px]"
               />
               <Dropdown
                 options={[
@@ -44,6 +45,7 @@ export default function HairBody() {
                 ]}
                 onChange={() => {}}
                 activeItem={1}
+                className="w-[220px]"
               />
             </div>
             <div className="grid grid-cols-4 gap-x-5 gap-y-[30px]">

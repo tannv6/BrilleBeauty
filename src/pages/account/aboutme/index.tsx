@@ -1,14 +1,13 @@
 import Layout from "@/components/Layout";
 import MypageNav from "@/components/MypageNav";
 import SubNav from "@/components/SubNav";
-import Link from "next/link";
 
-export default function Account() {
+export default function AboutMe() {
   return (
     <>
       <Layout>
         <div id="main">
-          <SubNav title="My Account" />
+          <SubNav title1="My Account" title2="About Me"/>
           <div className="inner-container mt-[75px] mb-[135px]">
             <div className="flex flex-row gap-[60px]">
               <MypageNav></MypageNav>
