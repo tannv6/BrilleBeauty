@@ -16,14 +16,14 @@ function getFileExtension(filename: string) {
 const saveFile = async (file: formidable.File) => {
   const data = fs.readFileSync(file.filepath);
   await fs.writeFileSync(
-    `./public/products/${file.newFilename}.${getFileExtension(
+    `./public/uploads/products/${file.newFilename}.${getFileExtension(
       file.originalFilename || ""
     )}`,
     data
   );
   await fs.unlinkSync(file.filepath);
   return {
-    ufile: `/products/${file.newFilename}.${getFileExtension(
+    ufile: `/uploads/products/${file.newFilename}.${getFileExtension(
       file.originalFilename || ""
     )}`,
     rfile: file.originalFilename,

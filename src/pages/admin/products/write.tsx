@@ -25,16 +25,16 @@ export const getServerSideProps = (async () => {
 }) satisfies GetServerSideProps<{ categories: any }>;
 function ProductWrite({ categories }: any) {
   const router = useRouter();
-  const [product, setProduct] = useState({
+  const [product, setProduct] = useState<{[key: string] : any}>({
     ProductName: "",
     InitPrice: "",
     SellPrice: "",
     Description: "",
     SaleDate: "",
     SaleEndDate: "",
-    IsBest: "",
-    IsBigSale: "",
-    IsNew: "",
+    IsBest: 0,
+    IsBigSale: 0,
+    IsNew: 0,
     ProductImage: "",
     CategoryID: "0",
   });
@@ -299,41 +299,7 @@ function ProductWrite({ categories }: any) {
                   scope="row"
                   className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap dark:text-white"
                 >
-                  Original Price
-                </th>
-                <td className="px-6 py-4">
-                  <input
-                    type="text"
-                    name="InitPrice"
-                    id="InitPrice"
-                    value={product.InitPrice}
-                    onChange={handleChange}
-                    className="h-[40px] outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  />
-                </td>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Sell Price
-                </th>
-                <td className="px-6 py-4">
-                  <input
-                    type="text"
-                    name="SellPrice"
-                    id="SellPrice"
-                    value={product.SellPrice}
-                    onChange={handleChange}
-                    className="h-[40px] outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  />
-                </td>
-              </tr>
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Detail Images
+                  Description
                 </th>
                 <td className="px-6 py-2" colSpan={3}>
                   <textarea
