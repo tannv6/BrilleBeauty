@@ -55,7 +55,7 @@ export default function Login() {
                                 <input className="w-[22px] h-[22px] rounded appearance-none border checked:bg-[url('/checkbox_customer.png')] checked:border-0 cursor-pointer" type="checkbox" id="save" />
                                 <label htmlFor="save" className='text-[16px] font-medium text-[#252525]'> Save ID</label>
                             </div>
-                            <Link href={""}>
+                            <Link href={"/find_id"}>
                                 <p className='text-[16px] font-medium text-[#454545]'>Forgot Your Password?</p>
                             </Link>
                         </div>
@@ -131,13 +131,13 @@ export default function Login() {
                         </div>
                         <div className="mt-[30px]">
                             <div className='flex gap-2'>
-                                <input className="w-[22px] h-[22px] rounded appearance-none border checked:bg-[url('/checkbox_customer.png')] checked:border-0 cursor-pointer" type="checkbox" id="save" />
-                                <label htmlFor="save" className='text-[16px] font-medium text-[#252525]'> By creating an account, you confirm that you agree to beauty.coms <br />
+                                <input className="w-[22px] h-[22px] rounded appearance-none border checked:bg-[url('/checkbox_customer.png')] checked:border-0 cursor-pointer" type="checkbox" id="policy" />
+                                <label htmlFor="policy" className='text-[16px] font-medium text-[#252525]'> By creating an account, you confirm that you agree to beauty.coms <br />
                                     Terms and Conditions and Privacy Policy.</label>
                             </div>
                             <div className='flex gap-2 items-center mt-2'>
-                                <input className="w-[22px] h-[22px] rounded appearance-none border checked:bg-[url('/checkbox_customer.png')] checked:border-0 cursor-pointer" type="checkbox" id="save" />
-                                <label htmlFor="save" className='text-[16px] font-medium text-[#252525]'> Sign Up for Newsletter</label>
+                                <input className="w-[22px] h-[22px] rounded appearance-none border checked:bg-[url('/checkbox_customer.png')] checked:border-0 cursor-pointer" type="checkbox" id="sign" />
+                                <label htmlFor="sign" className='text-[16px] font-medium text-[#252525]'> Sign Up for Newsletter</label>
                             </div>
                         </div>
                         <Link href={""}>

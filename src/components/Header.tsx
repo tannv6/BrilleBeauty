@@ -60,7 +60,7 @@ export default function Header() {
           >
             Brands
           </Link>
-          <div className="absolute hidden top-[51px] left-0 transform min-[1920px]:-translate-x-[35%] 2xl:-translate-x-[31%] bg-white w-full xl:w-[100vw] h-[322px] group-hover:block z-[100] border-b boder-gray-200">
+          <div className="absolute hidden top-[49px] left-0 transform min-[1920px]:-translate-x-[35%] 2xl:-translate-x-[31%] bg-white w-full xl:w-[100vw] h-[322px] group-hover:block z-[100] border-b boder-gray-200 border-t">
             <div className="inner-container">
               {/* <div className="flex items-end justify-end w-full">
                 <Image src="/close_ic.png" alt="" width={50} height={50}/>
@@ -128,7 +128,7 @@ export default function Header() {
             href={"/face"}>
             Face
           </Link>
-          <div className="absolute hidden top-[51px] left-0 transform min-[1920px]:-translate-x-[40%] transform 2xl:-translate-x-[38%] bg-white w-full xl:w-[100vw] h-[400px] group-hover:block z-[100] border-b boder-gray-200">
+          <div className="absolute hidden top-[49px] left-0 transform min-[1920px]:-translate-x-[40%] transform 2xl:-translate-x-[38%] bg-white w-full xl:w-[100vw] h-[400px] group-hover:block z-[100] border-b boder-gray-200 border-t">
             <div className="inner-container flex gap-[150px] mt-[55px]">
                 <div>
                   <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">Facecare</h3>
@@ -168,7 +168,7 @@ export default function Header() {
           >
             Eyes & Lips
           </Link>
-          <div className="absolute hidden top-[51px] left-0 transform min-[1920px]:-translate-x-[44%] 2xl:-translate-x-[43%] bg-white w-full xl:w-[100vw] h-[400px] group-hover:block z-[100] border-b boder-gray-200">
+          <div className="absolute hidden top-[49px] left-0 transform min-[1920px]:-translate-x-[44%] 2xl:-translate-x-[43%] bg-white w-full xl:w-[100vw] h-[400px] group-hover:block z-[100] border-b boder-gray-200 border-t">
             <div className="inner-container flex gap-[150px] mt-[55px]">
                 <div>
                   <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">Eye Care</h3>
@@ -210,7 +210,7 @@ export default function Header() {
           >
             Hair & Body
           </Link>
-          <div className="absolute hidden top-[51px] left-0 transform 2xl:-translate-x-[51%] bg-white w-full xl:w-[100vw] h-[400px] group-hover:block z-[100] border-b boder-gray-200">
+          <div className="absolute hidden top-[49px] left-0 transform 2xl:-translate-x-[51%] bg-white w-full xl:w-[100vw] h-[400px] group-hover:block z-[100] border-b boder-gray-200 border-t">
             <div className="inner-container flex gap-[150px] mt-[55px]">
                 <div>
                   <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">Body</h3>
@@ -248,7 +248,7 @@ export default function Header() {
             href={"/tools"}>
             Tools
           </Link>
-          <div className="absolute hidden top-[51px] left-0 transform min-[1920px]:-translate-x-[58%] 2xl:-translate-x-[60%] bg-white w-full xl:w-[100vw] h-[430px] group-hover:block z-[100] border-b boder-gray-200">
+          <div className="absolute hidden top-[49px] left-0 transform min-[1920px]:-translate-x-[58%] 2xl:-translate-x-[60%] bg-white w-full xl:w-[100vw] h-[430px] group-hover:block z-[100] border-b boder-gray-200 border-t">
             <div className="inner-container flex gap-[150px] mt-[55px]">
                 <div>
                   <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">Hair & Body Tools</h3>
@@ -287,7 +287,7 @@ export default function Header() {
             href={""}>
             Sales
           </Link>
-          <div className="absolute hidden top-[51px] left-0 transform min-[1920px]:-translate-x-[63%] 2xl:-translate-x-[66%] bg-white w-full xl:w-[100vw] h-[420px] group-hover:block z-[100] border-b boder-gray-200">
+          <div className="absolute hidden top-[49px] left-0 transform min-[1920px]:-translate-x-[63%] 2xl:-translate-x-[66%] bg-white w-full xl:w-[100vw] h-[420px] group-hover:block z-[100] border-b boder-gray-200 border-t">
             <div className="inner-container flex gap-[70px] mt-[55px]">
                 <div>
                   <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">Last Minute Sale </h3>
