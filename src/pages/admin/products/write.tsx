@@ -141,10 +141,12 @@ function ProductWrite({ categories }: any) {
                   SaleDate
                 </th>
                 <td className="px-6 py-2">
-                  <div className="flex items-center">
+                  <div className="flex items-center gap-1">
                     <DatePicker
-                      dateFormat={"yyyy-MM-DD"}
-                      className="inline-flex border h-[35px] px-2 w-[150px]"
+                      showIcon
+                      dateFormat={"yyyy-MM-dd"}
+                      className="inline-flex items-center border h-[35px] px-2 w-[150px] ouline-0"
+                      calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
                       selected={
                         product.SaleDate
                           ? new Date(product.SaleDate)
@@ -161,8 +163,10 @@ function ProductWrite({ categories }: any) {
                     />
                     ~
                     <DatePicker
-                      dateFormat={"yyyy-MM-DD"}
+                      showIcon
+                      dateFormat={"yyyy-MM-dd"}
                       className="inline-flex border h-[35px] px-2 w-[150px]"
+                      calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
                       selected={
                         product.SaleEndDate
                           ? new Date(product.SaleEndDate)
