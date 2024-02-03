@@ -23,7 +23,7 @@ const saveFile = async (file: formidable.File) => {
   );
   await fs.unlinkSync(file.filepath);
   return {
-    ufile: `/uploads/products/${file.newFilename}.${getFileExtension(
+    ufile: `/products/${file.newFilename}.${getFileExtension(
       file.originalFilename || ""
     )}`,
     rfile: file.originalFilename,

@@ -4,6 +4,7 @@ import { GetServerSideProps } from "next";
 import connectDB from "@/app/db";
 import Link from "next/link";
 import Image from "next/image";
+const CDN_URL = process.env.CDN_URL;
 export const getServerSideProps = (async () => {
   const connect = await connectDB();
   const [response] = await connect.execute("SELECT * FROM products");
@@ -56,7 +57,7 @@ function list({ response }: any) {
                     <td className="py-3 px-4">{e.ProductID}</td>
                     <td className="py-3 px-4">
                       <Image
-                        src={e.ProductImage}
+                        src={`${CDN_URL}/${e.ProductImage}`}
                         alt=""
                         width={100}
                         height={100}
