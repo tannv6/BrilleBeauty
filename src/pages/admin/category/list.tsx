@@ -6,7 +6,7 @@ import { GetServerSideProps } from "next";
 
 export const getServerSideProps = (async () => {
   const connect = await connectDB();
-  const [response] = await connect.execute("SELECT * FROM menu");
+  const [response] = await connect.execute("SELECT * FROM categories WHERE Level = 1");
   return {
     props: {
       response: (response as Array<any>).map((e) => ({
@@ -38,12 +38,12 @@ function list({ response }: any) {
               {response.map((e: any, i: any) => {
                 return (
                   <tr key={i} className="border-b border-blue-gray-200">
-                    <td className="py-3 px-4">{e.MenuID}</td>
-                    <td className="py-3 px-4">{e.MenuName}</td>
+                    <td className="py-3 px-4">{e.CategoryID}</td>
+                    <td className="py-3 px-4">{e.CategoryName}</td>
                     <td className="py-3 px-4">{1}</td>
                     <td className="py-3 px-4">
                       <Link
-                        href=""
+                        href={`/admin/category/write/${e.CategoryID}`}
                         className="font-medium text-blue-600 hover:text-blue-800"
                       >
                         Edit

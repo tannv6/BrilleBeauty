@@ -4,7 +4,7 @@ import { GetServerSideProps } from "next";
 import connectDB from "@/app/db";
 import Link from "next/link";
 import Image from "next/image";
-const CDN_URL = process.env.CDN_URL;
+const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 export const getServerSideProps = (async () => {
   const connect = await connectDB();
   const [response] = await connect.execute("SELECT * FROM products");

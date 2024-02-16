@@ -285,7 +285,7 @@ export default function Header() {
           <Link 
             className={`${pathname === '/sales' ? 'gnb_active' : ''} text-18 tracking-wide leading-[50px] text-gray-700`}
             href={""}>
-            Sales
+            Combo
           </Link>
           <div className="absolute hidden top-[49px] left-0 transform min-[1920px]:-translate-x-[63%] 2xl:-translate-x-[66%] bg-white w-full xl:w-[100vw] h-[420px] group-hover:block z-[100] border-b boder-gray-200 border-t">
             <div className="inner-container flex gap-[70px] mt-[55px]">
