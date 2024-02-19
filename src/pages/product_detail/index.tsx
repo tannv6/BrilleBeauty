@@ -19,7 +19,7 @@ export default function Face() {
     <>
       <Layout>
         <div id="main">
-          <SubNav title="Damage Care Perfect Serum Original (New) - 80ml"/>
+          <SubNav title1="Damage Care Perfect Serum Original (New) - 80ml"/>
           <div className="inner-container mt-[70px] mb-[60px]">
             <div className="flex flex-row justify-between">
               <div className="basis-[556px]">
