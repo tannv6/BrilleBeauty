@@ -1,0 +1,50 @@
+.level1::after {
+
+}
+.level2:not(:nth-last-child(1))::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    background-color: #dddddd;
+    height: 100%;
+}
+.level2::after {
+    content: "";
+    display: block;
+    width: 20px;
+    height: 35px;
+    border: 1px solid #dddddd;
+    border-width: 0 0 1px 1px;
+    border-radius: 0 0 0 6px;
+    position: absolute;
+    top: -20px;
+    left: 0;
+    z-index: 12;
+}
+
+.level3:not(:nth-last-child(1))::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    background-color: #eeeeee;
+    height: 100%;
+}
+.level3::after {
+    content: "";
+    display: block;
+    width: 20px;
+    height: 35px;
+    border: 1px solid #eeeeee;
+    border-width: 0 0 1px 1px;
+    border-radius: 0 0 0 6px;
+    position: absolute;
+    top: -20px;
+    left: 0;
+    z-index: 12;
+}
