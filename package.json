@@ -9,9 +9,10 @@
     "lint": "next lint",
     "deploy": "pm2 startOrRestart ecosystem.config.js",
     "deploy:production": "pm2 startOrRestart ecosystem.config.js --env production",
-    "prod": "npm run build && npm run deploy:production",
+    "prod": "npm run kill && npm run build && npm run deploy:production",
     "down": "pm2 stop brillebeauty",
-    "status": "pm2 status"
+    "status": "pm2 status",
+    "kill": "pm2 kill"
   },
   "dependencies": {
     "@types/react-datepicker": "^4.19.5",
