@@ -2,14 +2,16 @@ export const listMenu = [
   {
     id: 1,
     label: "Category",
+    mapLinks: ["/admin/category"],
     children: [
       { id: 1, label: "Categories List", link: "/admin/category/list" },
-      { id: 2, label: "Add Category", link: "" },
+      { id: 2, label: "Add Category", link: "/admin/category/write" },
     ],
   },
   {
     id: 2,
     label: "Products",
+    mapLinks: ["/admin/products"],
     children: [
       { id: 1, label: "Products List", link: "/admin/products/list" },
       { id: 2, label: "Add Product", link: "/admin/products/write" },

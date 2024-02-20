@@ -3,8 +3,13 @@ import Head from "next/head";
 import Link from "next/link";
 import "@/app/globals.css";
 import { listMenu } from "@/utils/constants";
+import { usePathname } from "next/navigation";
 function Layout({ children }: any) {
-  const [activeMenu, setActiveMenu] = useState(0);
+  const location = usePathname();
+  const initMenu = listMenu.find((e) =>
+    e.mapLinks?.find((e1) => location?.includes(e1))
+  );
+  const [activeMenu, setActiveMenu] = useState(initMenu?.id || 0);
   const handleChangeMenu = (id: number) => {
     if (activeMenu == id) {
       setActiveMenu(0);
@@ -16,11 +21,11 @@ function Layout({ children }: any) {
     <>
       <Head>
         <title>Brille Beauty CMS</title>
-        <link
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
-          rel="stylesheet"
-        />
       </Head>
+      <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+        rel="stylesheet"
+      />
       <nav className="bg-blue-500 p-4 flex items-center justify-between">
         <div>
           <h1 className="text-white text-xl font-semibold">Brille Beauty</h1>

@@ -6,7 +6,9 @@ import { GetServerSideProps } from "next";
 
 export const getServerSideProps = (async () => {
   const connect = await connectDB();
-  const [response] = await connect.execute("SELECT * FROM categories WHERE Level = 1");
+  const [response] = await connect.execute(
+    "SELECT * FROM categories WHERE Level = 1 AND DeletedAt IS NULL"
+  );
   return {
     props: {
       response: (response as Array<any>).map((e) => ({
