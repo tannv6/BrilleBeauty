@@ -42,10 +42,12 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       SellPrice,
       Description,
       SaleDate,
-      IsBest=0,
-      IsBigSale=0,
-      IsNew=0,
-      CategoryID,
+      IsBest = 0,
+      IsBigSale = 0,
+      IsNew = 0,
+      CategoryID1,
+      CategoryID2,
+      CategoryID3,
       SaleEndDate,
     } = fields;
 
@@ -66,13 +68,14 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     IsBigSale = ${IsBigSale}, 
     IsNew = ${IsNew},
     ProductImage = '${ProductImage}',
-    CategoryID = '${CategoryID}'`;
-    
+    CategoryID = '${CategoryID3 || CategoryID2 || CategoryID1}'`;
+
     const [results] = await connect.execute(query);
     const lastInsertedId = (results as any).insertId;
     let queryImage = "";
     if (detailImages && detailImages?.length > 0) {
-      queryImage += "INSERT INTO productimages(ProductID,ImageURL, FileName) VALUES ";
+      queryImage +=
+        "INSERT INTO productimages(ProductID,ImageURL, FileName) VALUES ";
       for (let index = 0; index < detailImages.length; index++) {
         const imgName = await saveFile(detailImages[index]);
         if (index > 0) {

@@ -7,7 +7,7 @@ export default async function handle(
 ) {
   try {
     const connect = await connectDB();
-    const query = `select * from menu;`;
+    const query = `select * from categories where DeletedAt is null;`;
     const [result] = await connect.execute(query);
     return res.status(200).json({ data: result });
   } catch (error) {

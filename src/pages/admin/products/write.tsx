@@ -2,9 +2,7 @@ import React, { FormEvent, useState } from "react";
 import Layout from "../components/Layout";
 import Dropdown from "@/components/Dropdown";
 import axios from "axios";
-import connectDB from "@/app/db";
 import { GetServerSideProps } from "next";
-import { convertDatesToNumbers } from "@/utils/function";
 import Checkbox from "../components/Checkbox";
 import { useRouter } from "next/router";
 import DatePicker from "react-datepicker";
@@ -12,20 +10,53 @@ import dateFormat from "dateformat";
 
 import "react-datepicker/dist/react-datepicker.css";
 export const getServerSideProps = (async () => {
-  const connect = await connectDB();
-  const [categories] = await connect.execute("SELECT * FROM menu");
+  const result = await axios.get("http://localhost:3000/api/category/list");
+
+  const categories = result.data.data;
+
+  const catObject: any = {
+    level1: [],
+    level2: [],
+    level3: [],
+  };
+
+  categories.forEach((e: any, i: any) => {
+    if (e.Level === 1) {
+      catObject.level1.push({
+        ...e,
+        id: e.CategoryID,
+        name: e.CategoryName,
+      });
+    } else if (e.Level === 2) {
+      catObject.level2.push({
+        ...e,
+        id: e.CategoryID,
+        name: e.CategoryName,
+      });
+    } else if (e.Level === 3) {
+      catObject.level3.push({
+        ...e,
+        id: e.CategoryID,
+        name: e.CategoryName,
+      });
+    }
+  });
+
   return {
     props: {
-      categories: convertDatesToNumbers(categories).map((e: any) => ({
-        id: e.MenuID,
-        name: e.MenuName,
-      })),
+      catObject,
+      categories: [],
     },
   };
-}) satisfies GetServerSideProps<{ categories: any }>;
-function ProductWrite({ categories }: any) {
+}) satisfies GetServerSideProps<{ categories: any; catObject: any }>;
+function ProductWrite({ catObject, categories }: any) {
+  const { level1, level2, level3 } = catObject;
+
+  const [level2List, setLevel2List] = useState([]);
+  const [level3List, setLevel3List] = useState([]);
+
   const router = useRouter();
-  const [product, setProduct] = useState<{[key: string] : any}>({
+  const [product, setProduct] = useState<{ [key: string]: any }>({
     ProductName: "",
     InitPrice: "",
     SellPrice: "",
@@ -36,7 +67,9 @@ function ProductWrite({ categories }: any) {
     IsBigSale: 0,
     IsNew: 0,
     ProductImage: "",
-    CategoryID: "0",
+    CategoryID1: "0",
+    CategoryID2: "0",
+    CategoryID3: "0",
   });
 
   const [detailImage, setDetailImage] = useState<any[]>([]);
@@ -80,6 +113,24 @@ function ProductWrite({ categories }: any) {
     }
   }
 
+  const handleChangeCate = (level: number, id: number) => {
+    if (level === 1) {
+      setProduct({
+        ...product,
+        CategoryID1: id,
+        CategoryID2: 0,
+        CategoryID3: 0,
+      });
+      setLevel2List(level2.filter((e: any) => e.ParentID === id));
+    }
+    if (level === 2) {
+      setProduct({ ...product, CategoryID2: id, CategoryID3: 0 });
+      setLevel3List(level3.filter((e: any) => e.ParentID === id));
+    }
+    if (level === 3) {
+    }
+  };
+
   return (
     <Layout>
       <h1 className="text-2xl font-bold mb-4">Add New Product</h1>
@@ -122,17 +173,37 @@ function ProductWrite({ categories }: any) {
                   Category
                 </th>
                 <td className="px-6 py-2">
-                  <Dropdown
-                    containerClassName="w-[150px]"
-                    className="w-full h-[40px] rounded-md"
-                    options={categories}
-                    onChange={(id: number) => {
-                      handleChange({
-                        target: { name: "CategoryID", value: id },
-                      });
-                    }}
-                    activeItem={Number(product.CategoryID)}
-                  />
+                  <div className="flex gap-1">
+                    <Dropdown
+                      containerClassName="w-[150px]"
+                      className="w-full h-[40px] rounded-md"
+                      options={level1}
+                      onChange={(id: number) => {
+                        handleChangeCate(1, id);
+                      }}
+                      activeItem={Number(product.CategoryID1)}
+                    />
+                    <Dropdown
+                      containerClassName="w-[150px]"
+                      className="w-full h-[40px] rounded-md"
+                      options={level2List}
+                      onChange={(id: number) => {
+                        handleChangeCate(2, id);
+                      }}
+                      activeItem={Number(product.CategoryID2)}
+                    />
+                    <Dropdown
+                      containerClassName="w-[150px]"
+                      className="w-full h-[40px] rounded-md"
+                      options={level3List}
+                      onChange={(id: number) => {
+                        handleChange({
+                          target: { name: "CategoryID3", value: id },
+                        });
+                      }}
+                      activeItem={Number(product.CategoryID3)}
+                    />
+                  </div>
                 </td>
                 <th
                   scope="row"

@@ -26,7 +26,7 @@ function Dropdown({ className,options, activeItem, onChange, containerClassName 
         {options.map((e, i) => {
           return (
             <li onMouseDown={()=>handleClick(e.id)} key={i}>
-              <span className="cursor-pointer bg-gray-200 hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap">
+              <span className={`${e.id === activeItem ? "bg-blue-500 text-white" : "bg-gray-200"} cursor-pointer hover:bg-gray-400 py-2 px-4 block whitespace-no-wrap`}>
                 {e.name}
               </span>
             </li>
