@@ -10,6 +10,15 @@ export const listMenu = [
   },
   {
     id: 2,
+    label: "Brand",
+    mapLinks: ["/admin/brand"],
+    children: [
+      { id: 1, label: "Brand List", link: "/admin/brand/list" },
+      { id: 2, label: "Add Brand", link: "/admin/brand/write" },
+    ],
+  },
+  {
+    id: 3,
     label: "Products",
     mapLinks: ["/admin/products"],
     children: [
@@ -18,12 +27,12 @@ export const listMenu = [
     ],
   },
   {
-    id: 3,
+    id: 4,
     label: "Orders",
     children: [{ id: 1, label: "Orders List", link: "" }],
   },
   {
-    id: 4,
+    id: 5,
     label: "Customers",
     children: [{ id: 1, label: "Customers List", link: "" }],
   },
