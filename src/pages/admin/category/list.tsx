@@ -3,6 +3,7 @@ import Layout from "../components/Layout";
 import Link from "next/link";
 import connectDB from "@/app/db";
 import { GetServerSideProps } from "next";
+import axios from "axios";
 
 export const getServerSideProps = (async () => {
   const connect = await connectDB();
@@ -22,6 +23,17 @@ export const getServerSideProps = (async () => {
 }) satisfies GetServerSideProps<{ response: any }>;
 
 function list({ response }: any) {
+  const handleDelete = async (id: number) => {
+    const data = {
+      del: [{ CategoryID: id }],
+    };
+    if (confirm("Are you sure delete this category?")) {
+      await axios.post(`/api/category/update`, {
+        data,
+      });
+      window.location.reload();
+    }
+  };
   return (
     <Layout>
       <h1 className="text-2xl font-bold mb-4">Category List</h1>
@@ -44,12 +56,20 @@ function list({ response }: any) {
                     <td className="py-3 px-4">{e.CategoryName}</td>
                     <td className="py-3 px-4">{1}</td>
                     <td className="py-3 px-4">
-                      <Link
-                        href={`/admin/category/write/${e.CategoryID}`}
-                        className="font-medium text-blue-600 hover:text-blue-800"
-                      >
-                        Edit
-                      </Link>
+                      <div className="flex gap-1">
+                        <Link
+                          href={`/admin/category/write/${e.CategoryID}`}
+                          className="font-medium text-blue-600 hover:text-blue-800"
+                        >
+                          Edit
+                        </Link>
+                        <button
+                          className="text-red-500"
+                          onClick={() => handleDelete(e.CategoryID)}
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );

@@ -260,7 +260,7 @@ function ProductWrite({ catObject, categories }: any) {
                   scope="row"
                   className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
                 >
-                  Image
+                  Thumbnail Image
                 </th>
                 <td className="px-6 py-2" colSpan={3}>
                   <input

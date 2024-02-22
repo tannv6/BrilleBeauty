@@ -8,7 +8,6 @@ export default async function handle(
   try {
     const { data } = req.body;
     const connect = await connectDB();
-    console.log(data);
     let queryUpdate = "";
     let queryDelete = "";
     let queryNew = "";
