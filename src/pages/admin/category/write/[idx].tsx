@@ -153,7 +153,7 @@ function Write({ data, idx }: any) {
           <div className="level1">
             <input
               type="text"
-              className="border rounded p-1"
+              className="border rounded p-1 w-[220px] bg-pink-100"
               value={categories?.CategoryName}
               onChange={(e) => handleChange(e, 1)}
             />
@@ -171,11 +171,11 @@ function Write({ data, idx }: any) {
                 return (
                   <div
                     className="level2 relative"
-                    style={{ marginLeft: 100, marginTop: 20 }}
+                    style={{ marginLeft: 110, marginTop: 20 }}
                     key={i}
                   >
                     <input
-                      className="border rounded p-1 ms-[20px]"
+                      className="border rounded p-1 ms-[110px] w-[220px] bg-blue-100"
                       type="text"
                       value={el.CategoryName}
                       onChange={(e) => handleChange(e, 2, el.CategoryID)}
@@ -199,12 +199,12 @@ function Write({ data, idx }: any) {
                           return (
                             <div
                               className="level3 relative"
-                              style={{ marginLeft: 100, marginTop: 20 }}
+                              style={{ marginLeft: 110, marginTop: 20 }}
                               key={i1}
                             >
                               <input
                                 type="text"
-                                className="border rounded p-1 ms-[20px]"
+                                className="border rounded p-1 ms-[220px] w-[220px] bg-cyan-100"
                                 value={e1.CategoryName}
                                 onChange={(e) =>
                                   handleChange(
