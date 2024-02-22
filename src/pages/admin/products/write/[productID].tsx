@@ -1,14 +1,13 @@
 import React, { FormEvent, useState } from "react";
-import Layout from "../components/Layout";
 import Dropdown from "@/components/Dropdown";
 import axios from "axios";
-import { GetServerSideProps } from "next";
-import Checkbox from "../components/Checkbox";
 import { useRouter } from "next/router";
 import DatePicker from "react-datepicker";
 import dateFormat from "dateformat";
 
 import "react-datepicker/dist/react-datepicker.css";
+import Layout from "../../components/Layout";
+import Checkbox from "../../components/Checkbox";
 export const getServerSideProps = async (context: { params: any }) => {
   const { params } = context;
   const { productID } = params;
@@ -53,27 +52,24 @@ export const getServerSideProps = async (context: { params: any }) => {
   return {
     props: {
       catObject,
-      categories: [],
       productDetail: productDetail.data,
     },
   };
 };
-function ProductWrite({ catObject, categories, productDetail }: any) {
+function ProductWrite({ catObject, productDetail }: any) {
   const { level1, level2, level3 } = catObject;
-
-  console.log(productDetail);
 
   const [level2List, setLevel2List] = useState([]);
   const [level3List, setLevel3List] = useState([]);
 
   const router = useRouter();
   const [product, setProduct] = useState<{ [key: string]: any }>({
-    ProductName: productDetail.ProductName || "",
-    InitPrice: productDetail.InitPrice || "",
-    SellPrice: productDetail.SellPrice || "",
-    Description: productDetail.Description || "",
-    SaleDate: productDetail.SaleDate || "",
-    SaleEndDate: productDetail.SaleEndDate || "",
+    ProductName: productDetail?.ProductName || "",
+    InitPrice: productDetail?.InitPrice || "",
+    SellPrice: productDetail?.SellPrice || "",
+    Description: productDetail?.Description || "",
+    SaleDate: productDetail?.SaleDate || "",
+    SaleEndDate: productDetail?.SaleEndDate || "",
     IsBest: 0,
     IsBigSale: 0,
     IsNew: 0,
