@@ -73,7 +73,7 @@ export default function Header() {
                     placeholder="Please search for brands."
                   />
                   <button type="button"
-                    className="bg-[url('/search_ic.png')] w-[34px] h-[30px] cursor-pointer mr-4">
+                    className="bg-[url('/search_ic.png')] w-[33px] h-[30px] cursor-pointer mr-4">
                   </button>
                 </div>
               </div>

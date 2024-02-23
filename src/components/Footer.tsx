@@ -9,17 +9,17 @@ function Footer() {
         <nav className="inner-container">
           <ul className="flex items-center gap-10">
             <li>
-              <Link href={"/"} className="text-[15px] text-[#454545] font-bold">
+              <Link href={"/info/about"} className="text-[15px] text-[#454545] font-bold">
                 ABOUT BEAUTY
               </Link>
             </li>
             <li>
-              <Link href={"/"} className="text-[15px] text-[#757575]">
+              <Link href={"/info/term"} className="text-[15px] text-[#757575]">
                 TERMS OF USE
               </Link>
             </li>
             <li>
-              <Link href={"/"} className="text-[15px] text-[#757575]">
+              <Link href={"/info/store"} className="text-[15px] text-[#757575]">
                 STORE INFORMATION
               </Link>
             </li>
