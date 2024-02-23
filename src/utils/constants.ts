@@ -20,10 +20,13 @@ export const listMenu = [
   {
     id: 3,
     label: "Products",
-    mapLinks: ["/admin/products"],
+    mapLinks: ["/admin/products", "/admin/combo"],
     children: [
       { id: 1, label: "Products List", link: "/admin/products/list" },
       { id: 2, label: "Add Product", link: "/admin/products/write" },
+      { id: 2, label: "Combo List", link: "/admin/combo/list" },
+      { id: 2, label: "Add Combo", link: "/admin/combo/write" },
+      { id: 2, label: "Option Types", link: "/admin/option_type/list" },
     ],
   },
   {
