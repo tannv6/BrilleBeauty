@@ -8,6 +8,8 @@ import dateFormat from "dateformat";
 import "react-datepicker/dist/react-datepicker.css";
 import Layout from "../../components/Layout";
 import Checkbox from "../../components/Checkbox";
+import Link from "next/link";
+import Input from "../../components/Input";
 export const getServerSideProps = async (context: { params: any }) => {
   const { params } = context;
   const { productID } = params;
@@ -56,7 +58,7 @@ export const getServerSideProps = async (context: { params: any }) => {
     },
   };
 };
-function ProductWrite({ catObject, productDetail }: any) {
+function ProductWrite({ catObject, productDetail, isNew }: any) {
   const { level1, level2, level3 } = catObject;
 
   const [level2List, setLevel2List] = useState([]);
@@ -64,6 +66,7 @@ function ProductWrite({ catObject, productDetail }: any) {
 
   const router = useRouter();
   const [product, setProduct] = useState<{ [key: string]: any }>({
+    ProductID: productDetail?.ProductID || "",
     ProductName: productDetail?.ProductName || "",
     InitPrice: productDetail?.InitPrice || "",
     SellPrice: productDetail?.SellPrice || "",
@@ -77,6 +80,7 @@ function ProductWrite({ catObject, productDetail }: any) {
     CategoryID1: "0",
     CategoryID2: "0",
     CategoryID3: "0",
+    Options: []
   });
 
   const [detailImage, setDetailImage] = useState<any[]>([]);
@@ -113,7 +117,12 @@ function ProductWrite({ catObject, productDetail }: any) {
     detailImage.forEach((e) => {
       formData.append("detailImage[]", e);
     });
-    const response = await axios.post("/api/products/write", formData);
+    let response;
+    if (isNew) {
+      response = await axios.post("/api/products/write", formData);
+    } else {
+      response = await axios.post("/api/products/update", formData);
+    }
 
     if (response.status === 201) {
       router.push("/admin/products/list");
@@ -137,10 +146,24 @@ function ProductWrite({ catObject, productDetail }: any) {
     if (level === 3) {
     }
   };
-
+  console.log(product);
+  const handleAddOption=()=> {
+    const prdNew: any = {};
+    Object.assign(prdNew, product);
+    prdNew.Options.push({
+      PoName: "",
+      PoInitPrice: "",
+      PoSellPrice: "",
+    })
+    setProduct(prdNew);
+  }
   return (
     <Layout>
-      <h1 className="text-2xl font-bold mb-4">Add New Product</h1>
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold mb-4">
+          {isNew ? "Add New Product" : "Edit Product"}
+        </h1>
+      </div>
       <form onSubmit={handleSubmit}>
         <div className="relative overflow-x-auto">
           <table
@@ -280,11 +303,26 @@ function ProductWrite({ catObject, productDetail }: any) {
                 </td>
               </tr>
               <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white">Options</th>
+                <td  className="px-6 py-2">
+                  <button onClick={()=>handleAddOption()} type="button" className="px-5 ms-0 border rounded bg-cyan-400 text-white px-3 py-1">
+                    +
+                  </button>
+                  {
+                    product.Options.map((e:any,i:any)=>{
+                      return <div className={`flex gap-2 ${i>0?"mt-2":""}`} key={i}>
+                        <div>Name <Input name={""} value={e.PoName} width={0} type={"input"} onChange={undefined}/></div>
+                        <Input name={""} value={e.PoInitPrice} width={0} type={"input"} onChange={undefined}/>
+                        <Input name={""} value={e.PoSellPrice} width={0} type={"input"} onChange={undefined}/>
+                      </div>
+                    })
+                  }
+                </td>
                 <th
                   scope="row"
                   className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
                 >
-                  Options
+                  
                 </th>
                 <td className="px-6 py-2">
                   <Checkbox
@@ -398,7 +436,13 @@ function ProductWrite({ catObject, productDetail }: any) {
             </tbody>
           </table>
         </div>
-        <div className="flex justify-center mt-3">
+        <div className="gap-2 flex justify-center mt-3">
+        <Link
+          className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+          href="/admin/products/list"
+        >
+          Back to List
+        </Link>
           <button
             type="submit"
             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"

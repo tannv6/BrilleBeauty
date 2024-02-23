@@ -7,7 +7,7 @@ import Image from "next/image";
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 export const getServerSideProps = (async () => {
   const connect = await connectDB();
-  const [response] = await connect.execute("SELECT * FROM products");
+  const [response] = await connect.execute("SELECT s1.*, s2.CategoryName FROM products s1 inner join categories s2 on s1.CategoryID = s2.CategoryID");
   return {
     props: {
       response: (response as Array<any>).map((e) => ({
@@ -66,7 +66,7 @@ function List({ response }: any) {
                     <td className="py-3 px-4">{e.ProductName}</td>
                     <td className="py-3 px-4">{e.InitPrice}</td>
                     <td className="py-3 px-4">{e.SellPrice}</td>
-                    <td className="py-3 px-4">{e.CategoryID}</td>
+                    <td className="py-3 px-4">{e.CategoryName}</td>
                     <td className="py-3 px-4">
                       <Link
                         href={`/admin/products/write/${e.ProductID}`}

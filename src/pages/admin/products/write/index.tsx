@@ -41,7 +41,7 @@ export const getServerSideProps = async () => {
   };
 };
 function index({ catObject }: any) {
-  return <ProductWrite {...{ catObject }} />;
+  return <ProductWrite {...{ catObject, isNew: true }} />;
 }
 
 export default index;
