@@ -59,7 +59,7 @@ export default function Login() {
                                 <p className='text-[16px] font-medium text-[#454545]'>Forgot Your Password?</p>
                             </Link>
                         </div>
-                        <Link href={""}>
+                        <Link href={"/account"}>
                             <button type='button' className='mt-7 w-full h-[62px] flex items-center justify-center rounded bg-[#f04b76] text-[18px] text-white font-medium'>
                                 Login
                             </button>
