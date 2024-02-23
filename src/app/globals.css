@@ -164,13 +164,25 @@ input[type="radio"] + label:hover span{
 transform: scale(1.2);
 }  */
 
+input[type="radio"] {
+  display: none;
+}
+
 input[type="radio"]:checked + label span {
 background-color: #252525;
 box-shadow: 0px 0px 0px 8px white inset;
 }
 
+input[type="radio"] + label{
+  display: flex;
+  align-items: center;
+  text-wrap: nowrap;
+}
+
 input[type="radio"]:checked + label{
- color: #252525;
+  color: #252525;
+  display: flex;
+  align-items: center;
 }
 
 /* .container-main {

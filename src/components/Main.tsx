@@ -26,8 +26,8 @@ export default function Main() {
                 </div>
             </div>
             <div className="main_ttl text-center">
-                <p className="text-22 tracking-wide leading-8 uppercase text-gray-700 font-bold mb-2.5">BEAUTY COLLECTION </p>
-                <span className="text-18 tracking-wide leading-5 text-gray-500">Shop By Category</span>
+                <p className="text-[22px] tracking-wide leading-8 uppercase text-gray-700 font-bold mb-2.5">BEAUTY COLLECTION </p>
+                <span className="text-[18px] tracking-wide leading-5 text-gray-500">Shop By Category</span>
             </div>
             <div className="grid grid-cols-4 gap-x-5 gap-y-[30px] mt-10">
                 <ProductItem
@@ -120,8 +120,8 @@ export default function Main() {
                 <Image src="/banner_img03.png" alt="" width={1201} height={140} />
             </div>
             <div className="main_ttl text-center">
-                <p className="text-22 tracking-wide leading-8 uppercase text-gray-700 font-bold mb-2.5">SALE </p>
-                <span className="text-18 tracking-wide leading-5 text-gray-500">Shop By Category</span>
+                <p className="text-[22px] tracking-wide leading-8 uppercase text-gray-700 font-bold mb-2.5">SALE </p>
+                <span className="text-[18px] tracking-wide leading-5 text-gray-500">Shop By Category</span>
             </div>
             <div className="grid grid-cols-4 gap-x-5 gap-y-[30px] mt-10">
                 <ProductItem
@@ -211,8 +211,8 @@ export default function Main() {
                 </button>
             </div>
             <div className="main_ttl text-center mt-[100px]">
-                <p className="text-22 tracking-wide leading-8 uppercase text-gray-700 font-bold mb-2.5">Review Board </p>
-                <span className="text-18 tracking-wide leading-5 text-gray-500">Write a review and get 10 points</span>
+                <p className="text-[22px] tracking-wide leading-8 uppercase text-gray-700 font-bold mb-2.5">Review Board </p>
+                <span className="text-[18px] tracking-wide leading-5 text-gray-500">Write a review and get 10 points</span>
             </div>
             <div className="swiper-container relative overflow-hidden">
                 <Swiper
