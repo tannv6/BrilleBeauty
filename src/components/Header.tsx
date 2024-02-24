@@ -62,12 +62,11 @@ export default function Header() {
     <nav className="gnb inner-container">
       <ul className="flex justify-center items-center custom-gap-45 h-[50px] font-medium">
         <li className="relative group">
-          <Link
-            className={`${pathname === '/brands' ? 'gnb_active' : ''} text-18 tracking-wide leading-[50px] text-gray-700`}
-            href={"/brands"}
+          <p
+            className={`text-18 tracking-wide leading-[50px] text-gray-700 select-none`}
           >
             Brands
-          </Link>
+          </p>
           <div className="absolute hidden top-[49px] left-0 transform min-[1920px]:-translate-x-[35%] 2xl:-translate-x-[31%] bg-white w-full xl:w-[100vw] h-[322px] group-hover:block z-[100] border-b boder-gray-200 border-t">
             <div className="inner-container">
               {/* <div className="flex items-end justify-end w-full">
@@ -289,19 +288,19 @@ export default function Header() {
             <div className="inner-container flex gap-[70px] mt-[55px]">
               <div>
                 <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">Last Minute Sale </h3>
-                <Image src="/sale_img01.webp" alt="" width={250} height={250} />
+                <Link href="/search/combo"><Image src="/sale_img01.webp" alt="" width={250} height={250} /></Link>
               </div>
               <div>
                 <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">Clearance Sale</h3>
-                <Image src="/sale_img02.webp" alt="" width={250} height={250} />
+                <Link href="/search/combo"><Image src="/sale_img02.webp" alt="" width={250} height={250} /></Link>
               </div>
               <div>
                 <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">Value Set</h3>
-                <Image src="/sale_img03.webp" alt="" width={250} height={250} />
+                <Link href="/search/combo"><Image src="/sale_img03.webp" alt="" width={250} height={250} /></Link>
               </div>
               <div>
                 <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">Mini Size</h3>
-                <Image src="/sale_img04.webp" alt="" width={250} height={250} />
+                <Link href="/search/combo"><Image src="/sale_img04.webp" alt="" width={250} height={250} /></Link>
               </div>
             </div>
           </div>
