@@ -80,7 +80,7 @@ function ProductWrite({ catObject, productDetail, isNew }: any) {
     CategoryID1: "0",
     CategoryID2: "0",
     CategoryID3: "0",
-    Options: []
+    Options: [],
   });
 
   const [detailImage, setDetailImage] = useState<any[]>([]);
@@ -147,16 +147,40 @@ function ProductWrite({ catObject, productDetail, isNew }: any) {
     }
   };
   console.log(product);
-  const handleAddOption=()=> {
+  const handleAddOption = () => {
     const prdNew: any = {};
     Object.assign(prdNew, product);
     prdNew.Options.push({
+      PoID: Date.now(),
+      isNew: true,
       PoName: "",
       PoInitPrice: "",
       PoSellPrice: "",
-    })
+    });
     setProduct(prdNew);
+  };
+  const handleChangeOptions = (e: any, id: number) => {
+    const options = product.Options;
+    const option = options.find((e: any) => (e.PoID = id));
+    option[e.target.name] = e.target.value;
+    option["isEdit"] = true;
+    setProduct({
+      ...product,
+      Options: options,
+    });
+  };
+  console.log(product.Options);
+
+  const handleDelOption=(id:number)=>{
+    const options = product.Options;
+    const option = options.find((e: any) => (e.PoID = id));
+    option["isDel"] = true;
+    setProduct({
+      ...product,
+      Options: options,
+    });
   }
+
   return (
     <Layout>
       <div className="flex justify-between items-center">
@@ -303,27 +327,82 @@ function ProductWrite({ catObject, productDetail, isNew }: any) {
                 </td>
               </tr>
               <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white">Options</th>
-                <td  className="px-6 py-2">
-                  <button onClick={()=>handleAddOption()} type="button" className="px-5 ms-0 border rounded bg-cyan-400 text-white px-3 py-1">
+                <th className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white">
+                  Options
+                  <button
+                    onClick={() => handleAddOption()}
+                    type="button"
+                    className="ms-1 px-3 ms-0 border rounded bg-cyan-400 text-white py-1"
+                  >
                     +
                   </button>
-                  {
-                    product.Options.map((e:any,i:any)=>{
-                      return <div className={`flex gap-2 ${i>0?"mt-2":""}`} key={i}>
-                        <div>Name <Input name={""} value={e.PoName} width={0} type={"input"} onChange={undefined}/></div>
-                        <Input name={""} value={e.PoInitPrice} width={0} type={"input"} onChange={undefined}/>
-                        <Input name={""} value={e.PoSellPrice} width={0} type={"input"} onChange={undefined}/>
+                </th>
+                <td className="px-6 py-2" colSpan={3}>
+                  {product.Options.map((e: any, i: any) => {
+                    return (
+                      <div
+                        className={`flex gap-2 ${i > 0 ? "mt-2" : ""}`}
+                        key={i}
+                      >
+                        <Dropdown
+                          containerClassName="w-[150px]"
+                          className="w-full h-[35px] rounded-md"
+                          options={level3List}
+                          onChange={(id: number) => {
+                            handleChange({
+                              target: { name: "CategoryID3", value: id },
+                            });
+                          }}
+                          activeItem={Number(product.CategoryID3)}
+                          placeHolder="--Option type--"
+                        />
+                        <div className="flex items-center gap-1">
+                          Name
+                          <Input
+                            name={"PoName"}
+                            value={e.PoName}
+                            width={0}
+                            type={"input"}
+                            onChange={(evt: any) =>
+                              handleChangeOptions(evt, e.PoID)
+                            }
+                          />
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <span className="text-nowrap">Init Price</span>{" "}
+                          <Input
+                            name={"PoInitPrice"}
+                            value={e.PoInitPrice}
+                            width={0}
+                            type={"input"}
+                            onChange={(evt: any) =>
+                              handleChangeOptions(evt, e.PoID)
+                            }
+                          />
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <span className="text-nowrap">Sell Price</span>{" "}
+                          <Input
+                            name={"PoSellPrice"}
+                            value={e.PoSellPrice}
+                            width={0}
+                            type={"input"}
+                            onChange={(evt: any) =>
+                              handleChangeOptions(evt, e.PoID)
+                            }
+                          />
+                        </div>
+                        <button type="button" className="border rounded bg-rose-600 text-white px-3 py-1 ms-1" onClick={()=>handleDelOption(e.PoID)}>x</button>
                       </div>
-                    })
-                  }
+                    );
+                  })}
                 </td>
+              </tr>
+              <tr>
                 <th
                   scope="row"
                   className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  
-                </th>
+                ></th>
                 <td className="px-6 py-2">
                   <Checkbox
                     name="IsBest"
@@ -437,12 +516,12 @@ function ProductWrite({ catObject, productDetail, isNew }: any) {
           </table>
         </div>
         <div className="gap-2 flex justify-center mt-3">
-        <Link
-          className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-          href="/admin/products/list"
-        >
-          Back to List
-        </Link>
+          <Link
+            className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+            href="/admin/products/list"
+          >
+            Back to List
+          </Link>
           <button
             type="submit"
             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"

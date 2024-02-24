@@ -5,10 +5,11 @@ type Props = {
   options: { id: number; name: string }[];
   onChange: Function;
   activeItem: number;
-  containerClassName?: string
+  containerClassName?: string;
+  placeHolder?: string
 };
 
-function Dropdown({ className,options, activeItem, onChange, containerClassName }: Props) {
+function Dropdown({ className,options, activeItem, onChange, containerClassName,placeHolder }: Props) {
   const activeOption = options.find((e) => e.id === activeItem);
   const [isOpen, setIsOpen] = useState(false);
   const handleClick = (id:number) => {
@@ -20,7 +21,7 @@ function Dropdown({ className,options, activeItem, onChange, containerClassName 
   return (
     <div className={`relative z-50 ${containerClassName || ""}`} tabIndex={-1} onBlur={handleBlur}>
       <button type="button" onClick={() => setIsOpen(!isOpen)} className={`text-left text- border border-[#dbdbdb] h-12 bg-no-repeat bg-[center_right_1rem] bg-[url('/dropdown_bg_arrow.png')] ${className} px-4 appearance-none outline-none`}>
-        <span className="mr-1">{activeOption?.name || "--Select--"}</span>
+        <span className="mr-1">{activeOption?.name || placeHolder || "--Select--"}</span>
       </button>
       <ul className={`dropdown-menu absolute text-gray-700 pt-1 min-w-full ${isOpen ? "" : 'hidden'}`}>
         {options.map((e, i) => {
