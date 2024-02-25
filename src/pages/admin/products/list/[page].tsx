@@ -33,7 +33,7 @@ function ProductList({ response, initPage, total, totalPage }: any) {
 
   const [list, setList] = useState(response || []);
   const getData = async (page: number) => {
-    const response = await axios.get("/api/combo/list", {
+    const response = await axios.get("/api/products/list", {
       params: { page, scale },
     });
     setList(response.data.data);
