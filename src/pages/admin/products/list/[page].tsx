@@ -12,7 +12,7 @@ import Tr from "../../components/Tr";
 import Th from "../../components/Th";
 import Td from "../../components/Td";
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
-const scale = 3;
+const scale = 10;
 export const getServerSideProps = (async (context: any) => {
   const { params } = context;
   const { page } = params;

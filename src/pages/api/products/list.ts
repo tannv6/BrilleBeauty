@@ -12,7 +12,8 @@ export default async function handle(
 
     const connect = await connectDB();
 
-    const totalQuery = "SELECT s1.*, s2.CategoryName FROM products s1 inner join categories s2 on s1.CategoryID = s2.CategoryID";
+    const totalQuery =
+      "SELECT s1.*, s2.CategoryName FROM products s1 inner join categories s2 on s1.CategoryID = s2.CategoryID";
 
     const [resultTotal]: any = await connect.execute(totalQuery);
 
@@ -20,9 +21,7 @@ export default async function handle(
 
     const query =
       totalQuery +
-      ` limit ${(Number(page) - 1) * Number(scale)}, ${
-        Number(page) * Number(scale)
-      };`;
+      ` limit ${(Number(page) - 1) * Number(scale)}, ${Number(scale)};`;
     const [result] = await connect.execute(query);
     return res.status(200).json({
       data: result,

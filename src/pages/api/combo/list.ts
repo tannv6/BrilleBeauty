@@ -20,9 +20,7 @@ export default async function handle(
 
     const query =
       totalQuery +
-      ` limit ${(Number(page) - 1) * Number(scale)}, ${
-        Number(page) * Number(scale)
-      };`;
+      ` limit ${(Number(page) - 1) * Number(scale)}, ${Number(scale)};`;
     const [result] = await connect.execute(query);
     return res.status(200).json({
       data: result,

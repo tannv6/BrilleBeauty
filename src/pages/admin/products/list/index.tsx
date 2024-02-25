@@ -2,7 +2,7 @@ import axios from "axios";
 import { GetServerSideProps } from "next";
 import React from "react";
 import ProductList from "./[page]";
-const scale = 3;
+const scale = 10;
 export const getServerSideProps = (async () => {
   const response = await axios.get("http://localhost:3000/api/products/list", {
     params: { page: 1, scale },
