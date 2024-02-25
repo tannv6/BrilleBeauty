@@ -35,7 +35,7 @@ function Layout({ children }: any) {
           <i className="fas fa-user-circle text-white text-2xl" />
         </div>
       </nav>
-      <div className="flex">
+      <div className="flex overflow-x-auto">
         <aside className="bg-gray-800 text-white w-64 min-h-screen p-4">
           <nav>
             <ul className="space-y-2">

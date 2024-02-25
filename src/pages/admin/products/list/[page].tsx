@@ -1,24 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Layout from "../../components/Layout";
+import { GetServerSideProps } from "next";
 import Link from "next/link";
+import Image from "next/image";
+import axios from "axios";
+import { useRouter } from "next/router";
+import Pagingnation from "../../components/Pagingnation";
 import Table from "../../components/Table";
 import Thead from "../../components/Thead";
 import Tr from "../../components/Tr";
 import Th from "../../components/Th";
-import Tbody from "../../components/Tbody";
 import Td from "../../components/Td";
-import Image from "next/image";
-import axios from "axios";
-import Pagingnation from "../../components/Pagingnation";
-import { useParams } from "next/navigation";
-import { useRouter } from "next/router";
-import { GetServerSideProps } from "next";
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
-const scale = 10;
+const scale = 3;
 export const getServerSideProps = (async (context: any) => {
   const { params } = context;
   const { page } = params;
-  const response = await axios.get("http://localhost:3000/api/combo/list", {
+  const response = await axios.get("http://localhost:3000/api/products/list", {
     params: { page, scale },
   });
   return {
@@ -29,7 +27,7 @@ export const getServerSideProps = (async (context: any) => {
     },
   };
 }) satisfies GetServerSideProps<{ response: any }>;
-function ComboList({ response, initPage, total, totalPage }: any) {
+function ProductList({ response, initPage, total, totalPage }: any) {
   const router = useRouter();
   const [page, setPage] = useState(Number(initPage) || 1);
 
@@ -47,49 +45,50 @@ function ComboList({ response, initPage, total, totalPage }: any) {
     router.query.page = page.toString();
     router.push(router);
   };
-
   return (
     <Layout>
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold mb-4">Combo List</h1>
+        <h1 className="text-2xl font-bold mb-4">Products List</h1>
         <Link
-          href={"/admin/combo/write"}
+          href={"/admin/products/write"}
           className="flex justify-center items-center bg-blue-600 text-white p-2 rounded w-[150px] h-[40px]"
         >
-          Add New Combo
+          Add New Product
         </Link>
       </div>
       <div className="flex items-center justify-center">
-          <Table colWidths={["10%", "100px", "45%", "20%", "20%", "10%"]}>
+          <Table>
             <Thead>
-              <Tr>
+              <Tr className="bg-blue-gray-100 text-gray-700">
                 <Th>ID</Th>
-                <Th>Image</Th>
-                <Th>Combo Name</Th>
+                <Th>Thumb Image</Th>
+                <Th>Product Name</Th>
                 <Th>Original Price</Th>
                 <Th>Sell Price</Th>
+                <Th>Category</Th>
                 <Th center>Action</Th>
               </Tr>
             </Thead>
-            <Tbody>
+            <tbody className="text-blue-gray-900">
               {list.map((e: any, i: any) => {
                 return (
-                  <Tr key={i} className="border-b border-blue-gray-200">
+                  <Tr key={i}>
                     <Td>{total - (page - 1) * scale - i}</Td>
                     <Td>
                       <Image
-                        src={`${CDN_URL}/${e.ComboImage}`}
+                        src={`${CDN_URL}/${e.ProductImage}`}
                         alt=""
                         width={100}
                         height={100}
                       />
                     </Td>
-                    <Td>{e.ComboName}</Td>
+                    <Td>{e.ProductName}</Td>
                     <Td>{e.InitPrice}</Td>
                     <Td>{e.SellPrice}</Td>
+                    <Td>{e.CategoryName}</Td>
                     <Td center>
                       <Link
-                        href={`/admin/combo/write/${e.ComboID}`}
+                        href={`/admin/products/write/${e.ProductID}`}
                         className="font-medium text-blue-600 hover:text-blue-800"
                       >
                         <i className="fas fa-edit"></i>
@@ -98,7 +97,7 @@ function ComboList({ response, initPage, total, totalPage }: any) {
                   </Tr>
                 );
               })}
-            </Tbody>
+            </tbody>
           </Table>
         </div>
       <Pagingnation
@@ -112,4 +111,4 @@ function ComboList({ response, initPage, total, totalPage }: any) {
   );
 }
 
-export default ComboList;
+export default ProductList;
