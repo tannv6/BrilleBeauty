@@ -52,6 +52,9 @@ function Write({ data, idx }: any) {
       new: [],
     };
     if (categories.isDel) {
+      if (!confirm("Are you sure delete this category?")) {
+        return;
+      }
       data.del.push({
         CategoryID: categories.CategoryID,
       });
@@ -144,16 +147,15 @@ function Write({ data, idx }: any) {
     }
     setCategories(cateNew);
   };
-  console.log(categories);
 
   return (
     <Layout>
       {categories.CategoryID ? (
-        <div className={`${categories?.isDel ? "opacity-25" : ""}`}>
+        <div className={`${categories?.isDel ? "opacity-25 pointer-events-none" : ""}`}>
           <div className="level1">
             <input
               type="text"
-              className="border rounded p-1 w-[220px] bg-pink-100"
+              className="border rounded p-1 w-[220px] bg-teal-200"
               value={categories?.CategoryName}
               onChange={(e) => handleChange(e, 1)}
             />
@@ -161,7 +163,7 @@ function Write({ data, idx }: any) {
               onClick={() => handleAddCategory(2, categories?.CategoryID)}
               className="border rounded bg-cyan-400 text-white px-3 py-1 ms-1"
             >
-              +
+              <i className="text-xs fas fa-plus"></i>
             </button>
           </div>
           <div>
@@ -175,7 +177,7 @@ function Write({ data, idx }: any) {
                     key={i}
                   >
                     <input
-                      className="border rounded p-1 ms-[110px] w-[220px] bg-blue-100"
+                      className="border rounded p-1 ms-[110px] w-[220px] bg-blue-200"
                       type="text"
                       value={el.CategoryName}
                       onChange={(e) => handleChange(e, 2, el.CategoryID)}
@@ -184,13 +186,13 @@ function Write({ data, idx }: any) {
                       onClick={() => handleAddCategory(3, el.CategoryID)}
                       className="border rounded bg-cyan-400 text-white px-3 py-1 ms-1"
                     >
-                      +
+                      <i className="text-xs fas fa-plus"></i>
                     </button>
                     <button
                       onClick={() => hanldeDeleteCate(2, el.CategoryID)}
                       className="border rounded bg-rose-600 text-white px-3 py-1 ms-1"
                     >
-                      x
+                      <i className="text-xs fas fa-times"></i>
                     </button>
                     <div>
                       {el.child
@@ -225,7 +227,7 @@ function Write({ data, idx }: any) {
                                 }
                                 className="border rounded bg-rose-600 text-white px-3 py-1 ms-1"
                               >
-                                x
+                                <i className="text-xs fas fa-times"></i>
                               </button>
                             </div>
                           );
@@ -254,10 +256,14 @@ function Write({ data, idx }: any) {
           Back to list
         </Link>
         <button
-          onClick={() => hanldeDeleteCate(1)}
+          onClick={
+            categories.isDel
+              ? () => setCategories({ ...categories, isDel: false })
+              : () => hanldeDeleteCate(1)
+          }
           className="border px-3 py-1 rounded bg-rose-600 text-white"
         >
-          Delete
+          {categories.isDel ? "Revert" : "Delete"}
         </button>
         <button
           className="border px-3 py-1 rounded bg-[#1877f2] text-white"

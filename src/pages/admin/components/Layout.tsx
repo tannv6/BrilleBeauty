@@ -41,8 +41,9 @@ function Layout({ children }: any) {
             <ul className="space-y-2">
               {listMenu.map((e, i) => {
                 return (
-                  <li key={i} className="opcion-con-desplegable">
+                  <li key={i} className="opcion-con-desplegable ease-out duration-300">
                     <div
+                    role="button"
                       onClick={() => handleChangeMenu(e.id)}
                       className="flex items-center justify-between p-2 hover:bg-gray-700"
                     >
@@ -53,8 +54,8 @@ function Layout({ children }: any) {
                       <i className="fas fa-chevron-down text-xs" />
                     </div>
                     <ul
-                      className={`desplegable ml-4 ${
-                        activeMenu === e.id ? "" : "hidden"
+                      className={`duration-300 desplegable ml-4 ease-out overflow-hidden ${
+                        activeMenu === e.id ? "max-h-[500px]" : "max-h-[0px]"
                       }`}
                     >
                       {e.children?.map((e1, i1) => {

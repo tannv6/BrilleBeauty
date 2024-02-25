@@ -50,7 +50,9 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       CategoryID2,
       CategoryID3,
       SaleEndDate,
-      DelImage
+      DelImage,
+      PotID,
+      Options,
     } = fields;
 
     let ProductImage = "";
@@ -70,11 +72,13 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     IsBigSale = ${IsBigSale}, 
     IsNew = ${IsNew},
     ProductImage = '${ProductImage}',
-    CategoryID = '${CategoryID3 || CategoryID2 || CategoryID1}' 
+    CategoryID = '${
+      Number(CategoryID3) || Number(CategoryID2) || Number(CategoryID1)
+    }',
+    PotID = '${PotID}'
     WHERE ProductID = '${ProductID}'`;
 
-    const [results] = await connect.execute(query);
-    const lastInsertedId = (results as any).insertId;
+    await connect.execute(query);
     let queryImage = "";
     if (detailImages && detailImages?.length > 0) {
       queryImage +=
@@ -84,14 +88,32 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
         if (index > 0) {
           queryImage += ",";
         }
-        queryImage += `('${lastInsertedId}', '${imgName.ufile}', '${imgName.rfile}')`;
+        queryImage += `('${ProductID}', '${imgName.ufile}', '${imgName.rfile}')`;
       }
     }
+    queryImage && (await connect.execute(queryImage));
     if (DelImage) {
-        const queryDelImage = `DELETE FROM productimages WHERE ImageID IN (${DelImage})`;
-        await connect.execute(queryDelImage);
+      const queryDelImage = `DELETE FROM productimages WHERE ImageID IN (${DelImage})`;
+      await connect.execute(queryDelImage);
     }
-    await connect.execute(queryImage);
+    if (Options) {
+      const OptionsArray = JSON.parse(Options[0]);
+      for (let index = 0; index < OptionsArray.length; index++) {
+        const element = OptionsArray[index];
+        if (element.isDel && !element.isNew) {
+          const sql = `update product_options set DeletedAt = now() where PoID = ${element.PoID}`;
+          await connect.execute(sql);
+        } else if (element.isNew && !element.isDel) {
+          const sql = `insert into product_options set ProductID = '${ProductID}', PotID = '${PotID}', 
+          PoName = '${element.PoName}', PoInitPrice = '${element.PoInitPrice}', PoSellPrice = '${element.PoSellPrice}'`;
+          await connect.execute(sql);
+        } else if (element.isEdit) {
+          const sql = `update product_options set PoName = '${element.PoName}', PoInitPrice = '${element.PoInitPrice}', 
+          PoSellPrice = '${element.PoSellPrice}' where PoID = ${element.PoID}`;
+          await connect.execute(sql);
+        }
+      }
+    }
     return res.status(201).json({ result: "OK" });
   } catch (err) {
     return res.status(500).json({ error: err });

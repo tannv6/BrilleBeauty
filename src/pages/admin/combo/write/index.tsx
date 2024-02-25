@@ -41,7 +41,7 @@ export const getServerSideProps = async () => {
   };
 };
 function index({ catObject }: any) {
-  return <ComboDetail {...{ catObject }} />;
+  return <ComboDetail {...{ catObject, isNew: true }} />;
 }
 
 export default index;

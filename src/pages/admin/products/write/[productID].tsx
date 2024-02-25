@@ -3,13 +3,13 @@ import Dropdown from "@/components/Dropdown";
 import axios from "axios";
 import { useRouter } from "next/router";
 import DatePicker from "react-datepicker";
-import dateFormat from "dateformat";
 
 import "react-datepicker/dist/react-datepicker.css";
 import Layout from "../../components/Layout";
 import Checkbox from "../../components/Checkbox";
 import Link from "next/link";
 import Input from "../../components/Input";
+import moment from "moment";
 export const getServerSideProps = async (context: { params: any }) => {
   const { params } = context;
   const { productID } = params;
@@ -22,6 +22,10 @@ export const getServerSideProps = async (context: { params: any }) => {
   const result = await axios.get("http://localhost:3000/api/category/list");
 
   const categories = result.data.data;
+
+  const result1 = await axios.get(
+    "http://localhost:3000/api/option_types/list"
+  );
 
   const catObject: any = {
     level1: [],
@@ -55,14 +59,23 @@ export const getServerSideProps = async (context: { params: any }) => {
     props: {
       catObject,
       productDetail: productDetail.data,
+      optionTypes: result1.data.data,
     },
   };
 };
-function ProductWrite({ catObject, productDetail, isNew }: any) {
+function ProductWrite({ catObject, productDetail, isNew, optionTypes }: any) {
   const { level1, level2, level3 } = catObject;
 
-  const [level2List, setLevel2List] = useState([]);
-  const [level3List, setLevel3List] = useState([]);
+  const [level2List, setLevel2List] = useState(
+    productDetail?.CategoryLevel === 2
+      ? level2.filter((e: any) => e.ParentID === productDetail?.ParentID)
+      : []
+  );
+  const [level3List, setLevel3List] = useState(
+    productDetail?.CategoryLevel === 3
+      ? level3.filter((e: any) => e.ParentID === productDetail?.ParentID)
+      : []
+  );
 
   const router = useRouter();
   const [product, setProduct] = useState<{ [key: string]: any }>({
@@ -71,16 +84,34 @@ function ProductWrite({ catObject, productDetail, isNew }: any) {
     InitPrice: productDetail?.InitPrice || "",
     SellPrice: productDetail?.SellPrice || "",
     Description: productDetail?.Description || "",
-    SaleDate: productDetail?.SaleDate || "",
-    SaleEndDate: productDetail?.SaleEndDate || "",
+    SaleDate: moment(productDetail?.SaleDate).format("yyyy-MM-DD HH:mm:ss"),
+    SaleEndDate: moment(productDetail?.SaleEndDate).format(
+      "yyyy-MM-DD HH:mm:ss"
+    ),
     IsBest: 0,
     IsBigSale: 0,
     IsNew: 0,
     ProductImage: "",
-    CategoryID1: "0",
-    CategoryID2: "0",
-    CategoryID3: "0",
-    Options: [],
+    CategoryID: productDetail?.CategoryID,
+    CategoryLevel: productDetail?.CategoryLevel,
+    CategoryID1:
+      productDetail?.CategoryLevel === 1
+        ? productDetail?.CategoryID
+        : productDetail?.CategoryLevel === 2
+        ? productDetail?.ParentID
+        : productDetail?.CategoryLevel === 3
+        ? productDetail?.ppID
+        : "0",
+    CategoryID2:
+      productDetail?.CategoryLevel === 2
+        ? productDetail?.CategoryID
+        : productDetail?.CategoryLevel === 3
+        ? productDetail?.ParentID
+        : "0",
+    CategoryID3:
+      productDetail?.CategoryLevel === 3 ? productDetail?.CategoryID : "0",
+    Options: productDetail?.Options || [],
+    PotID: productDetail?.PotID || "0",
   });
 
   const [detailImage, setDetailImage] = useState<any[]>([]);
@@ -112,7 +143,11 @@ function ProductWrite({ catObject, productDetail, isNew }: any) {
     let formData = new FormData();
 
     for (let [key, value] of Object.entries(product)) {
-      formData.append(key, value);
+      if (key === "Options") {
+        formData.append(key, JSON.stringify(value));
+      } else {
+        formData.append(key, value);
+      }
     }
     detailImage.forEach((e) => {
       formData.append("detailImage[]", e);
@@ -146,7 +181,6 @@ function ProductWrite({ catObject, productDetail, isNew }: any) {
     if (level === 3) {
     }
   };
-  console.log(product);
   const handleAddOption = () => {
     const prdNew: any = {};
     Object.assign(prdNew, product);
@@ -161,7 +195,7 @@ function ProductWrite({ catObject, productDetail, isNew }: any) {
   };
   const handleChangeOptions = (e: any, id: number) => {
     const options = product.Options;
-    const option = options.find((e: any) => (e.PoID = id));
+    const option = options.find((e: any) => (e.PoID === id));
     option[e.target.name] = e.target.value;
     option["isEdit"] = true;
     setProduct({
@@ -169,17 +203,15 @@ function ProductWrite({ catObject, productDetail, isNew }: any) {
       Options: options,
     });
   };
-  console.log(product.Options);
-
-  const handleDelOption=(id:number)=>{
+  const handleDelOption = (id: number) => {
     const options = product.Options;
-    const option = options.find((e: any) => (e.PoID = id));
+    const option = options.find((e: any) => (e.PoID === id));
     option["isDel"] = true;
     setProduct({
       ...product,
       Options: options,
     });
-  }
+  };
 
   return (
     <Layout>
@@ -269,7 +301,7 @@ function ProductWrite({ catObject, productDetail, isNew }: any) {
                   <div className="flex items-center gap-1">
                     <DatePicker
                       showIcon
-                      dateFormat={"yyyy-MM-dd"}
+                      dateFormat={"yyyy-MM-dd HH:mm:ss"}
                       className="inline-flex items-center border h-[35px] px-2 w-[150px] ouline-0"
                       calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
                       selected={
@@ -281,7 +313,7 @@ function ProductWrite({ catObject, productDetail, isNew }: any) {
                         handleChange({
                           target: {
                             name: "SaleDate",
-                            value: dateFormat(date || undefined, "yyyy-mm-dd"),
+                            value: moment(date).format("yyyy-MM-DD HH:mm:ss"),
                           },
                         })
                       }
@@ -289,7 +321,7 @@ function ProductWrite({ catObject, productDetail, isNew }: any) {
                     ~
                     <DatePicker
                       showIcon
-                      dateFormat={"yyyy-MM-dd"}
+                      dateFormat={"yyyy-MM-dd HH:mm:ss"}
                       className="inline-flex border h-[35px] px-2 w-[150px]"
                       calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
                       selected={
@@ -301,7 +333,7 @@ function ProductWrite({ catObject, productDetail, isNew }: any) {
                         handleChange({
                           target: {
                             name: "SaleEndDate",
-                            value: dateFormat(date || undefined, "yyyy-mm-dd "),
+                            value: moment(date).format("yyyy-MM-DD HH:mm:ss"),
                           },
                         })
                       }
@@ -329,33 +361,38 @@ function ProductWrite({ catObject, productDetail, isNew }: any) {
               <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                 <th className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white">
                   Options
+                </th>
+                <td className="px-6 py-2" colSpan={3}>
+                  <Dropdown
+                    containerClassName="w-[150px]"
+                    className="w-full h-[35px] rounded-md"
+                    options={optionTypes.map((e: any, i: any) => {
+                      return {
+                        id: e.PotID,
+                        name: e.PotName,
+                      };
+                    })}
+                    onChange={(id: number) => {
+                      handleChange({
+                        target: { name: "PotID", value: id },
+                      });
+                    }}
+                    activeItem={Number(product.PotID)}
+                    placeHolder="--Option type--"
+                  />
                   <button
                     onClick={() => handleAddOption()}
                     type="button"
-                    className="ms-1 px-3 ms-0 border rounded bg-cyan-400 text-white py-1"
+                    className="h-[35px] ms-1 px-3 ms-0 border rounded bg-cyan-400 text-white py-1"
                   >
                     +
                   </button>
-                </th>
-                <td className="px-6 py-2" colSpan={3}>
-                  {product.Options.map((e: any, i: any) => {
+                  {product.Options.filter((e:any)=>!e.isDel).map((e: any, i: any) => {
                     return (
                       <div
-                        className={`flex gap-2 ${i > 0 ? "mt-2" : ""}`}
+                        className={`flex gap-2 ${i > 0 ? "mt-2" : "mt-2"}`}
                         key={i}
                       >
-                        <Dropdown
-                          containerClassName="w-[150px]"
-                          className="w-full h-[35px] rounded-md"
-                          options={level3List}
-                          onChange={(id: number) => {
-                            handleChange({
-                              target: { name: "CategoryID3", value: id },
-                            });
-                          }}
-                          activeItem={Number(product.CategoryID3)}
-                          placeHolder="--Option type--"
-                        />
                         <div className="flex items-center gap-1">
                           Name
                           <Input
@@ -392,7 +429,13 @@ function ProductWrite({ catObject, productDetail, isNew }: any) {
                             }
                           />
                         </div>
-                        <button type="button" className="border rounded bg-rose-600 text-white px-3 py-1 ms-1" onClick={()=>handleDelOption(e.PoID)}>x</button>
+                        <button
+                          type="button"
+                          className="border rounded bg-rose-600 text-white px-3 py-1 ms-1"
+                          onClick={() => handleDelOption(e.PoID)}
+                        >
+                          <i className="fa fa-times" aria-hidden="true"></i>
+                        </button>
                       </div>
                     );
                   })}

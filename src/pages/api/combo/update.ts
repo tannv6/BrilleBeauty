@@ -37,6 +37,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     const image = files.ComboImage?.[0];
     const detailImages = files["detailImage[]"];
     const {
+      ComboID,
       ComboName,
       InitPrice,
       SellPrice,
@@ -45,11 +46,8 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       IsBest = 0,
       IsBigSale = 0,
       IsNew = 0,
-      CategoryID1,
-      CategoryID2,
-      CategoryID3,
       SaleEndDate,
-      ComboID
+      DelImage,
     } = fields;
 
     let ComboImage = "";
@@ -58,7 +56,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       ComboImage = (await saveFile(image)).ufile;
     }
     const connect = await connectDB();
-    const query = `UPDATE Combos SET 
+    const query = `UPDATE Combo SET 
     ComboName = '${ComboName}', 
     InitPrice = '${InitPrice}', 
     SellPrice = '${SellPrice}',
@@ -68,12 +66,10 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     IsBest = ${IsBest}, 
     IsBigSale = ${IsBigSale}, 
     IsNew = ${IsNew},
-    ComboImage = '${ComboImage}',
-    CategoryID = '${CategoryID3 || CategoryID2 || CategoryID1}'
+    ComboImage = '${ComboImage}'
     WHERE ComboID = '${ComboID}'`;
 
-    const [results] = await connect.execute(query);
-    const lastInsertedId = (results as any).insertId;
+    await connect.execute(query);
     let queryImage = "";
     if (detailImages && detailImages?.length > 0) {
       queryImage +=
@@ -83,10 +79,14 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
         if (index > 0) {
           queryImage += ",";
         }
-        queryImage += `('${lastInsertedId}', '${imgName.ufile}', '${imgName.rfile}')`;
+        queryImage += `('${ComboID}', '${imgName.ufile}', '${imgName.rfile}')`;
       }
     }
-    await connect.execute(queryImage);
+    queryImage && (await connect.execute(queryImage));
+    if (DelImage) {
+      const queryDelImage = `DELETE FROM comboimages WHERE ImageID IN (${DelImage})`;
+      await connect.execute(queryDelImage);
+    }
     return res.status(201).json({ result: "OK" });
   } catch (err) {
     return res.status(500).json({ error: err });

@@ -1,14 +1,15 @@
 import React, { FormEvent, useState } from "react";
 import Dropdown from "@/components/Dropdown";
 import axios from "axios";
-import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import DatePicker from "react-datepicker";
-import dateFormat from "dateformat";
 
 import "react-datepicker/dist/react-datepicker.css";
 import Layout from "../../components/Layout";
 import Checkbox from "../../components/Checkbox";
+import Link from "next/link";
+import Input from "../../components/Input";
+import moment from "moment";
 export const getServerSideProps = async (context: { params: any }) => {
   const { params } = context;
   const { comboID } = params;
@@ -18,68 +19,28 @@ export const getServerSideProps = async (context: { params: any }) => {
       params: { comboID },
     }
   );
-  const result = await axios.get("http://localhost:3000/api/category/list");
 
-  const categories = result.data.data;
-
-  const catObject: any = {
-    level1: [],
-    level2: [],
-    level3: [],
-  };
-
-  categories.forEach((e: any, i: any) => {
-    if (e.Level === 1) {
-      catObject.level1.push({
-        ...e,
-        id: e.CategoryID,
-        name: e.CategoryName,
-      });
-    } else if (e.Level === 2) {
-      catObject.level2.push({
-        ...e,
-        id: e.CategoryID,
-        name: e.CategoryName,
-      });
-    } else if (e.Level === 3) {
-      catObject.level3.push({
-        ...e,
-        id: e.CategoryID,
-        name: e.CategoryName,
-      });
-    }
-  });
 
   return {
     props: {
-      catObject,
       comboDetail: comboDetail.data,
     },
   };
 };
-function ComboWrite({ catObject, comboDetail }: any) {
-    console.log(catObject);
-  const { level1, level2, level3 } = catObject;
-
-
-  const [level2List, setLevel2List] = useState([]);
-  const [level3List, setLevel3List] = useState([]);
-
+function ComboWrite({comboDetail, isNew }: any) {
   const router = useRouter();
   const [combo, setCombo] = useState<{ [key: string]: any }>({
+    ComboID: comboDetail?.ComboID || "",
     ComboName: comboDetail?.ComboName || "",
     InitPrice: comboDetail?.InitPrice || "",
     SellPrice: comboDetail?.SellPrice || "",
     Description: comboDetail?.Description || "",
-    SaleDate: comboDetail?.SaleDate || "",
-    SaleEndDate: comboDetail?.SaleEndDate || "",
+    SaleDate: moment(comboDetail?.SaleDate).format("yyyy-MM-DD HH:mm:ss"),
+    SaleEndDate: moment(comboDetail?.SaleEndDate).format("yyyy-MM-DD HH:mm:ss"),
     IsBest: 0,
     IsBigSale: 0,
     IsNew: 0,
     ComboImage: "",
-    CategoryID1: "0",
-    CategoryID2: "0",
-    CategoryID3: "0",
   });
 
   const [detailImage, setDetailImage] = useState<any[]>([]);
@@ -116,30 +77,18 @@ function ComboWrite({ catObject, comboDetail }: any) {
     detailImage.forEach((e) => {
       formData.append("detailImage[]", e);
     });
-    const response = await axios.post("/api/combos/write", formData);
+
+    let response;
+    if (isNew) {
+      response = await axios.post("/api/combo/write", formData);
+    } else {
+      response = await axios.post("/api/combo/update", formData);
+    }
 
     if (response.status === 201) {
-      router.push("/admin/combos/list");
+      router.push("/admin/combo/list");
     }
   }
-
-  const handleChangeCate = (level: number, id: number) => {
-    if (level === 1) {
-      setCombo({
-        ...combo,
-        CategoryID1: id,
-        CategoryID2: 0,
-        CategoryID3: 0,
-      });
-      setLevel2List(level2.filter((e: any) => e.ParentID === id));
-    }
-    if (level === 2) {
-      setCombo({ ...combo, CategoryID2: id, CategoryID3: 0 });
-      setLevel3List(level3.filter((e: any) => e.ParentID === id));
-    }
-    if (level === 3) {
-    }
-  };
 
   return (
     <Layout>
@@ -180,64 +129,23 @@ function ComboWrite({ catObject, comboDetail }: any) {
                   scope="row"
                   className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
                 >
-                  Category
-                </th>
-                <td className="px-6 py-2">
-                  <div className="flex gap-1">
-                    <Dropdown
-                      containerClassName="w-[150px]"
-                      className="w-full h-[40px] rounded-md"
-                      options={level1}
-                      onChange={(id: number) => {
-                        handleChangeCate(1, id);
-                      }}
-                      activeItem={Number(combo.CategoryID1)}
-                    />
-                    <Dropdown
-                      containerClassName="w-[150px]"
-                      className="w-full h-[40px] rounded-md"
-                      options={level2List}
-                      onChange={(id: number) => {
-                        handleChangeCate(2, id);
-                      }}
-                      activeItem={Number(combo.CategoryID2)}
-                    />
-                    <Dropdown
-                      containerClassName="w-[150px]"
-                      className="w-full h-[40px] rounded-md"
-                      options={level3List}
-                      onChange={(id: number) => {
-                        handleChange({
-                          target: { name: "CategoryID3", value: id },
-                        });
-                      }}
-                      activeItem={Number(combo.CategoryID3)}
-                    />
-                  </div>
-                </td>
-                <th
-                  scope="row"
-                  className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
-                >
                   SaleDate
                 </th>
-                <td className="px-6 py-2">
+                <td className="px-6 py-2" colSpan={3}>
                   <div className="flex items-center gap-1">
                     <DatePicker
                       showIcon
-                      dateFormat={"yyyy-MM-dd"}
-                      className="inline-flex items-center border h-[35px] px-2 w-[150px] ouline-0"
+                      dateFormat={"yyyy-MM-dd HH:mm:ss"}
+                      className="inline-flex items-center border h-[35px] px-2 w-[180px] ouline-0"
                       calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
                       selected={
-                        combo.SaleDate
-                          ? new Date(combo.SaleDate)
-                          : new Date()
+                        combo.SaleDate ? new Date(combo.SaleDate) : new Date()
                       }
                       onChange={(date) =>
                         handleChange({
                           target: {
                             name: "SaleDate",
-                            value: dateFormat(date || undefined, "yyyy-mm-dd"),
+                            value: moment(date).format("yyyy-MM-DD HH:mm:ss"),
                           },
                         })
                       }
@@ -245,8 +153,8 @@ function ComboWrite({ catObject, comboDetail }: any) {
                     ~
                     <DatePicker
                       showIcon
-                      dateFormat={"yyyy-MM-dd"}
-                      className="inline-flex border h-[35px] px-2 w-[150px]"
+                      dateFormat={"yyyy-MM-dd HH:mm:ss"}
+                      className="inline-flex border h-[35px] px-2 w-[180px]"
                       calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
                       selected={
                         combo.SaleEndDate
@@ -257,7 +165,7 @@ function ComboWrite({ catObject, comboDetail }: any) {
                         handleChange({
                           target: {
                             name: "SaleEndDate",
-                            value: dateFormat(date || undefined, "yyyy-mm-dd "),
+                            value: moment(date).format("yyyy-MM-DD HH:mm:ss"),
                           },
                         })
                       }

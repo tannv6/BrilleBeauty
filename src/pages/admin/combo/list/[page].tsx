@@ -1,26 +1,53 @@
-import React from "react";
-import Layout from "../components/Layout";
-import { GetServerSideProps } from "next";
+import React, { useEffect, useState } from "react";
+import Layout from "../../components/Layout";
 import Link from "next/link";
+import Table from "../../components/Table";
+import Thead from "../../components/Thead";
+import Tr from "../../components/Tr";
+import Th from "../../components/Th";
+import Tbody from "../../components/Tbody";
+import Td from "../../components/Td";
 import Image from "next/image";
 import axios from "axios";
-import Table from "../components/Table";
-import Thead from "../components/Thead";
-import Tr from "../components/Tr";
-import Th from "../components/Th";
-import Tbody from "../components/Tbody";
-import Td from "../components/Td";
-import Pagingnation from "../components/Pagingnation";
+import Pagingnation from "../../components/Pagingnation";
+import { useParams } from "next/navigation";
+import { useRouter } from "next/router";
+import { GetServerSideProps } from "next";
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
-export const getServerSideProps = (async () => {
+const scale = 10;
+export const getServerSideProps = (async (context: any) => {
+  const { params } = context;
+  const { page } = params;
   const response = await axios.get("http://localhost:3000/api/combo/list");
   return {
     props: {
       response: response.data.data,
+      initPage: page,
     },
   };
 }) satisfies GetServerSideProps<{ response: any }>;
-function List({ response }: any) {
+function ComboList({ response, initPage }: any) {
+  const router = useRouter();
+  const [page, setPage] = useState(Number(initPage) || 1);
+
+  const [list, setList] = useState(response || []);
+  const getData = async () => {
+    const response = await axios.get("/api/combo/list");
+    setList(response.data.data);
+  };
+  console.log(page);
+
+  //   useEffect(() => {
+  //     setPage(Number(params?.page));
+  //     getData();
+  //   }, []);
+
+  const handleChangePage = (page: number) => {
+    setPage(page);
+    router.query.page = page.toString();
+    router.push(router);
+  };
+
   return (
     <Layout>
       <div className="flex justify-between items-center">
@@ -46,7 +73,7 @@ function List({ response }: any) {
               </Tr>
             </Thead>
             <Tbody>
-              {response.map((e: any, i: any) => {
+              {list.map((e: any, i: any) => {
                 return (
                   <Tr key={i} className="border-b border-blue-gray-200">
                     <Td>{e.ComboID}</Td>
@@ -76,9 +103,15 @@ function List({ response }: any) {
           </Table>
         </div>
       </div>
-      <Pagingnation tP={5} cP={3} tE={100} scale={10}/>
+      <Pagingnation
+        tP={100}
+        cP={page}
+        tE={1000}
+        per={10}
+        onChange={handleChangePage}
+      />
     </Layout>
   );
 }
 
-export default List;
+export default ComboList;

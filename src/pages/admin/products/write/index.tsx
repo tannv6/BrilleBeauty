@@ -11,6 +11,9 @@ export const getServerSideProps = async () => {
     level2: [],
     level3: [],
   };
+  const result1 = await axios.get(
+    "http://localhost:3000/api/option_types/list"
+  );
 
   categories.forEach((e: any, i: any) => {
     if (e.Level === 1) {
@@ -37,11 +40,12 @@ export const getServerSideProps = async () => {
   return {
     props: {
       catObject,
+      optionTypes: result1.data.data,
     },
   };
 };
-function index({ catObject }: any) {
-  return <ProductWrite {...{ catObject, isNew: true }} />;
+function index({ catObject, optionTypes }: any) {
+  return <ProductWrite {...{ catObject, optionTypes, isNew: true }} />;
 }
 
 export default index;
