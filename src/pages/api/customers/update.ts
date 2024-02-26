@@ -35,7 +35,8 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     Province='${Province}',
     District='${District}',
     Village='${Village}',
-    Address='${Address}' where CustomerID='${CustomerID}';`;
+    Address='${Address}',
+    UpdatedAt = now() where CustomerID='${CustomerID}';`;
 
     const [results] = await connect.execute(query);
 
