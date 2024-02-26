@@ -72,12 +72,13 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     IsBest = ${IsBest}, 
     IsBigSale = ${IsBigSale}, 
     IsNew = ${IsNew},
-    ProductImage = '${ProductImage}',
+    ProductImage = ${ProductImage ? `'${ProductImage}'` : "ProductImage"},
     CategoryID = '${
       Number(CategoryID3) || Number(CategoryID2) || Number(CategoryID1)
     }',
     PotID = '${PotID}',
-    BrandID = '${BrandID}'
+    BrandID = '${BrandID}',
+    UpdatedAt = now()
     WHERE ProductID = '${ProductID}'`;
 
     await connect.execute(query);
