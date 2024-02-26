@@ -51,6 +51,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       SaleEndDate,
       PotID,
       Options,
+      BrandID,
     } = fields;
 
     let ProductImage = "";
@@ -72,7 +73,9 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     ProductImage = '${ProductImage}',
     CategoryID = '${
       Number(CategoryID3) || Number(CategoryID2) || Number(CategoryID1)
-    }'`;
+    }',
+    PotID = '${PotID}',
+    BrandID = '${BrandID}'`;
 
     const [results] = await connect.execute(query);
     const lastInsertedId = (results as any).insertId;

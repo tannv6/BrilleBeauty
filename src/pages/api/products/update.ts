@@ -53,6 +53,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       DelImage,
       PotID,
       Options,
+      BrandID
     } = fields;
 
     let ProductImage = "";
@@ -75,7 +76,8 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     CategoryID = '${
       Number(CategoryID3) || Number(CategoryID2) || Number(CategoryID1)
     }',
-    PotID = '${PotID}'
+    PotID = '${PotID}',
+    BrandID = '${BrandID}'
     WHERE ProductID = '${ProductID}'`;
 
     await connect.execute(query);

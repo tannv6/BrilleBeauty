@@ -19,12 +19,16 @@ export const getServerSideProps = async (context: { params: any }) => {
       params: { productID },
     }
   );
-  const result = await axios.get("http://localhost:3000/api/category/list");
+  const result = await axios.get("http://localhost:3000/api/category/all");
 
   const categories = result.data.data;
 
   const result1 = await axios.get(
     "http://localhost:3000/api/option_types/list"
+  );
+
+  const result2 = await axios.get(
+    "http://localhost:3000/api/brand/list"
   );
 
   const catObject: any = {
@@ -60,10 +64,11 @@ export const getServerSideProps = async (context: { params: any }) => {
       catObject,
       productDetail: productDetail.data,
       optionTypes: result1.data.data,
+      brandList: result2.data.data.map((e:any)=>({...e, id:e.BrandID, name:e.BrandName}))
     },
   };
 };
-function ProductWrite({ catObject, productDetail, isNew, optionTypes }: any) {
+function ProductWrite({ catObject, productDetail, isNew, optionTypes, brandList }: any) {
   const { level1, level2, level3 } = catObject;
 
   const [level2List, setLevel2List] = useState(
@@ -112,6 +117,7 @@ function ProductWrite({ catObject, productDetail, isNew, optionTypes }: any) {
       productDetail?.CategoryLevel === 3 ? productDetail?.CategoryID : "0",
     Options: productDetail?.Options || [],
     PotID: productDetail?.PotID || "0",
+    BrandID: productDetail?.BrandID || "0",
   });
 
   const [detailImage, setDetailImage] = useState<any[]>([]);
@@ -195,7 +201,7 @@ function ProductWrite({ catObject, productDetail, isNew, optionTypes }: any) {
   };
   const handleChangeOptions = (e: any, id: number) => {
     const options = product.Options;
-    const option = options.find((e: any) => (e.PoID === id));
+    const option = options.find((e: any) => e.PoID === id);
     option[e.target.name] = e.target.value;
     option["isEdit"] = true;
     setProduct({
@@ -205,7 +211,7 @@ function ProductWrite({ catObject, productDetail, isNew, optionTypes }: any) {
   };
   const handleDelOption = (id: number) => {
     const options = product.Options;
-    const option = options.find((e: any) => (e.PoID === id));
+    const option = options.find((e: any) => e.PoID === id);
     option["isDel"] = true;
     setProduct({
       ...product,
@@ -302,7 +308,7 @@ function ProductWrite({ catObject, productDetail, isNew, optionTypes }: any) {
                     <DatePicker
                       showIcon
                       dateFormat={"yyyy-MM-dd HH:mm:ss"}
-                      className="inline-flex items-center border h-[35px] px-2 w-[150px] ouline-0"
+                      className="inline-flex items-center border h-[35px] px-2 w-[180px] ouline-0"
                       calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
                       selected={
                         product.SaleDate
@@ -322,7 +328,7 @@ function ProductWrite({ catObject, productDetail, isNew, optionTypes }: any) {
                     <DatePicker
                       showIcon
                       dateFormat={"yyyy-MM-dd HH:mm:ss"}
-                      className="inline-flex border h-[35px] px-2 w-[150px]"
+                      className="inline-flex border h-[35px] px-2 w-[180px]"
                       calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
                       selected={
                         product.SaleEndDate
@@ -387,61 +393,83 @@ function ProductWrite({ catObject, productDetail, isNew, optionTypes }: any) {
                   >
                     +
                   </button>
-                  {product.Options.filter((e:any)=>!e.isDel).map((e: any, i: any) => {
-                    return (
-                      <div
-                        className={`flex gap-2 ${i > 0 ? "mt-2" : "mt-2"}`}
-                        key={i}
-                      >
-                        <div className="flex items-center gap-1">
-                          Name
-                          <Input
-                            name={"PoName"}
-                            value={e.PoName}
-                            width={0}
-                            type={"input"}
-                            onChange={(evt: any) =>
-                              handleChangeOptions(evt, e.PoID)
-                            }
-                          />
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <span className="text-nowrap">Init Price</span>{" "}
-                          <Input
-                            name={"PoInitPrice"}
-                            value={e.PoInitPrice}
-                            width={0}
-                            type={"input"}
-                            onChange={(evt: any) =>
-                              handleChangeOptions(evt, e.PoID)
-                            }
-                          />
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <span className="text-nowrap">Sell Price</span>{" "}
-                          <Input
-                            name={"PoSellPrice"}
-                            value={e.PoSellPrice}
-                            width={0}
-                            type={"input"}
-                            onChange={(evt: any) =>
-                              handleChangeOptions(evt, e.PoID)
-                            }
-                          />
-                        </div>
-                        <button
-                          type="button"
-                          className="border rounded bg-rose-600 text-white px-3 py-1 ms-1"
-                          onClick={() => handleDelOption(e.PoID)}
+                  {product.Options.filter((e: any) => !e.isDel).map(
+                    (e: any, i: any) => {
+                      return (
+                        <div
+                          className={`flex gap-2 ${i > 0 ? "mt-2" : "mt-2"}`}
+                          key={i}
                         >
-                          <i className="fa fa-times" aria-hidden="true"></i>
-                        </button>
-                      </div>
-                    );
-                  })}
+                          <div className="flex items-center gap-1">
+                            Name
+                            <Input
+                              name={"PoName"}
+                              value={e.PoName}
+                              width={0}
+                              type={"input"}
+                              onChange={(evt: any) =>
+                                handleChangeOptions(evt, e.PoID)
+                              }
+                            />
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <span className="text-nowrap">Init Price</span>{" "}
+                            <Input
+                              name={"PoInitPrice"}
+                              value={e.PoInitPrice}
+                              width={0}
+                              type={"input"}
+                              onChange={(evt: any) =>
+                                handleChangeOptions(evt, e.PoID)
+                              }
+                            />
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <span className="text-nowrap">Sell Price</span>{" "}
+                            <Input
+                              name={"PoSellPrice"}
+                              value={e.PoSellPrice}
+                              width={0}
+                              type={"input"}
+                              onChange={(evt: any) =>
+                                handleChangeOptions(evt, e.PoID)
+                              }
+                            />
+                          </div>
+                          <button
+                            type="button"
+                            className="border rounded bg-rose-600 text-white px-3 py-1 ms-1"
+                            onClick={() => handleDelOption(e.PoID)}
+                          >
+                            <i className="fa fa-times" aria-hidden="true"></i>
+                          </button>
+                        </div>
+                      );
+                    }
+                  )}
                 </td>
               </tr>
-              <tr>
+              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th
+                  scope="row"
+                  className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  Brand
+                </th>
+                <td className="px-6 py-2">
+                  <Dropdown
+                    containerClassName="w-[150px]"
+                    className="w-full h-[35px] rounded-md"
+                    options={brandList}
+                    onChange={(id: number) => {
+                      handleChange({
+                        target: { name: "BrandID", value: id },
+                      });
+                    }}
+                    activeItem={Number(product.BrandID)}
+                    placeHolder="--Brand--"
+                  />
+                </td>
                 <th
                   scope="row"
                   className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
