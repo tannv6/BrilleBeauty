@@ -1,17 +1,25 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import Link from "next/link";
 import "@/app/globals.css";
 import { listMenu } from "@/utils/constants";
 import { usePathname } from "next/navigation";
 function Layout({ children }: any) {
-  const location = usePathname();
-  console.log(location);
-  
+  const pathname = usePathname();
+
   const initMenu = listMenu.find((e) =>
-    e.mapLinks?.find((e1) => location?.includes(e1))
+    e.mapLinks?.find((e1) => pathname?.includes(e1))
   );
+
   const [activeMenu, setActiveMenu] = useState(initMenu?.id || 0);
+
+  useEffect(() => {
+    const initMenu = listMenu.find((e) =>
+      e.mapLinks?.find((e1) => pathname?.includes(e1))
+    );
+    setActiveMenu(initMenu?.id || 0);
+  }, [pathname]);
+
   const handleChangeMenu = (id: number) => {
     if (activeMenu == id) {
       setActiveMenu(0);
@@ -43,9 +51,12 @@ function Layout({ children }: any) {
             <ul className="space-y-2">
               {listMenu.map((e, i) => {
                 return (
-                  <li key={i} className="opcion-con-desplegable ease-out duration-300">
+                  <li
+                    key={i}
+                    className="opcion-con-desplegable ease-out duration-300"
+                  >
                     <div
-                    role="button"
+                      role="button"
                       onClick={() => handleChangeMenu(e.id)}
                       className="flex items-center justify-between p-2 hover:bg-gray-700"
                     >

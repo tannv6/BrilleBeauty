@@ -1,7 +1,7 @@
 import axios from "axios";
 import React from "react";
 import MemberList from "./[page]";
-const scale = 10;
+const scale = 3;
 export const getServerSideProps = async () => {
   const response = await axios.get("http://localhost:3000/api/customers/list", {
     params: { page: 1, scale },

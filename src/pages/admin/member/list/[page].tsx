@@ -11,8 +11,9 @@ import Thead from "../../components/Thead";
 import Tr from "../../components/Tr";
 import Th from "../../components/Th";
 import Td from "../../components/Td";
+import moment from "moment";
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
-const scale = 10;
+const scale = 3;
 export const getServerSideProps = (async (context: any) => {
   const { params } = context;
   const { page } = params;
@@ -45,15 +46,21 @@ function MemberList({ response, initPage, total, totalPage }: any) {
     router.query.page = page.toString();
     router.push(router);
   };
+  const handleDelete = async (id: number) => {
+    if (confirm("Are you sure delete this customer?")) {
+      await axios.put(`/api/customers/del`, { CustomerID: id });
+      window.location.reload();
+    }
+  };
   return (
     <Layout>
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold mb-4">Products List</h1>
+        <h1 className="text-2xl font-bold mb-4">Customers List</h1>
         <Link
-          href={"/admin/products/write"}
-          className="flex justify-center items-center bg-blue-600 text-white p-2 rounded w-[150px] h-[40px]"
+          href={"/admin/member/write"}
+          className="flex justify-center items-center bg-blue-600 text-white py-2 px-3 rounded h-[40px]"
         >
-          Add New Product
+          Add New Customer
         </Link>
       </div>
       <div className="flex items-center justify-center">
@@ -78,14 +85,20 @@ function MemberList({ response, initPage, total, totalPage }: any) {
                   <Td>{e.LastName}</Td>
                   <Td>{e.Email}</Td>
                   <Td>{e.CustomerPhone}</Td>
-                  <Td>{e.CreatedAt}</Td>
+                  <Td>{moment(e.CreatedAt).format("yyyy-MM-DD HH:mm:ss")}</Td>
                   <Td center>
                     <Link
                       href={`/admin/member/write/${e.CustomerID}`}
-                      className="font-medium text-blue-600 hover:text-blue-800"
+                      className="font-medium text-blue-600 hover:text-blue-800 me-3"
                     >
                       <i className="fas fa-edit"></i>
                     </Link>
+                    <button
+                      className="text-red-500"
+                      onClick={() => handleDelete(e.CustomerID)}
+                    >
+                      <i className="fas fa-trash-alt"></i>
+                    </button>
                   </Td>
                 </Tr>
               );

@@ -8,10 +8,10 @@ export default async function handle(
   try {
     const params = req.query;
 
-    const { page = 1, scale = 1000 } = params;
+    const { page = 1, scale = 1000, DistrictID } = params;
 
     const connect = await connectDB();
-    const totalQuery = `select * from customers where DeletedAt is null order by CustomerID desc`;
+    const totalQuery = `select * from commune where DistrictID = '${DistrictID}' and DeletedAt is null`;
 
     const [resultTotal]: any = await connect.execute(totalQuery);
 

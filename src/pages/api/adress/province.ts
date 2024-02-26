@@ -11,7 +11,7 @@ export default async function handle(
     const { page = 1, scale = 1000 } = params;
 
     const connect = await connectDB();
-    const totalQuery = `select * from customers where DeletedAt is null order by CustomerID desc`;
+    const totalQuery = `select * from province where DeletedAt is null`;
 
     const [resultTotal]: any = await connect.execute(totalQuery);
 
