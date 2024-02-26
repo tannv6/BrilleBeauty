@@ -6,6 +6,8 @@ import { listMenu } from "@/utils/constants";
 import { usePathname } from "next/navigation";
 function Layout({ children }: any) {
   const location = usePathname();
+  console.log(location);
+  
   const initMenu = listMenu.find((e) =>
     e.mapLinks?.find((e1) => location?.includes(e1))
   );
@@ -48,7 +50,7 @@ function Layout({ children }: any) {
                       className="flex items-center justify-between p-2 hover:bg-gray-700"
                     >
                       <div className="flex items-center">
-                        <i className="fas fa-calendar-alt mr-2" />
+                        <i className={`fas ${e.icon} mr-2`} />
                         <span>{e.label}</span>
                       </div>
                       <i className="fas fa-chevron-down text-xs" />

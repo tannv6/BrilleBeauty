@@ -4,18 +4,18 @@ export const listMenu = [
     label: "Category",
     mapLinks: ["/admin/category"],
     children: [
-      { id: 1, label: "Categories List", link: "/admin/category/list" },
-      { id: 2, label: "Add Category", link: "/admin/category/write" },
+      { id: 1, label: "Categories List", link: "/admin/category/list" }
     ],
+    icon: "fa-calendar-alt"
   },
   {
     id: 2,
     label: "Brand",
     mapLinks: ["/admin/brand"],
     children: [
-      { id: 1, label: "Brand List", link: "/admin/brand/list" },
-      { id: 2, label: "Add Brand", link: "/admin/brand/write" },
+      { id: 1, label: "Brand List", link: "/admin/brand/list" }
     ],
+    icon: "fa-calendar-alt"
   },
   {
     id: 3,
@@ -23,20 +23,34 @@ export const listMenu = [
     mapLinks: ["/admin/products", "/admin/combo", "/admin/option_types"],
     children: [
       { id: 1, label: "Products List", link: "/admin/products/list" },
-      { id: 2, label: "Add Product", link: "/admin/products/write" },
       { id: 2, label: "Combo List", link: "/admin/combo/list" },
-      { id: 2, label: "Add Combo", link: "/admin/combo/write" },
       { id: 2, label: "Option Types", link: "/admin/option_types/list" },
     ],
+    icon: "fa-calendar-alt"
   },
   {
     id: 4,
     label: "Orders",
     children: [{ id: 1, label: "Orders List", link: "" }],
+    icon: "fa-calendar-alt"
   },
   {
     id: 5,
-    label: "Customers",
-    children: [{ id: 1, label: "Customers List", link: "" }],
+    label: "Member",
+    mapLinks: ["/admin/member"],
+    children: [{ id: 1, label: "Member List", link: "/admin/member/list/1" }],
+    icon: "fa-calendar-alt"
+  },
+  {
+    id: 6,
+    label: "Banner",
+    children: [{ id: 1, label: "Banner List", link: "" }],
+    icon: "fa-calendar-alt"
+  },
+  {
+    id: 7,
+    label: "Setting",
+    children: [{ id: 1, label: "Web Information", link: "" }],
+    icon: "fa-calendar-alt"
   },
 ];
