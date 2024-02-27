@@ -50,7 +50,8 @@ export const listMenu = [
   {
     id: 7,
     label: "Setting",
-    children: [{ id: 1, label: "Web Information", link: "" }],
+    mapLinks: ["/admin/setting"],
+    children: [{ id: 1, label: "Web Information", link: "/admin/setting/web_info" }],
     icon: "fa-calendar-alt"
   },
 ];

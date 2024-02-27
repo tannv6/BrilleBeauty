@@ -22,8 +22,6 @@ export const getServerSideProps = async (context: { params: any }) => {
 };
 function BrandWrite({ brandDetail }: any) {
 
-  console.log(brandDetail);
-
   const router = useRouter();
   const [brand, setBrand] = useState<{ [key: string]: any }>({
     BrandName: brandDetail.BrandName || "",

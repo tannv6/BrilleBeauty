@@ -37,8 +37,6 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     Address='${Address}',
     CreatedAt= now();`;
 
-    console.log(query);
-
     const [results] = await connect.execute(query);
 
     return res.status(201).json({ result: "OK" });

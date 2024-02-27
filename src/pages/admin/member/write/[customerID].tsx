@@ -20,19 +20,32 @@ export const getServerSideProps = async (context: { params: any }) => {
     }
   );
   const result1 = await axios.get(`http://localhost:3000/api/adress/province`);
+  const result2 = await axios.get(`http://localhost:3000/api/adress/district`, {
+    params: { ProvinceID: customerDetail.data?.Province },
+  });
+  const result3 = await axios.get(`http://localhost:3000/api/adress/commune`, {
+    params: { DistrictID: customerDetail.data?.District },
+  });
 
   return {
     props: {
       customerDetail: customerDetail.data,
       provinceList: result1.data.data,
+      districtListInit: result2.data.data,
+      communeListInit: result3.data.data,
     },
   };
 };
-function CustomerWrite({ customerDetail, isNew, provinceList }: any) {
-  console.log(provinceList);
+function CustomerWrite({
+  customerDetail,
+  isNew,
+  provinceList,
+  districtListInit,
+  communeListInit,
+}: any) {
 
-  const [districtList, setDistrictList] = useState([]);
-  const [communeList, setCommuneList] = useState([]);
+  const [districtList, setDistrictList] = useState(districtListInit || []);
+  const [communeList, setCommuneList] = useState(communeListInit || []);
 
   const router = useRouter();
   const [customer, setCustomer] = useState<{
@@ -217,7 +230,7 @@ function CustomerWrite({ customerDetail, isNew, provinceList }: any) {
                     <Dropdown
                       containerClassName="w-[120px]"
                       className="w-full h-[35px] rounded-md"
-                      options={provinceList.map((e: any, i: any) => ({
+                      options={provinceList?.map((e: any, i: any) => ({
                         id: e.ProvinceID,
                         name: e.ProvinceName,
                       }))}
