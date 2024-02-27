@@ -31,7 +31,7 @@ export const listMenu = [
   {
     id: 4,
     label: "Orders",
-    children: [{ id: 1, label: "Orders List", link: "" }],
+    children: [{ id: 1, label: "Orders List", link: "/admin/orders/list/1" }],
     icon: "fa-calendar-alt"
   },
   {
