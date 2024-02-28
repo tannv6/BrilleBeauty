@@ -29,6 +29,7 @@
     "react-datepicker": "^5.0.0",
     "react-dom": "^18",
     "react-slick": "^0.29.0",
+    "simple-react-lightbox": "^3.6.9-0",
     "slick-carousel": "^1.8.1",
     "swiper": "^11.0.5",
     "tinymce": "^6.8.3"
@@ -39,6 +40,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/simple-react-lightbox": "^3.6.7",
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.0.4",

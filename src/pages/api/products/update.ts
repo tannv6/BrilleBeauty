@@ -96,7 +96,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     }
     queryImage && (await connect.execute(queryImage));
     if (DelImage) {
-      const queryDelImage = `DELETE FROM productimages WHERE ImageID IN (${DelImage})`;
+      const queryDelImage = `UPDATE productimages SET DeletedAt = now() WHERE ImageID IN (${DelImage})`;
       await connect.execute(queryDelImage);
     }
     if (Options) {

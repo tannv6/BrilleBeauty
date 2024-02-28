@@ -10,6 +10,13 @@ import Checkbox from "../../components/Checkbox";
 import Link from "next/link";
 import Input from "../../components/Input";
 import moment from "moment";
+import Table from "../../components/Table";
+import Thead from "../../components/Thead";
+import Tr from "../../components/Tr";
+import Th from "../../components/Th";
+import Td from "../../components/Td";
+import Image from "next/image";
+const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 export const getServerSideProps = async (context: { params: any }) => {
   const { params } = context;
   const { OrderID } = params;
@@ -20,25 +27,32 @@ export const getServerSideProps = async (context: { params: any }) => {
     }
   );
   const result1 = await axios.get(`http://localhost:3000/api/adress/province`);
-  const result2 = await axios.get(
-    `http://localhost:3000/api/adress/district`,
-    {
-      params: { ProvinceID: orderDetail.data?.Province },
-    }
+  const result2 = await axios.get(`http://localhost:3000/api/adress/district`, {
+    params: { ProvinceID: orderDetail.data?.ProvinceID },
+  });
+  const result3 = await axios.get(`http://localhost:3000/api/adress/commune`, {
+    params: { DistrictID: orderDetail.data?.DistrictID },
+  });
+  const result4 = await axios.get(
+    `http://localhost:3000/api/orders/status_list`
   );
-  const result3 = await axios.get(
-    `http://localhost:3000/api/adress/commune`,
-    {
-      params: { DistrictID: orderDetail.data?.District },
-    }
+  const result5 = await axios.get(
+    `http://localhost:3000/api/orders/shiping_form`
+  );
+  const result6 = await axios.get(
+    `http://localhost:3000/api/orders/pay_method`
   );
 
   return {
     props: {
-      orderDetail: orderDetail.data,
+      orderDetail: orderDetail.data.order,
       provinceList: result1.data.data,
       districtListInit: result2.data.data,
       communeListInit: result3.data.data,
+      statusList: result4.data,
+      prdList: orderDetail.data.detail,
+      shippingFormList: result5.data,
+      payMethodList: result6.data,
     },
   };
 };
@@ -48,7 +62,13 @@ function OrderWrite({
   provinceList,
   districtListInit,
   communeListInit,
+  statusList,
+  prdList,
+  shippingFormList,
+  payMethodList,
 }: any) {
+  console.log(statusList);
+
   const [districtList, setDistrictList] = useState(districtListInit || []);
   const [communeList, setCommuneList] = useState(communeListInit || []);
 
@@ -72,21 +92,21 @@ function OrderWrite({
     CommuneID: any;
   }>({
     OrderID: orderDetail?.OrderID,
-    OrdersCode: orderDetail?.OrdersCode,
-    CustomerID: orderDetail?.CustomerID,
-    TotalAmount: orderDetail?.TotalAmount,
-    StatusID: orderDetail?.StatusID,
-    OrderPhone: orderDetail?.OrderPhone,
-    OrderEmail: orderDetail?.OrderEmail,
-    OrderAddress: orderDetail?.OrderAddress,
-    PayMethodID: orderDetail?.PayMethodID,
-    ShippingFormID: orderDetail?.ShippingFormID,
-    Note: orderDetail?.Note,
-    CustomerNote: orderDetail?.CustomerNote,
-    RecieverName: orderDetail?.RecieverName,
-    ProvinceID: orderDetail?.ProvinceID,
-    DistrictID: orderDetail?.DistrictID,
-    CommuneID: orderDetail?.CommuneID,
+    OrdersCode: orderDetail?.OrdersCode || "",
+    CustomerID: orderDetail?.CustomerID || "",
+    TotalAmount: orderDetail?.TotalAmount || "",
+    StatusID: orderDetail?.StatusID || "",
+    OrderPhone: orderDetail?.OrderPhone || "",
+    OrderEmail: orderDetail?.OrderEmail || "",
+    OrderAddress: orderDetail?.OrderAddress || "",
+    PayMethodID: orderDetail?.PayMethodID || "",
+    ShippingFormID: orderDetail?.ShippingFormID || "",
+    Note: orderDetail?.Note || "",
+    CustomerNote: orderDetail?.CustomerNote || "",
+    RecieverName: orderDetail?.RecieverName || "",
+    ProvinceID: orderDetail?.ProvinceID || "",
+    DistrictID: orderDetail?.DistrictID || "",
+    CommuneID: orderDetail?.CommuneID || "",
   });
 
   const [detailImage, setDetailImage] = useState<any[]>([]);
@@ -154,6 +174,11 @@ function OrderWrite({
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold mb-4">
           {isNew ? "Add New Order" : "Edit Order"}
+          {orderDetail?.OrderID && (
+            <span className="ms-3 text-xl font-bold text-gray-400">
+              ( {orderDetail?.OrdersCode} )
+            </span>
+          )}
         </h1>
       </div>
       <form onSubmit={handleSubmit}>
@@ -208,16 +233,24 @@ function OrderWrite({
                   scope="row"
                   className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
                 >
-                  OrderPhone
+                  Order Status
                 </th>
                 <td className="px-6 py-2">
-                  <input
-                    type="text"
-                    name="OrderPhone"
-                    value={order.OrderPhone}
-                    id="OrderPhone"
-                    onChange={handleChange}
-                    className="h-[35px] outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  <Dropdown
+                    containerClassName="w-[200px]"
+                    className="w-full h-[35px] rounded-md"
+                    options={statusList?.map((e: any, i: any) => ({
+                      id: e.StatusID,
+                      name: e.StatusName,
+                    }))}
+                    onChange={(id: number) => {
+                      handleGetDistrict(id);
+                      handleChange({
+                        target: { name: "StatusID", value: id },
+                      });
+                    }}
+                    activeItem={Number(order.StatusID)}
+                    placeHolder="--Status--"
                   />
                 </td>
                 <th
@@ -312,9 +345,146 @@ function OrderWrite({
                   />
                 </td>
               </tr>
+              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th
+                  scope="row"
+                  className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  Customer Order
+                </th>
+                <td className="px-6 py-2">
+                  <input
+                    type="text"
+                    value={`${orderDetail?.FirstName || ""} ${
+                      orderDetail?.LastName || ""
+                    }`}
+                    disabled
+                    className="h-[35px] outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  />
+                </td>
+                <th
+                  scope="row"
+                  className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  Shipping Form
+                </th>
+                <td className="px-6 py-2">
+                  <Dropdown
+                    containerClassName="w-[180px]"
+                    className="w-full h-[35px] rounded-md"
+                    options={shippingFormList.map((e: any, i: any) => ({
+                      id: e.ShippingFormID,
+                      name: e.ShippingFormName,
+                    }))}
+                    onChange={(id: number) => {
+                      handleChange({
+                        target: { name: "ShippingFormID", value: id },
+                      });
+                    }}
+                    activeItem={Number(order.ShippingFormID)}
+                    placeHolder="--ShippingForm--"
+                  />
+                </td>
+              </tr>
+              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th
+                  scope="row"
+                  className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  TotalAmount
+                </th>
+                <td className="px-6 py-2">
+                  <input
+                    type="text"
+                    value={order.TotalAmount}
+                    disabled
+                    className="h-[35px] outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  />
+                </td>
+                <th
+                  scope="row"
+                  className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  Pay Method
+                </th>
+                <td className="px-6 py-2">
+                  <Dropdown
+                    containerClassName="w-[180px]"
+                    className="w-full h-[35px] rounded-md"
+                    options={payMethodList.map((e: any, i: any) => ({
+                      id: e.PayMethodID,
+                      name: e.PayMethodName,
+                    }))}
+                    onChange={(id: number) => {
+                      handleChange({
+                        target: { name: "PayMethodID", value: id },
+                      });
+                    }}
+                    activeItem={Number(order.PayMethodID)}
+                    placeHolder="--PayMethod--"
+                  />
+                </td>
+              </tr>
+              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th
+                  scope="row"
+                  className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  Note
+                </th>
+                <td className="px-6 py-2">
+                  <input
+                    type="text"
+                    name="Note"
+                    value={order.Note}
+                    id="Note"
+                    onChange={handleChange}
+                    className="h-[35px] outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  />
+                </td>
+                <th
+                  scope="row"
+                  className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  Customer Note
+                </th>
+                <td className="px-6 py-2">{order.CustomerNote || ""}</td>
+              </tr>
             </tbody>
           </table>
         </div>
+        <h1 className="text-xl font-bold mb-2 mt-6">Product List</h1>
+        <Table>
+          <Thead>
+            <Tr className="bg-blue-gray-100 text-gray-700">
+              <Th>ID</Th>
+              <Th>Thumb Image</Th>
+              <Th>Product Name</Th>
+              <Th>Amount</Th>
+              <Th>Price</Th>
+            </Tr>
+          </Thead>
+          <tbody className="text-blue-gray-900">
+            {prdList.map((e: any, i: any) => {
+              return (
+                <Tr key={i}>
+                  <Td>{i + 1}</Td>
+                  <Td>
+                    <Image
+                      src={`${CDN_URL}/${e.ProductImage}`}
+                      alt=""
+                      width={100}
+                      height={100}
+                    />
+                  </Td>
+                  <Td>{e.ProductName}</Td>
+                  <Td>{e.detailQuantity}</Td>
+                  <Td>{e.Subtotal}</Td>
+                </Tr>
+              );
+            })}
+          </tbody>
+        </Table>
         <div className="gap-2 flex justify-center mt-3">
           <Link
             className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"

@@ -11,6 +11,7 @@ import Thead from "../../components/Thead";
 import Tr from "../../components/Tr";
 import Th from "../../components/Th";
 import Td from "../../components/Td";
+import { SRLWrapper } from "simple-react-lightbox";
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 const scale = 10;
 export const getServerSideProps = (async (context: any) => {
@@ -47,16 +48,23 @@ function ProductList({ response, initPage, total, totalPage }: any) {
   };
   return (
     <Layout>
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold mb-4">Products List</h1>
-        <Link
-          href={"/admin/products/write"}
-          className="flex justify-center items-center bg-blue-600 text-white p-2 rounded w-[150px] h-[40px]"
-        >
-          Add New Product
-        </Link>
-      </div>
-      <div className="flex items-center justify-center">
+      <SRLWrapper
+        options={{
+          thumbnails: {
+            showThumbnails: false,
+          },
+        }}
+      >
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold mb-4">Products List</h1>
+          <Link
+            href={"/admin/products/write"}
+            className="flex justify-center items-center bg-blue-600 text-white p-2 rounded w-[150px] h-[40px]"
+          >
+            Add New Product
+          </Link>
+        </div>
+        <div className="flex items-center justify-center">
           <Table>
             <Thead>
               <Tr className="bg-blue-gray-100 text-gray-700">
@@ -100,13 +108,14 @@ function ProductList({ response, initPage, total, totalPage }: any) {
             </tbody>
           </Table>
         </div>
-      <Pagingnation
-        tP={totalPage}
-        cP={page}
-        tE={total}
-        per={10}
-        onChange={handleChangePage}
-      />
+        <Pagingnation
+          tP={totalPage}
+          cP={page}
+          tE={total}
+          per={10}
+          onChange={handleChangePage}
+        />
+      </SRLWrapper>
     </Layout>
   );
 }

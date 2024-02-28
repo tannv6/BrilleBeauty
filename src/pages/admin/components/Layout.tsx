@@ -4,6 +4,7 @@ import Link from "next/link";
 import "@/app/globals.css";
 import { listMenu } from "@/utils/constants";
 import { usePathname } from "next/navigation";
+import SimpleReactLightbox from 'simple-react-lightbox';
 function Layout({ children }: any) {
   const pathname = usePathname();
 
@@ -28,7 +29,7 @@ function Layout({ children }: any) {
     }
   };
   return (
-    <>
+    <SimpleReactLightbox>
       <Head>
         <title>Brille Beauty CMS</title>
       </Head>
@@ -93,7 +94,7 @@ function Layout({ children }: any) {
         </aside>
         <main className="container mx-auto p-4">{children}</main>
       </div>
-    </>
+    </SimpleReactLightbox>
   );
 }
 

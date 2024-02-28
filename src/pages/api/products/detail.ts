@@ -20,6 +20,7 @@ export default async function handle(
     if (Array.isArray(result) && result.length > 0) {
         const product: any = result[0];
         product['Options'] = result1;
+        product['Images'] = result2;
         return res.status(200).json(product);
       } else {
         return res.status(200).json(null);
