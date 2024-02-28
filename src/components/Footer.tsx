@@ -23,11 +23,6 @@ function Footer() {
                 STORE INFORMATION
               </Link>
             </li>
-            <li>
-              <Link href={"/"} className="text-[15px] text-[#757575]">
-                HELP
-              </Link>
-            </li>
           </ul>
         </nav>
       </div>

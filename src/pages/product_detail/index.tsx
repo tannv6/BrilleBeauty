@@ -11,6 +11,7 @@ import ProductDetailNav from "@/components/ProductDetailNav";
 import Image from "next/image";
 import Pagi from "@/components/Pagi";
 import ProductRelated from "@/components/ProductRelated";
+import Link from "next/link";
 export default function Face() {
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   const [NumProduct, setNumProduct] = useState(1);
@@ -153,7 +154,9 @@ export default function Face() {
                   <span className="font-bold">PRODUCT REVIEWS</span>
                   <span className="text-[#757575]">(12)</span>
                 </p>
-                <button className="w-[130px] h-[35px] border border-[#ef426f] rounded text-[#ef426f] font-medium">Write review</button>
+                <Link href="/write_review">
+                  <button className="w-[130px] h-[35px] border border-[#ef426f] rounded text-[#ef426f] font-medium">Write review</button>
+                </Link>
               </div>
               <hr />
 
