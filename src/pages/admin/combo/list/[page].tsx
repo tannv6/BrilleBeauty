@@ -60,7 +60,7 @@ function ComboList({ response, initPage, total, totalPage }: any) {
         </Link>
       </div>
       <div className="flex items-center justify-center">
-          <Table colWidths={["10%", "100px", "45%", "20%", "20%", "10%"]}>
+          <Table colWidths={["10%", "100px", "30%", "20%", "20%", "15%", "10%"]}>
             <Thead>
               <Tr>
                 <Th>ID</Th>
@@ -68,6 +68,7 @@ function ComboList({ response, initPage, total, totalPage }: any) {
                 <Th>Combo Name</Th>
                 <Th>Original Price</Th>
                 <Th>Sell Price</Th>
+                <Th>Category</Th>
                 <Th center>Action</Th>
               </Tr>
             </Thead>
@@ -87,6 +88,7 @@ function ComboList({ response, initPage, total, totalPage }: any) {
                     <Td>{e.ComboName}</Td>
                     <Td>{e.InitPrice}</Td>
                     <Td>{e.SellPrice}</Td>
+                    <Td>{e.CategoryName}</Td>
                     <Td center>
                       <Link
                         href={`/admin/combo/write/${e.ComboID}`}

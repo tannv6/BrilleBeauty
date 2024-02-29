@@ -82,9 +82,9 @@ function ProductWrite({
     SaleEndDate: moment(productDetail?.SaleEndDate).format(
       "yyyy-MM-DD HH:mm:ss"
     ),
-    IsBest: 0,
-    IsBigSale: 0,
-    IsNew: 0,
+    IsBest: productDetail?.IsBest,
+    IsBigSale: productDetail?.IsBigSale,
+    IsNew: productDetail?.IsNew,
     ProductImage: productDetail?.ProductImage || "",
     CategoryID: productDetail?.CategoryID,
     CategoryLevel: productDetail?.CategoryLevel,
@@ -228,6 +228,12 @@ function ProductWrite({
     });
   };
 
+  const thumbSrc =
+    typeof product.ProductImage === "object"
+      ? URL.createObjectURL(product.ProductImage)
+      : productDetail.ProductImage
+      ? `${CDN_URL}/${productDetail.ProductImage}`
+      : "";
   return (
     <Layout>
       <SRLWrapper
@@ -378,12 +384,15 @@ function ProductWrite({
                       type="file"
                       id="formFile"
                     />
-                    <Image
-                      width={100}
-                      height={100}
-                      src={`${CDN_URL}/${product.ProductImage}`}
-                      alt=""
-                    />
+                    {thumbSrc && (
+                      <Image
+                        className="mt-2"
+                        width={100}
+                        height={100}
+                        src={thumbSrc}
+                        alt=""
+                      />
+                    )}
                   </td>
                 </tr>
                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">

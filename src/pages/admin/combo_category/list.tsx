@@ -11,7 +11,9 @@ import Modal from "../components/Modal";
 import axios from "axios";
 
 export const getServerSideProps = async () => {
-  const result = await axios.get("http://localhost:3000/api/option_types/list");
+  const result = await axios.get(
+    "http://localhost:3000/api/combo_category/list"
+  );
   return {
     props: {
       list: result.data.data,
@@ -22,40 +24,40 @@ export const getServerSideProps = async () => {
 function List({ list }: any) {
   const [isOpenWrite, setIsOpenWrite] = useState(false);
   const [detail, setDetail] = useState<{
-    PotID: number | undefined;
-    PotName: string;
+    CategoryID: number | undefined;
+    CategoryName: string;
   }>({
-    PotID: 0,
-    PotName: "",
+    CategoryID: 0,
+    CategoryName: "",
   });
-  const handleOpenWrite = (PotName: string, PotID?: number) => {
+  const handleOpenWrite = (CategoryName: string, CategoryID?: number) => {
     setDetail({
       ...detail,
-      PotID,
-      PotName,
+      CategoryID,
+      CategoryName,
     });
     setIsOpenWrite(true);
   };
   const handleSubmit = async () => {
-    if (detail.PotID) {
-      await axios.post("/api/option_types/update", { ...detail });
+    if (detail.CategoryID) {
+      await axios.post("/api/combo_category/update", { ...detail });
     } else {
-      await axios.post("/api/option_types/create", { ...detail });
+      await axios.post("/api/combo_category/write", { ...detail });
     }
     location.reload();
   };
   const handleDelete = async (id: number) => {
-    if (confirm("Are you sure delete this option type?")) {
-      await axios.put(`/api/option_types/del`, { PotID: id });
+    if (confirm("Are you sure delete this category?")) {
+      await axios.put(`/api/combo_category/del`, { CategoryID: id });
       window.location.reload();
     }
   };
   return (
     <Layout>
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold mb-4">Option Type List</h1>
+        <h1 className="text-2xl font-bold mb-4">Combo Category List</h1>
         <Button onClick={() => handleOpenWrite("")} color="blue">
-          + Add option type
+          + Add Category
         </Button>
       </div>
       <Table colWidths={["20%", "60%", "20%"]}>
@@ -71,17 +73,19 @@ function List({ list }: any) {
             return (
               <Tr key={i}>
                 <Td>{list.length - i}</Td>
-                <Td>{e.PotName}</Td>
+                <Td>{e.CategoryName}</Td>
                 <Td center>
                   <button
                     className="font-medium text-blue-600 hover:text-blue-800 me-3"
-                    onClick={() => handleOpenWrite(e.PotName, e.PotID)}
+                    onClick={() =>
+                      handleOpenWrite(e.CategoryName, e.CategoryID)
+                    }
                   >
                     <i className="fas fa-edit"></i>
                   </button>
                   <button
                     className="text-red-500"
-                    onClick={() => handleDelete(e.PotID)}
+                    onClick={() => handleDelete(e.CategoryID)}
                   >
                     <i className="fas fa-trash-alt"></i>
                   </button>
@@ -103,14 +107,14 @@ function List({ list }: any) {
               </label>
               <input
                 type="text"
-                name="PotName"
-                id="PotName"
+                name="CategoryName"
+                id="CategoryName"
                 onChange={(e) =>
-                  setDetail({ ...detail, PotName: e.target.value })
+                  setDetail({ ...detail, CategoryName: e.target.value })
                 }
-                value={detail.PotName}
+                value={detail.CategoryName}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                placeholder="Type option type name"
+                placeholder="Type Category name"
                 required
               />
             </div>
@@ -120,7 +124,7 @@ function List({ list }: any) {
             type="button"
             className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
-            {detail.PotID ? "Update Option Type" : "Add Option Type"}
+            {detail.CategoryID ? "Update Combo Category" : "Add Combo Category"}
           </button>
         </form>
       </Modal>

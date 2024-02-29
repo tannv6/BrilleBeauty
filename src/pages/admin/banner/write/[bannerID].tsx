@@ -10,6 +10,9 @@ import Checkbox from "../../components/Checkbox";
 import Link from "next/link";
 import Input from "../../components/Input";
 import moment from "moment";
+import { SRLWrapper } from "simple-react-lightbox";
+import Image from "next/image";
+const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 export const getServerSideProps = async (context: { params: any }) => {
   const { params } = context;
   const { bannerID } = params;
@@ -26,11 +29,7 @@ export const getServerSideProps = async (context: { params: any }) => {
     },
   };
 };
-function BannerWrite({
-  bannerDetail,
-  isNew,
-}: any) {
-
+function BannerWrite({ bannerDetail, isNew }: any) {
   const router = useRouter();
   const [banner, setBanner] = useState<{
     BannerID: any;
@@ -39,13 +38,21 @@ function BannerWrite({
     BannerImg: any;
     BannerDes: any;
     BannerLink: any;
+    ImageUpload: File | null;
+    ShowDate: any;
+    ShowEndDate: any;
   }>({
     BannerID: bannerDetail?.BannerID,
-    BannerCategory: bannerDetail?.BannerCategory,
-    BannerName: bannerDetail?.BannerName,
-    BannerImg: bannerDetail?.BannerImg,
-    BannerDes: bannerDetail?.BannerDes,
-    BannerLink: bannerDetail?.BannerLink,
+    BannerCategory: bannerDetail?.BannerCategory || "",
+    BannerName: bannerDetail?.BannerName || "",
+    BannerImg: bannerDetail?.BannerImg || "",
+    BannerDes: bannerDetail?.BannerDes || "",
+    BannerLink: bannerDetail?.BannerLink || "",
+    ImageUpload: null,
+    ShowDate: moment(bannerDetail?.ShowDate).format("yyyy-MM-DD HH:mm:ss"),
+    ShowEndDate: moment(bannerDetail?.ShowEndDate).format(
+      "yyyy-MM-DD HH:mm:ss"
+    ),
   });
 
   const [detailImage, setDetailImage] = useState<any[]>([]);
@@ -92,6 +99,10 @@ function BannerWrite({
     }
   }
 
+  const src = banner.ImageUpload
+    ? URL.createObjectURL(banner.ImageUpload)
+    : `${CDN_URL}/${banner.BannerImg}`;
+
   return (
     <Layout>
       <div className="flex justify-between items-center">
@@ -117,37 +128,24 @@ function BannerWrite({
                   scope="row"
                   className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
                 >
-                  BannerID
+                  Banner Category
                 </th>
-                <td className="px-6 py-2">
-                  <input
-                    type="text"
-                    name="BannerID"
-                    value={banner.BannerID}
-                    id="BannerID"
-                    onChange={handleChange}
-                    className="h-[35px] outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  />
-                </td>
-                <th
-                  scope="row"
-                  className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  BannerCategory
-                </th>
-                <td className="px-6 py-2">
+                <td className="px-6 py-2" colSpan={3}>
                   <div className="flex gap-1">
                     <Dropdown
                       containerClassName="w-[120px]"
                       className="w-full h-[35px] rounded-md"
-                      options={[{id: "top",
-                        name: "top"}]}
+                      options={[
+                        { id: "top", name: "top" },
+                        { id: "middle", name: "middle" },
+                        { id: "bottom", name: "bottom" },
+                      ]}
                       onChange={(id: number) => {
                         handleChange({
                           target: { name: "BannerCategory", value: id },
                         });
                       }}
-                      activeItem={Number(banner.BannerCategory)}
+                      activeItem={banner.BannerCategory}
                       placeHolder="--Category--"
                     />
                   </div>
@@ -158,7 +156,58 @@ function BannerWrite({
                   scope="row"
                   className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
                 >
-                  BannerDescription
+                  Show Time
+                </th>
+                <td className="px-6 py-2">
+                  <div className="flex items-center gap-1">
+                    <DatePicker
+                      showTimeInput
+                      showIcon
+                      dateFormat={"yyyy-MM-dd HH:mm:ss"}
+                      className="inline-flex items-center border h-[35px] px-2 w-[180px] ouline-0"
+                      calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
+                      selected={
+                        banner.ShowDate ? new Date(banner.ShowDate) : new Date()
+                      }
+                      onChange={(date) =>
+                        handleChange({
+                          target: {
+                            name: "ShowDate",
+                            value: moment(date).format("yyyy-MM-DD HH:mm:ss"),
+                          },
+                        })
+                      }
+                    />
+                    ~
+                    <DatePicker
+                      showTimeInput
+                      showIcon
+                      dateFormat={"yyyy-MM-dd HH:mm:ss"}
+                      className="inline-flex border h-[35px] px-2 w-[180px]"
+                      calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
+                      selected={
+                        banner.ShowEndDate
+                          ? new Date(banner.ShowEndDate)
+                          : new Date()
+                      }
+                      onChange={(date) =>
+                        handleChange({
+                          target: {
+                            name: "ShowEndDate",
+                            value: moment(date).format("yyyy-MM-DD HH:mm:ss"),
+                          },
+                        })
+                      }
+                    />
+                  </div>
+                </td>
+              </tr>
+              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th
+                  scope="row"
+                  className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  Banner Description
                 </th>
                 <td className="px-6 py-2" colSpan={3}>
                   <input
@@ -176,7 +225,7 @@ function BannerWrite({
                   scope="row"
                   className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
                 >
-                  BannerLink
+                  Banner Link
                 </th>
                 <td className="px-6 py-2" colSpan={3}>
                   <input
@@ -197,13 +246,28 @@ function BannerWrite({
                   Banner Image
                 </th>
                 <td className="px-6 py-2" colSpan={3}>
-                    <input
-                      name="BannerImg"
-                      onChange={handleChange}
-                      className="relative m-0 block w-full min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
-                      type="file"
-                      id="formFile"
+                  <input
+                    name="ImageUpload"
+                    onChange={handleChange}
+                    className="relative m-0 block w-full min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
+                    type="file"
+                    id="ImageUpload"
+                  />
+                  <SRLWrapper
+                    options={{
+                      thumbnails: {
+                        showThumbnails: false,
+                      },
+                    }}
+                  >
+                    <Image
+                      className="mt-2"
+                      src={src}
+                      alt={""}
+                      width={100}
+                      height={100}
                     />
+                  </SRLWrapper>
                 </td>
               </tr>
             </tbody>
@@ -212,7 +276,7 @@ function BannerWrite({
         <div className="gap-2 flex justify-center mt-3">
           <Link
             className="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-            href="/admin/banners/list"
+            href="/admin/banner/list"
           >
             Back to List
           </Link>

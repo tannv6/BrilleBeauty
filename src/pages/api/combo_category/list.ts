@@ -11,9 +11,7 @@ export default async function handle(
     const { page = 1, scale = 1000 } = params;
 
     const connect = await connectDB();
-
-    const totalQuery = `select s1.*, s2.CategoryName from combo s1 left join combocategories s2 on
-                        s1.CategoryID = s2.CategoryID where s1.DeletedAt is null`;
+    const totalQuery = `select * from combocategories where DeletedAt is null order by CategoryID desc`;
 
     const [resultTotal]: any = await connect.execute(totalQuery);
 
@@ -22,6 +20,7 @@ export default async function handle(
     const query =
       totalQuery +
       ` limit ${(Number(page) - 1) * Number(scale)}, ${Number(scale)};`;
+
     const [result] = await connect.execute(query);
     return res.status(200).json({
       data: result,

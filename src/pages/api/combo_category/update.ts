@@ -13,33 +13,23 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   try {
     const form = formidable({});
     const [fields, files] = await form.parse(req);
-
     const image = files.ImageUpload?.[0];
     const {
-      BannerCategory,
-      BannerName,
-      BannerDes,
-      BannerLink,
-      ShowDate,
-      ShowEndDate,
+      CategoryID,
+      CategoryName,
     } = fields;
 
-    const connect = await connectDB();
-    let BannerImg = "";
+    let CategoryImg = "";
 
     if (image) {
-      BannerImg = (await saveFile(image, "/banner")).ufile;
+      CategoryImg = (await saveFile(image, "/Category")).ufile;
     }
 
-    const query = `insert into banners SET 
-    BannerCategory='${BannerCategory}',
-    BannerName='${BannerName}',
-    BannerDes='${BannerDes}',
-    BannerImg=${BannerImg ? `'${BannerImg}'` : "BannerImg"},
-    BannerLink='${BannerLink}',
-    ShowDate='${ShowDate}',
-    ShowEndDate='${ShowEndDate}',
-    CreatedAt= now();`;
+    const connect = await connectDB();
+
+    const query = `update combocategories SET
+    CategoryName='${CategoryName}',
+    UpdatedAt = now() where CategoryID='${CategoryID}';`;
 
     const [results] = await connect.execute(query);
 

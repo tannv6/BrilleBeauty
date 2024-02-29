@@ -2,32 +2,11 @@ import connectDB from "@/app/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import { NextRequest, NextResponse } from "next/server";
 import formidable from "formidable";
-import fs from "fs";
+import { saveFile } from "@/utils/function";
 export const config = {
   api: {
     bodyParser: false,
   },
-};
-
-function getFileExtension(filename: string) {
-  return filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2);
-}
-
-const saveFile = async (file: formidable.File) => {
-  const data = fs.readFileSync(file.filepath);
-  await fs.writeFileSync(
-    `./public/uploads/combo/${file.newFilename}.${getFileExtension(
-      file.originalFilename || ""
-    )}`,
-    data
-  );
-  await fs.unlinkSync(file.filepath);
-  return {
-    ufile: `/combo/${file.newFilename}.${getFileExtension(
-      file.originalFilename || ""
-    )}`,
-    rfile: file.originalFilename,
-  };
 };
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
@@ -48,12 +27,13 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       IsNew = 0,
       SaleEndDate,
       DelImage,
+      CategoryID,
     } = fields;
 
     let ComboImage = "";
 
     if (image) {
-      ComboImage = (await saveFile(image)).ufile;
+      ComboImage = (await saveFile(image, "/combo")).ufile;
     }
     const connect = await connectDB();
     const query = `UPDATE Combo SET 
@@ -63,10 +43,11 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     Description = '${Description}', 
     SaleDate = '${SaleDate}', 
     SaleEndDate = '${SaleEndDate}',
+    CategoryID = '${CategoryID}',
     IsBest = ${IsBest}, 
     IsBigSale = ${IsBigSale}, 
     IsNew = ${IsNew},
-    ComboImage = '${ComboImage}'
+    ComboImage = ${ComboImage ? `'${ComboImage}'` : "ComboImage"}
     WHERE ComboID = '${ComboID}'`;
 
     await connect.execute(query);
@@ -83,8 +64,8 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       }
     }
     queryImage && (await connect.execute(queryImage));
-    if (DelImage) {
-      const queryDelImage = `DELETE FROM comboimages WHERE ImageID IN (${DelImage})`;
+    if (DelImage?.[0]) {
+      const queryDelImage = `UPDATE comboimages SET DeletedAt = now() WHERE ImageID IN (${DelImage})`;
       await connect.execute(queryDelImage);
     }
     return res.status(201).json({ result: "OK" });
