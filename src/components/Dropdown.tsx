@@ -2,7 +2,7 @@ import { useState } from "react";
 
 type Props = {
   className?: string;
-  options: { id: number; name: string }[];
+  options: { id: number | string; name: string }[];
   onChange: Function;
   activeItem: number;
   containerClassName?: string;
@@ -19,7 +19,7 @@ function Dropdown({
 }: Props) {
   const activeOption = options.find((e) => e.id === activeItem);
   const [isOpen, setIsOpen] = useState(false);
-  const handleClick = (id: number) => {
+  const handleClick = (id: number | string) => {
     onChange(id);
   };
   const handleBlur = (e: any) => {

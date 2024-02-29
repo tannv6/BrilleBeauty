@@ -44,7 +44,8 @@ export const listMenu = [
   {
     id: 6,
     label: "Banner",
-    children: [{ id: 1, label: "Banner List", link: "" }],
+    mapLinks: ["/admin/banner"],
+    children: [{ id: 1, label: "Banner List", link: "/admin/banner/list/1" }],
     icon: "fa-calendar-alt"
   },
   {
