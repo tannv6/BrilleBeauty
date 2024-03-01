@@ -13,13 +13,13 @@ import Th from "../../components/Th";
 import Td from "../../components/Td";
 import moment from "moment";
 import { SRLWrapper } from "simple-react-lightbox";
+import { pageSize } from "../../utils/constants";
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
-const scale = 3;
 export const getServerSideProps = (async (context: any) => {
   const { params } = context;
   const { page } = params;
   const response = await axios.get("http://localhost:3000/api/popups/list", {
-    params: { page, scale },
+    params: { page, pageSize },
   });
   return {
     props: {
@@ -53,7 +53,7 @@ function PopupList({ response, initPage, total, totalPage }: any) {
   >(response || []);
   const getData = async (page: number) => {
     const response = await axios.get("/api/popups/list", {
-      params: { page, scale },
+      params: { page, pageSize },
     });
     setList(response.data.data);
   };
@@ -115,7 +115,7 @@ function PopupList({ response, initPage, total, totalPage }: any) {
               {list.map((e, i) => {
                 return (
                   <Tr key={i}>
-                    <Td>{total - (page - 1) * scale - i}</Td>
+                    <Td>{total - (page - 1) * pageSize - i}</Td>
                     <Td>{e.PopupScreen}</Td>
                     <Td>
                       <Image
@@ -136,8 +136,8 @@ function PopupList({ response, initPage, total, totalPage }: any) {
                       ></span>
                     </Td>
                     <Td>
-                      {moment(e.StartDate).format("yyyy-MM-DD HH:mm:ss")}<br/>~
-                      {moment(e.EndDate).format("yyyy-MM-DD HH:mm:ss")}
+                      {moment(e.StartDate).format("yyyy-MM-DD HH:mm:ss")}
+                      <br />~{moment(e.EndDate).format("yyyy-MM-DD HH:mm:ss")}
                     </Td>
                     <Td center>
                       <Link

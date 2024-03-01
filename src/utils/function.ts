@@ -31,7 +31,7 @@ export const saveFile = async (
 ) => {
   const data = fs.readFileSync(file.filepath);
   await fs.writeFileSync(
-    `./public/uploads${path}/${file.newFilename}.${getFileExtension(
+    `../data/brillebeauty${path}/${file.newFilename}.${getFileExtension(
       file.originalFilename || ""
     )}`,
     data

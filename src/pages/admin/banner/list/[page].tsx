@@ -13,13 +13,13 @@ import Th from "../../components/Th";
 import Td from "../../components/Td";
 import moment from "moment";
 import { SRLWrapper } from "simple-react-lightbox";
+import { pageSize } from "../../utils/constants";
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
-const scale = 3;
 export const getServerSideProps = (async (context: any) => {
   const { params } = context;
   const { page } = params;
   const response = await axios.get("http://localhost:3000/api/banners/list", {
-    params: { page, scale },
+    params: { page, pageSize },
   });
   return {
     props: {
@@ -36,7 +36,7 @@ function BannerList({ response, initPage, total, totalPage }: any) {
   const [list, setList] = useState(response || []);
   const getData = async (page: number) => {
     const response = await axios.get("/api/banners/list", {
-      params: { page, scale },
+      params: { page, pageSize },
     });
     setList(response.data.data);
   };
@@ -87,7 +87,7 @@ function BannerList({ response, initPage, total, totalPage }: any) {
               {list.map((e: any, i: any) => {
                 return (
                   <Tr key={i}>
-                    <Td>{total - (page - 1) * scale - i}</Td>
+                    <Td>{total - (page - 1) * pageSize - i}</Td>
                     <Td>{e.BannerCategory}</Td>
                     <Td>
                       <Image

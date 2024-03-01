@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Layout from "../../components/Layout";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
-import Image from "next/image";
 import axios from "axios";
 import { useRouter } from "next/router";
 import Pagingnation from "../../components/Pagingnation";
@@ -12,13 +11,12 @@ import Tr from "../../components/Tr";
 import Th from "../../components/Th";
 import Td from "../../components/Td";
 import moment from "moment";
-const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
-const scale = 3;
+import { pageSize } from "../../utils/constants";
 export const getServerSideProps = (async (context: any) => {
   const { params } = context;
   const { page } = params;
   const response = await axios.get("http://localhost:3000/api/customers/list", {
-    params: { page, scale },
+    params: { page, pageSize },
   });
   return {
     props: {
@@ -35,7 +33,7 @@ function MemberList({ response, initPage, total, totalPage }: any) {
   const [list, setList] = useState(response || []);
   const getData = async (page: number) => {
     const response = await axios.get("/api/customers/list", {
-      params: { page, scale },
+      params: { page, pageSize },
     });
     setList(response.data.data);
   };
@@ -80,7 +78,7 @@ function MemberList({ response, initPage, total, totalPage }: any) {
             {list.map((e: any, i: any) => {
               return (
                 <Tr key={i}>
-                  <Td>{total - (page - 1) * scale - i}</Td>
+                  <Td>{total - (page - 1) * pageSize - i}</Td>
                   <Td>{e.FirstName}</Td>
                   <Td>{e.LastName}</Td>
                   <Td>{e.Email}</Td>

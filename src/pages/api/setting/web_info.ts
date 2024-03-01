@@ -1,33 +1,11 @@
 import connectDB from "@/app/db";
 import { NextApiRequest, NextApiResponse } from "next";
-import { NextRequest, NextResponse } from "next/server";
 import formidable from "formidable";
-import fs from "fs";
+import { saveFile } from "@/utils/function";
 export const config = {
   api: {
     bodyParser: false,
   },
-};
-
-function getFileExtension(filename: string) {
-  return filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2);
-}
-
-const saveFile = async (file: formidable.File) => {
-  const data = fs.readFileSync(file.filepath);
-  await fs.writeFileSync(
-    `./public/uploads/homeset/${file.newFilename}.${getFileExtension(
-      file.originalFilename || ""
-    )}`,
-    data
-  );
-  await fs.unlinkSync(file.filepath);
-  return {
-    ufile: `/homeset/${file.newFilename}.${getFileExtension(
-      file.originalFilename || ""
-    )}`,
-    rfile: file.originalFilename,
-  };
 };
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
@@ -70,19 +48,19 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     let logo_adm_url = "";
 
     if (og_img) {
-      og_img_url = (await saveFile(og_img)).ufile;
+      og_img_url = (await saveFile(og_img, "/homeset")).ufile;
     }
     if (favico_img) {
-      favico_img_url = (await saveFile(favico_img)).ufile;
+      favico_img_url = (await saveFile(favico_img, "/homeset")).ufile;
     }
     if (logos) {
-      logos_url = (await saveFile(logos)).ufile;
+      logos_url = (await saveFile(logos, "/homeset")).ufile;
     }
     if (logo_footer) {
-      logo_footer_url = (await saveFile(logo_footer)).ufile;
+      logo_footer_url = (await saveFile(logo_footer, "/homeset")).ufile;
     }
     if (logo_adm) {
-      logo_adm_url = (await saveFile(logo_adm)).ufile;
+      logo_adm_url = (await saveFile(logo_adm, "/homeset")).ufile;
     }
     const connect = await connectDB();
     const query = `UPDATE homeset SET 

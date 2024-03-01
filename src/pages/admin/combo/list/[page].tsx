@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Layout from "../../components/Layout";
 import Link from "next/link";
 import Table from "../../components/Table";
@@ -10,16 +10,15 @@ import Td from "../../components/Td";
 import Image from "next/image";
 import axios from "axios";
 import Pagingnation from "../../components/Pagingnation";
-import { useParams } from "next/navigation";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
+import { pageSize } from "../../utils/constants";
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
-const scale = 10;
 export const getServerSideProps = (async (context: any) => {
   const { params } = context;
   const { page } = params;
   const response = await axios.get("http://localhost:3000/api/combo/list", {
-    params: { page, scale },
+    params: { page, pageSize },
   });
   return {
     props: {
@@ -36,7 +35,7 @@ function ComboList({ response, initPage, total, totalPage }: any) {
   const [list, setList] = useState(response || []);
   const getData = async (page: number) => {
     const response = await axios.get("/api/combo/list", {
-      params: { page, scale },
+      params: { page, pageSize },
     });
     setList(response.data.data);
   };
@@ -67,55 +66,55 @@ function ComboList({ response, initPage, total, totalPage }: any) {
         </Link>
       </div>
       <div className="flex items-center justify-center">
-          <Table colWidths={["10%", "100px", "30%", "20%", "20%", "15%", "10%"]}>
-            <Thead>
-              <Tr>
-                <Th>ID</Th>
-                <Th>Image</Th>
-                <Th>Combo Name</Th>
-                <Th>Original Price</Th>
-                <Th>Sell Price</Th>
-                <Th>Category</Th>
-                <Th center>Action</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {list.map((e: any, i: any) => {
-                return (
-                  <Tr key={i} className="border-b border-blue-gray-200">
-                    <Td>{total - (page - 1) * scale - i}</Td>
-                    <Td>
-                      <Image
-                        src={`${CDN_URL}/${e.ComboImage}`}
-                        alt=""
-                        width={100}
-                        height={100}
-                      />
-                    </Td>
-                    <Td>{e.ComboName}</Td>
-                    <Td>{e.InitPrice}</Td>
-                    <Td>{e.SellPrice}</Td>
-                    <Td>{e.CategoryName}</Td>
-                    <Td center>
-                      <Link
-                        href={`/admin/combo/write/${e.ComboID}`}
-                        className="font-medium text-blue-600 hover:text-blue-800 me-3"
-                      >
-                        <i className="fas fa-edit"></i>
-                      </Link>
-                      <button
-                        className="text-red-500"
-                        onClick={() => handleDelete(e.ComboID)}
-                      >
-                        <i className="fas fa-trash-alt"></i>
-                      </button>
-                    </Td>
-                  </Tr>
-                );
-              })}
-            </Tbody>
-          </Table>
-        </div>
+        <Table colWidths={["10%", "100px", "30%", "20%", "20%", "15%", "10%"]}>
+          <Thead>
+            <Tr>
+              <Th>ID</Th>
+              <Th>Image</Th>
+              <Th>Combo Name</Th>
+              <Th>Original Price</Th>
+              <Th>Sell Price</Th>
+              <Th>Category</Th>
+              <Th center>Action</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {list.map((e: any, i: any) => {
+              return (
+                <Tr key={i} className="border-b border-blue-gray-200">
+                  <Td>{total - (page - 1) * pageSize - i}</Td>
+                  <Td>
+                    <Image
+                      src={`${CDN_URL}/${e.ComboImage}`}
+                      alt=""
+                      width={100}
+                      height={100}
+                    />
+                  </Td>
+                  <Td>{e.ComboName}</Td>
+                  <Td>{e.InitPrice}</Td>
+                  <Td>{e.SellPrice}</Td>
+                  <Td>{e.CategoryName}</Td>
+                  <Td center>
+                    <Link
+                      href={`/admin/combo/write/${e.ComboID}`}
+                      className="font-medium text-blue-600 hover:text-blue-800 me-3"
+                    >
+                      <i className="fas fa-edit"></i>
+                    </Link>
+                    <button
+                      className="text-red-500"
+                      onClick={() => handleDelete(e.ComboID)}
+                    >
+                      <i className="fas fa-trash-alt"></i>
+                    </button>
+                  </Td>
+                </Tr>
+              );
+            })}
+          </Tbody>
+        </Table>
+      </div>
       <Pagingnation
         tP={totalPage}
         cP={page}

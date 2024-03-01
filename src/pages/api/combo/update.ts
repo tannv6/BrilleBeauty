@@ -1,6 +1,5 @@
 import connectDB from "@/app/db";
 import { NextApiRequest, NextApiResponse } from "next";
-import { NextRequest, NextResponse } from "next/server";
 import formidable from "formidable";
 import { saveFile } from "@/utils/function";
 export const config = {
@@ -58,7 +57,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       queryImage +=
         "INSERT INTO comboimages(ComboID,ImageURL, FileName) VALUES ";
       for (let index = 0; index < detailImages.length; index++) {
-        const imgName = await saveFile(detailImages[index]);
+        const imgName = await saveFile(detailImages[index], "/combo");
         if (index > 0) {
           queryImage += ",";
         }

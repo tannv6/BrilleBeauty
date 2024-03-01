@@ -1,8 +1,6 @@
 import connectDB from "@/app/db";
 import { NextApiRequest, NextApiResponse } from "next";
-import { NextRequest, NextResponse } from "next/server";
 import formidable from "formidable";
-import { saveFile } from "@/utils/function";
 export const config = {
   api: {
     bodyParser: false,
@@ -12,25 +10,18 @@ export const config = {
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   try {
     const form = formidable({});
-    const [fields, files] = await form.parse(req);
-
-    const image = files.ImageUpload?.[0];
+    const [fields] = await form.parse(req);
     const {
       CategoryName,
     } = fields;
 
     const connect = await connectDB();
-    let CategoryImg = "";
-
-    if (image) {
-      CategoryImg = (await saveFile(image, "/Category")).ufile;
-    }
 
     const query = `insert into combocategories SET
     CategoryName='${CategoryName}',
     CreatedAt= now();`;
 
-    const [results] = await connect.execute(query);
+    await connect.execute(query);
 
     return res.status(201).json({ result: "OK" });
   } catch (err) {

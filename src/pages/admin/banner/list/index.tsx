@@ -1,10 +1,10 @@
 import axios from "axios";
 import React from "react";
 import BannerList from "./[page]";
-const scale = 3;
+import { pageSize } from "../../utils/constants";
 export const getServerSideProps = async () => {
   const response = await axios.get("http://localhost:3000/api/banners/list", {
-    params: { page: 1, scale },
+    params: { page: 1, pageSize },
   });
   return {
     props: {

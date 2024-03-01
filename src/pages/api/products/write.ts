@@ -1,33 +1,11 @@
 import connectDB from "@/app/db";
 import { NextApiRequest, NextApiResponse } from "next";
-import { NextRequest, NextResponse } from "next/server";
 import formidable from "formidable";
-import fs from "fs";
+import { saveFile } from "@/utils/function";
 export const config = {
   api: {
     bodyParser: false,
   },
-};
-
-function getFileExtension(filename: string) {
-  return filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2);
-}
-
-const saveFile = async (file: formidable.File) => {
-  const data = fs.readFileSync(file.filepath);
-  await fs.writeFileSync(
-    `./public/uploads/products/${file.newFilename}.${getFileExtension(
-      file.originalFilename || ""
-    )}`,
-    data
-  );
-  await fs.unlinkSync(file.filepath);
-  return {
-    ufile: `/products/${file.newFilename}.${getFileExtension(
-      file.originalFilename || ""
-    )}`,
-    rfile: file.originalFilename,
-  };
 };
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
@@ -58,7 +36,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     let ProductImage = "";
 
     if (image) {
-      ProductImage = (await saveFile(image)).ufile;
+      ProductImage = (await saveFile(image, "/products")).ufile;
     }
     const connect = await connectDB();
     const query = `INSERT INTO products SET 
@@ -86,7 +64,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       queryImage +=
         "INSERT INTO productimages(ProductID,ImageURL, FileName) VALUES ";
       for (let index = 0; index < detailImages.length; index++) {
-        const imgName = await saveFile(detailImages[index]);
+        const imgName = await saveFile(detailImages[index], "/products");
         if (index > 0) {
           queryImage += ",";
         }

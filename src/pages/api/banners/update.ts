@@ -1,6 +1,5 @@
 import connectDB from "@/app/db";
 import { NextApiRequest, NextApiResponse } from "next";
-import { NextRequest, NextResponse } from "next/server";
 import formidable from "formidable";
 import { saveFile } from "@/utils/function";
 export const config = {
