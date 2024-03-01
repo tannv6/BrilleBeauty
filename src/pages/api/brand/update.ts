@@ -15,16 +15,16 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     const [fields] = await form.parse(req);
     
     const {
-        BrandName,
+        BrandName,BrandID
     } = fields;
 
     console.log(BrandName);
     
-    // const connect = await connectDB();
-    // const query = `INSERT INTO brand SET 
-    // BrandName = '${BrandName}', CreatedAt = now() `;
+    const connect = await connectDB();
+    const query = `UPDATE brand SET 
+    BrandName = '${BrandName}', UpdatedAt = now() WHERE BrandID = '${BrandID}'`;
     
-    // const [results] = await connect.execute(query);
+    const [results] = await connect.execute(query);
     
     return res.status(201).json({ result: "OK" });
   } catch (err) {

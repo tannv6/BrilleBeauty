@@ -56,6 +56,13 @@ export const listMenu = [
     icon: "fa-calendar-alt",
   },
   {
+    id: 9,
+    label: "Popup",
+    mapLinks: ["/admin/popup"],
+    children: [{ id: 1, label: "Popup List", link: "/admin/popup/list/1" }],
+    icon: "fa-calendar-alt",
+  },
+  {
     id: 7,
     label: "Setting",
     mapLinks: ["/admin/setting"],

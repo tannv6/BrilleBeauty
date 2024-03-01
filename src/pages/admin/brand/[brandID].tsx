@@ -24,6 +24,7 @@ function BrandWrite({ brandDetail }: any) {
 
   const router = useRouter();
   const [brand, setBrand] = useState<{ [key: string]: any }>({
+    BrandID: brandDetail.BrandID || "",
     BrandName: brandDetail.BrandName || "",
   });
 

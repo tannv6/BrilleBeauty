@@ -3,7 +3,7 @@ import React, { useId } from "react";
 function Checkbox({ name, label, checked, onChange }: any) {
     const id = useId();
   return (
-    <div className="inline-flex items-center">
+    <div className="inline-flex items-center align-middle">
       <input
         checked={checked}
         name={name}

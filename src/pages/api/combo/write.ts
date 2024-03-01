@@ -55,7 +55,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       ComboImage = (await saveFile(image)).ufile;
     }
     const connect = await connectDB();
-    const query = `INSERT INTO Combo SET 
+    const query = `INSERT INTO combo SET 
     ComboName = '${ComboName}', 
     InitPrice = '${InitPrice}', 
     SellPrice = '${SellPrice}',

@@ -231,8 +231,8 @@ function ProductWrite({
   const thumbSrc =
     typeof product.ProductImage === "object"
       ? URL.createObjectURL(product.ProductImage)
-      : productDetail.ProductImage
-      ? `${CDN_URL}/${productDetail.ProductImage}`
+      : productDetail?.ProductImage
+      ? `${CDN_URL}/${productDetail?.ProductImage}`
       : "";
   return (
     <Layout>

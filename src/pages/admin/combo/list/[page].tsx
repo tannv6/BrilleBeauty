@@ -48,6 +48,13 @@ function ComboList({ response, initPage, total, totalPage }: any) {
     router.push(router);
   };
 
+  const handleDelete = async (id: number) => {
+    if (confirm("Are you sure delete this popup?")) {
+      await axios.put(`/api/combo/del`, { PopupID: id });
+      window.location.reload();
+    }
+  };
+
   return (
     <Layout>
       <div className="flex justify-between items-center">
@@ -92,10 +99,16 @@ function ComboList({ response, initPage, total, totalPage }: any) {
                     <Td center>
                       <Link
                         href={`/admin/combo/write/${e.ComboID}`}
-                        className="font-medium text-blue-600 hover:text-blue-800"
+                        className="font-medium text-blue-600 hover:text-blue-800 me-3"
                       >
                         <i className="fas fa-edit"></i>
                       </Link>
+                      <button
+                        className="text-red-500"
+                        onClick={() => handleDelete(e.PopupID)}
+                      >
+                        <i className="fas fa-trash-alt"></i>
+                      </button>
                     </Td>
                   </Tr>
                 );
