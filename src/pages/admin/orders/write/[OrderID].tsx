@@ -67,7 +67,6 @@ function OrderWrite({
   shippingFormList,
   payMethodList,
 }: any) {
-  console.log(statusList);
 
   const [districtList, setDistrictList] = useState(districtListInit || []);
   const [communeList, setCommuneList] = useState(communeListInit || []);

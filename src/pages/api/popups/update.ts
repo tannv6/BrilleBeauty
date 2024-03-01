@@ -23,6 +23,8 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       StartDate,
       EndDate,
       IsShow,
+      IsCentered,
+      IsFull,
       PopupLink,
       PopupScreen,
     } = fields;
@@ -44,6 +46,8 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     StartDate='${StartDate}',
     EndDate='${EndDate}',
     IsShow=${Number(IsShow)||0},
+    IsCentered=${Number(IsCentered) || 0},
+    IsFull=${Number(IsFull) || 0},
     PopupLink='${PopupLink}',
     PopupScreen='${PopupScreen}',
     UpdatedAt = now() where PopupID='${PopupID}';`;

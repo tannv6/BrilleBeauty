@@ -49,8 +49,8 @@ function ComboList({ response, initPage, total, totalPage }: any) {
   };
 
   const handleDelete = async (id: number) => {
-    if (confirm("Are you sure delete this popup?")) {
-      await axios.put(`/api/combo/del`, { PopupID: id });
+    if (confirm("Are you sure delete this combo?")) {
+      await axios.put(`/api/combo/del`, { ComboID: id });
       window.location.reload();
     }
   };
@@ -105,7 +105,7 @@ function ComboList({ response, initPage, total, totalPage }: any) {
                       </Link>
                       <button
                         className="text-red-500"
-                        onClick={() => handleDelete(e.PopupID)}
+                        onClick={() => handleDelete(e.ComboID)}
                       >
                         <i className="fas fa-trash-alt"></i>
                       </button>

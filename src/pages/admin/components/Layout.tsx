@@ -47,7 +47,7 @@ function Layout({ children }: any) {
         </div>
       </nav>
       <div className="flex overflow-x-auto">
-        <aside className="bg-gray-800 text-white w-64 min-h-screen p-4">
+        <aside className="bg-gray-800 text-white w-64 min-h-screen py-4">
           <nav>
             <ul className="space-y-2">
               {listMenu.map((e, i) => {
@@ -59,16 +59,16 @@ function Layout({ children }: any) {
                     <div
                       role="button"
                       onClick={() => handleChangeMenu(e.id)}
-                      className="flex items-center justify-between p-2 hover:bg-gray-700"
+                      className="flex items-center justify-between py-2 px-4 hover:bg-gray-700"
                     >
                       <div className="flex items-center">
-                        <i className={`fas ${e.icon} mr-2`} />
+                        <i className={`${e.icon} mr-2`} />
                         <span>{e.label}</span>
                       </div>
                       <i className="fas fa-chevron-down text-xs" />
                     </div>
                     <ul
-                      className={`duration-300 desplegable ml-4 ease-out overflow-hidden ${
+                      className={`duration-300 desplegable pl-6 ease-out overflow-hidden ${
                         activeMenu === e.id ? "max-h-[500px]" : "max-h-[0px]"
                       }`}
                     >
@@ -92,7 +92,7 @@ function Layout({ children }: any) {
             </ul>
           </nav>
         </aside>
-        <main className="container mx-auto p-4">{children}</main>
+        <main className="w-full mx-auto p-4">{children}</main>
       </div>
     </SimpleReactLightbox>
   );

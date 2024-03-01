@@ -13,7 +13,8 @@ export default async function handle(
     const connect = await connectDB();
 
     const totalQuery =
-      "SELECT s1.*, s2.CategoryName FROM products s1 inner join categories s2 on s1.CategoryID = s2.CategoryID";
+      `SELECT s1.*, s2.CategoryName FROM products s1 inner join categories s2 on s1.CategoryID = s2.CategoryID
+      WHERE s1.DeletedAt IS NULL`;
 
     const [resultTotal]: any = await connect.execute(totalQuery);
 

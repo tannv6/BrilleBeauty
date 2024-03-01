@@ -44,6 +44,8 @@ function PopupWrite({ popupDetail, isNew }: any) {
     PopupLink: any;
     PopupScreen: any;
     ImageUpload: File | null;
+    IsCentered: any;
+    IsFull: any;
   }>({
     PopupID: popupDetail?.PopupID || "",
     PopupTitle: popupDetail?.PopupTitle || "",
@@ -51,6 +53,8 @@ function PopupWrite({ popupDetail, isNew }: any) {
     PositionTop: popupDetail?.PositionTop || 0,
     PositionLeft: popupDetail?.PositionLeft || 0,
     IsShow: popupDetail?.IsShow || "",
+    IsCentered: popupDetail?.IsCentered || "",
+    IsFull: popupDetail?.IsFull || "",
     PopupImage: popupDetail?.PopupImage || "",
     PopupLink: popupDetail?.PopupLink || "",
     PopupScreen: popupDetail?.PopupScreen || "",
@@ -62,7 +66,7 @@ function PopupWrite({ popupDetail, isNew }: any) {
   function handleChange(e: any) {
     if (e.target.files) {
       setPopup({ ...popup, [e.target.name]: e.target.files[0] });
-    } else if (["IsShow"].includes(e.target.name)) {
+    } else if (["IsShow", "IsFull", "IsCentered"].includes(e.target.name)) {
       setPopup({ ...popup, [e.target.name]: e.target.checked ? 1 : 0 });
     } else {
       setPopup({ ...popup, [e.target.name]: e.target.value });
@@ -149,7 +153,7 @@ function PopupWrite({ popupDetail, isNew }: any) {
                   Show Time
                 </th>
                 <td className="px-6 py-2">
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1 flex-wrap">
                     <DatePicker
                       showTimeInput
                       showIcon
@@ -202,6 +206,54 @@ function PopupWrite({ popupDetail, isNew }: any) {
                     onChange={handleChange}
                     label={""}
                   />
+                </td>
+              </tr>
+              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th
+                  scope="row"
+                  className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
+                >Options</th>
+                <td className="px-6 py-2">
+                  <Checkbox
+                    name="IsCentered"
+                    checked={popup.IsCentered}
+                    onChange={handleChange}
+                    label={"Centered"}
+                  />
+                  <Checkbox
+                    name="IsFull"
+                    checked={popup.IsFull}
+                    onChange={handleChange}
+                    label={"Full"}
+                  />
+                </td>
+                <th
+                  scope="row"
+                  className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  Position
+                </th>
+                <td className="px-6 py-2">
+                  <div className="flex items-center gap-1">
+                  Top
+                  <input
+                    type="text"
+                    name="PositionTop"
+                    value={popup.PositionTop}
+                    id="PositionTop"
+                    onChange={handleChange}
+                    className="h-[35px] w-[100px] outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  />
+                  Left
+                  <input
+                    type="text"
+                    name="PositionLeft"
+                    value={popup.PositionLeft}
+                    id="PositionLeft"
+                    onChange={handleChange}
+                    className="h-[35px] w-[100px] outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  />
+                  </div>
                 </td>
               </tr>
               <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">

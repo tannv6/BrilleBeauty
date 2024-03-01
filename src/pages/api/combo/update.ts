@@ -28,6 +28,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       SaleEndDate,
       DelImage,
       CategoryID,
+      SeasonID
     } = fields;
 
     let ComboImage = "";
@@ -43,6 +44,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     Description = '${Description}', 
     SaleDate = '${SaleDate}', 
     SaleEndDate = '${SaleEndDate}',
+    SeasonID = ${SeasonID ? `'${SeasonID}'`: "SeasonID"},
     CategoryID = '${CategoryID}',
     IsBest = ${IsBest}, 
     IsBigSale = ${IsBigSale}, 

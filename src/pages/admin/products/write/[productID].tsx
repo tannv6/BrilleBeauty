@@ -82,6 +82,7 @@ function ProductWrite({
     SaleEndDate: moment(productDetail?.SaleEndDate).format(
       "yyyy-MM-DD HH:mm:ss"
     ),
+    PriceOnSaleDate: productDetail?.PriceOnSaleDate || "",
     IsBest: productDetail?.IsBest,
     IsBigSale: productDetail?.IsBigSale,
     IsNew: productDetail?.IsNew,
@@ -140,7 +141,6 @@ function ProductWrite({
       DetailImages: imageArr,
     });
   };
-  console.log(product.DelImage);
 
   function handleChange(e: any) {
     if (e.target.files) {
@@ -286,7 +286,7 @@ function ProductWrite({
                   >
                     Category
                   </th>
-                  <td className="px-6 py-2">
+                  <td className="px-6 py-2" colSpan={3}>
                     <div className="flex gap-1">
                       <Dropdown
                         containerClassName="w-[150px]"
@@ -319,14 +319,16 @@ function ProductWrite({
                       />
                     </div>
                   </td>
+                </tr>
+                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                   <th
                     scope="row"
                     className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
                   >
-                    SaleDate
+                    Sale Date
                   </th>
-                  <td className="px-6 py-2">
-                    <div className="flex items-center gap-1">
+                  <td className="px-6 py-2" colSpan={3}>
+                    <div className="flex items-center gap-1 flex-wrap">
                       <DatePicker
                         showIcon
                         dateFormat={"yyyy-MM-dd HH:mm:ss"}
@@ -366,6 +368,17 @@ function ProductWrite({
                           })
                         }
                       />
+                      <div className="flex items-center gap-1">
+                        Price
+                        <input
+                          type="text"
+                          name="PriceOnSaleDate"
+                          value={product.PriceOnSaleDate}
+                          id="PriceOnSaleDate"
+                          onChange={handleChange}
+                          className="h-[35px] outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[150px] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        />
+                      </div>
                     </div>
                   </td>
                 </tr>

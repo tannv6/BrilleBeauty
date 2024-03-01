@@ -48,8 +48,8 @@ function ProductList({ response, initPage, total, totalPage }: any) {
   };
 
   const handleDelete = async (id: number) => {
-    if (confirm("Are you sure delete this popup?")) {
-      await axios.put(`/api/products/del`, { PopupID: id });
+    if (confirm("Are you sure delete this product?")) {
+      await axios.put(`/api/products/del`, { ProductID: id });
       window.location.reload();
     }
   };
@@ -110,7 +110,7 @@ function ProductList({ response, initPage, total, totalPage }: any) {
                       </Link>
                       <button
                         className="text-red-500"
-                        onClick={() => handleDelete(e.PopupID)}
+                        onClick={() => handleDelete(e.ProductID)}
                       >
                         <i className="fas fa-trash-alt"></i>
                       </button>

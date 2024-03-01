@@ -33,22 +33,24 @@ function PopupList({ response, initPage, total, totalPage }: any) {
   const router = useRouter();
   const [page, setPage] = useState(Number(initPage) || 1);
 
-  const [list, setList] = useState<{
-    PopupID:any;
-    PopupTitle:any;
-    PopupContent:any;
-    PositionTop:any;
-    PositionLeft:any;
-    StartDate:any;
-    EndDate:any;
-    IsShow:any;
-    CreatedAt:any;
-    UpdatedAt:any;
-    DeletedAt:any;
-    PopupImage:any;
-    PopupLink:any;
-    PopupScreen:any;
-  }[]>(response || []);
+  const [list, setList] = useState<
+    {
+      PopupID: any;
+      PopupTitle: any;
+      PopupContent: any;
+      PositionTop: any;
+      PositionLeft: any;
+      StartDate: any;
+      EndDate: any;
+      IsShow: any;
+      CreatedAt: any;
+      UpdatedAt: any;
+      DeletedAt: any;
+      PopupImage: any;
+      PopupLink: any;
+      PopupScreen: any;
+    }[]
+  >(response || []);
   const getData = async (page: number) => {
     const response = await axios.get("/api/popups/list", {
       params: { page, scale },
@@ -87,14 +89,25 @@ function PopupList({ response, initPage, total, totalPage }: any) {
           </Link>
         </div>
         <div className="flex items-center justify-center">
-          <Table>
+          <Table
+            colWidths={[
+              "50px",
+              "50px",
+              "150px",
+              "400px",
+              "150px",
+              "200px",
+              "100px",
+            ]}
+          >
             <Thead>
               <Tr className="bg-blue-gray-100 text-gray-700">
                 <Th>ID</Th>
                 <Th>Category</Th>
                 <Th>Image</Th>
                 <Th>Link</Th>
-                <Th>CreatedAt</Th>
+                <Th>Created At</Th>
+                <Th>Show Time</Th>
                 <Th center>Action</Th>
               </Tr>
             </Thead>
@@ -113,7 +126,19 @@ function PopupList({ response, initPage, total, totalPage }: any) {
                       />
                     </Td>
                     <Td>{e.PopupLink}</Td>
-                    <Td>{moment(e.CreatedAt).format("yyyy-MM-DD HH:mm:ss")}</Td>
+                    <Td>
+                      <span
+                        dangerouslySetInnerHTML={{
+                          __html: moment(e.CreatedAt).format(
+                            "yyyy-MM-DD <br/> HH:mm:ss"
+                          ),
+                        }}
+                      ></span>
+                    </Td>
+                    <Td>
+                      {moment(e.StartDate).format("yyyy-MM-DD HH:mm:ss")}<br/>~
+                      {moment(e.EndDate).format("yyyy-MM-DD HH:mm:ss")}
+                    </Td>
                     <Td center>
                       <Link
                         href={`/admin/popup/write/${e.PopupID}`}

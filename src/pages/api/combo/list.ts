@@ -12,7 +12,7 @@ export default async function handle(
 
     const connect = await connectDB();
 
-    const totalQuery = `select s1.*, s2.CategoryName from combo s1 left join combocategories s2 on
+    const totalQuery = `select s1.*, s2.IsSeasonal, s2.CategoryName from combo s1 left join combocategories s2 on
                         s1.CategoryID = s2.CategoryID where s1.DeletedAt is null`;
 
     const [resultTotal]: any = await connect.execute(totalQuery);

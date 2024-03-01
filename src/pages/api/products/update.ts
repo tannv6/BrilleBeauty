@@ -50,10 +50,11 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       CategoryID2,
       CategoryID3,
       SaleEndDate,
+      PriceOnSaleDate,
       DelImage,
       PotID,
       Options,
-      BrandID
+      BrandID,
     } = fields;
 
     let ProductImage = "";
@@ -69,6 +70,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     Description = '${Description}', 
     SaleDate = '${SaleDate}', 
     SaleEndDate = '${SaleEndDate}',
+    PriceOnSaleDate = '${PriceOnSaleDate || 0}',
     IsBest = ${IsBest}, 
     IsBigSale = ${IsBigSale}, 
     IsNew = ${IsNew},

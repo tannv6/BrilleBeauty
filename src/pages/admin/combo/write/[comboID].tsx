@@ -27,17 +27,24 @@ export const getServerSideProps = async (context: { params: any }) => {
     "http://localhost:3000/api/combo_category/list"
   );
 
+  const result2 = await axios.get("http://localhost:3000/api/season/list");
+
   return {
     props: {
       comboDetail: comboDetail.data,
       categoryList: result1.data.data.map((e: any) => ({
         id: e.CategoryID,
         name: e.CategoryName,
+        IsSeasonal: e.IsSeasonal || 0,
+      })),
+      seasonList: result2.data.data.map((e: any) => ({
+        id: e.SeasonID,
+        name: e.SeasonName,
       })),
     },
   };
 };
-function ComboWrite({ comboDetail, isNew, categoryList }: any) {
+function ComboWrite({ comboDetail, isNew, categoryList, seasonList }: any) {
   const router = useRouter();
   const [combo, setCombo] = useState<{ [key: string]: any }>({
     ComboID: comboDetail?.ComboID || "",
@@ -54,6 +61,8 @@ function ComboWrite({ comboDetail, isNew, categoryList }: any) {
     CategoryID: comboDetail?.CategoryID || "",
     DelImage: "",
     DetailImages: comboDetail?.Images || [],
+    IsSeasonal: comboDetail?.IsSeasonal || 0,
+    SeasonID: comboDetail?.SeasonID || 0,
   });
 
   const [detailImage, setDetailImage] = useState<any[]>([]);
@@ -74,6 +83,15 @@ function ComboWrite({ comboDetail, isNew, categoryList }: any) {
       setCombo({ ...combo, [e.target.name]: e.target.files[0] });
     } else if (["IsBest", "IsBigSale", "IsNew"].includes(e.target.name)) {
       setCombo({ ...combo, [e.target.name]: e.target.checked ? 1 : 0 });
+    } else if (["CategoryID"].includes(e.target.name)) {
+      setCombo({
+        ...combo,
+        [e.target.name]: e.target.value,
+        IsSeasonal:
+          categoryList.find(
+            (elm: any) => elm.IsSeasonal && elm.id === e.target.value
+          ) || 0,
+      });
     } else {
       setCombo({ ...combo, [e.target.name]: e.target.value });
     }
@@ -118,7 +136,6 @@ function ComboWrite({ comboDetail, isNew, categoryList }: any) {
       DetailImages: imageArr,
     });
   };
-  console.log(combo);
 
   const thumbSrc =
     typeof combo.ComboImage === "object"
@@ -176,7 +193,7 @@ function ComboWrite({ comboDetail, isNew, categoryList }: any) {
                   </th>
                   <td className="px-6 py-2" colSpan={3}>
                     <Dropdown
-                      containerClassName="w-[150px]"
+                      containerClassName="w-[150px] me-2"
                       className="w-full h-[40px] rounded-md"
                       options={categoryList}
                       onChange={(id: number) => {
@@ -189,6 +206,23 @@ function ComboWrite({ comboDetail, isNew, categoryList }: any) {
                       }}
                       activeItem={Number(combo.CategoryID)}
                     />
+                    {Boolean(combo.IsSeasonal) && (
+                      <Dropdown
+                        containerClassName="w-[150px]"
+                        className="w-full h-[40px] rounded-md"
+                        options={seasonList}
+                        onChange={(id: number) => {
+                          handleChange({
+                            target: {
+                              name: "SeasonID",
+                              value: id,
+                            },
+                          });
+                        }}
+                        activeItem={Number(combo.SeasonID)}
+                        placeHolder="--Season--"
+                      />
+                    )}
                   </td>
                 </tr>
                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -264,34 +298,6 @@ function ComboWrite({ comboDetail, isNew, categoryList }: any) {
                         alt=""
                       />
                     )}
-                  </td>
-                </tr>
-                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                  <th
-                    scope="row"
-                    className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    Options
-                  </th>
-                  <td className="px-6 py-2">
-                    <Checkbox
-                      name="IsBest"
-                      checked={combo.IsBest}
-                      onChange={handleChange}
-                      label={"Best"}
-                    />
-                    <Checkbox
-                      name="IsBigSale"
-                      checked={combo.IsBigSale}
-                      onChange={handleChange}
-                      label={"Big Sale"}
-                    />
-                    <Checkbox
-                      name="IsNew"
-                      checked={combo.IsNew}
-                      onChange={handleChange}
-                      label={"New"}
-                    />
                   </td>
                 </tr>
                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">

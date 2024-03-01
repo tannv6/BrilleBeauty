@@ -18,8 +18,6 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
         BrandName,BrandID
     } = fields;
 
-    console.log(BrandName);
-    
     const connect = await connectDB();
     const query = `UPDATE brand SET 
     BrandName = '${BrandName}', UpdatedAt = now() WHERE BrandID = '${BrandID}'`;
