@@ -11,7 +11,7 @@ import Tr from "../../components/Tr";
 import Th from "../../components/Th";
 import Td from "../../components/Td";
 import moment from "moment";
-import { pageSize } from "../../utils/constants";
+import { pageSize } from "@/lib/constants";
 export const getServerSideProps = (async (context: any) => {
   const { params } = context;
   const { page } = params;

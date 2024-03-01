@@ -2,7 +2,7 @@ import React from "react";
 import ComboList from "./[page]";
 import axios from "axios";
 import { GetServerSideProps } from "next";
-import { pageSize } from "../../utils/constants";
+import { pageSize } from "@/lib/constants";
 export const getServerSideProps = (async () => {
   const response = await axios.get("http://localhost:3000/api/combo/list", {
     params: { page: 1, pageSize },

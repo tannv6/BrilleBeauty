@@ -1,7 +1,7 @@
 import axios from "axios";
 import React from "react";
 import PopupList from "./[page]";
-import { pageSize } from "../../utils/constants";
+import { pageSize } from "@/lib/constants";
 
 export const getServerSideProps = async () => {
   const response = await axios.get("http://localhost:3000/api/popups/list", {

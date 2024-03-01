@@ -12,7 +12,7 @@ import Tr from "../../components/Tr";
 import Th from "../../components/Th";
 import Td from "../../components/Td";
 import { SRLWrapper } from "simple-react-lightbox";
-import { pageSize } from "../../utils/constants";
+import { pageSize } from "@/lib/constants";
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 
 export const getServerSideProps = (async (context: any) => {

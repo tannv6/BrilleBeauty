@@ -2,7 +2,7 @@ import axios from "axios";
 import { GetServerSideProps } from "next";
 import React from "react";
 import ProductList from "./[page]";
-import { pageSize } from "../../utils/constants";
+import { pageSize } from "@/lib/constants";
 
 export const getServerSideProps = (async () => {
   const response = await axios.get("http://localhost:3000/api/products/list", {

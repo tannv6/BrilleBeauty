@@ -12,7 +12,7 @@ import axios from "axios";
 import Pagingnation from "../../components/Pagingnation";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
-import { pageSize } from "../../utils/constants";
+import { pageSize } from "@/lib/constants";
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 export const getServerSideProps = (async (context: any) => {
   const { params } = context;
