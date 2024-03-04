@@ -4,7 +4,17 @@ import ProductItem from "@/components/ProductItem";
 import SubVisual from "@/components/SubVisual";
 import Pagination from "@/components/Pagi";
 
-export default function BrandSearch() {
+export function getServerSideProps() {
+  return {
+    props: {
+      brand: {},
+    },
+  };
+}
+
+export default function BrandSearch({ brand }: any) {
+  console.log(brand);
+
   return (
     <>
       <Layout>
@@ -23,7 +33,9 @@ export default function BrandSearch() {
           </div>
           <div className="inner-container mt-[50px]">
             <div className="w-full flex justify-between mb-[60px]">
-              <p className="w-full text-[30px] text-[#ef426f] text-center font-bold">3CE PRODUCT</p>
+              <p className="w-full text-[30px] text-[#ef426f] text-center font-bold">
+                3CE PRODUCT
+              </p>
             </div>
             <div className="flex justify-end mb-10">
               <Dropdown
@@ -31,7 +43,7 @@ export default function BrandSearch() {
                   { id: 1, name: "Sort by: Popularity" },
                   { id: 2, name: "3CE (4)" },
                 ]}
-                onChange={() => { }}
+                onChange={() => {}}
                 activeItem={1}
                 className="w-[220px]"
               />

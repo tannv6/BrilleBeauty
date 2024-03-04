@@ -17,12 +17,7 @@ export const getServerSideProps = (async () => {
   const [response] = await connect.execute("SELECT * FROM brand WHERE DeletedAt IS NULL;");
   return {
     props: {
-      response: (response as Array<any>).map((e) => ({
-        ...e,
-        CreatedAt: new Date(e.CreatedAt).getTime(),
-        UpdatedAt: new Date(e.UpdatedAt).getTime(),
-        DeletedAt: new Date(e.DeletedAt).getTime(),
-      })),
+      response: JSON.parse(JSON.stringify(response)),
     },
   };
 }) satisfies GetServerSideProps<{ response: any }>;
