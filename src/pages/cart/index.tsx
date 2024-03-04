@@ -8,7 +8,7 @@ export default function EyesLips() {
     <>
       <Layout>
         <div id="main">
-          <SubNav title="MyCart" />
+          <SubNav title1="MyCart" />
           <div className="inner-container mt-[75px] mb-[155px]">
             <p className="text-[22px] font-bold pb-[25px]">MY CART</p>
             <table className="table-auto min-w-full">
@@ -97,8 +97,9 @@ export default function EyesLips() {
                 </tr>
               </tbody>
             </table>
-            <div className="mt-[75px] flex flex-col items-end">
-              <div className="flex items-center gap-[115px]">
+            <div className="mt-[50px] flex flex-col items-end">
+              <div className="flex items-center gap-[115px] w-full">
+                <button className="mr-auto ml-4 text-lg w-[144px] h-[36px] rounded border border-[#dbdbdb]">Select all</button>
                 <p className="text-[18px]">Total Payment <span className="text-base text-[#757575]">(0 Products):</span></p>
                 <p className="text-[30px] text-[#ef426f]">A$16.25</p>
               </div>
