@@ -142,7 +142,7 @@ export default function Header({ brandListRecommended }: any) {
                           <Link
                             key={i}
                             className="w-[120px] h-[46px] bg-[#f4f5f7] rounded-[23px] flex items-center justify-center text-[16px] text-[#545454]"
-                            href={"/search/brand"}
+                            href={`/search/brand/${e.BrandID}`}
                           >
                             #{e.BrandName}
                           </Link>

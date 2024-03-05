@@ -1,18 +1,30 @@
 import Dropdown from "@/components/Dropdown";
 import Layout from "@/components/Layout";
 import ProductItem from "@/components/ProductItem";
-import SubVisual from "@/components/SubVisual";
 import Pagination from "@/components/Pagi";
-
-export function getServerSideProps() {
+import axios from "axios";
+import { pageSize } from "@/lib/constants";
+const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
+export async function getServerSideProps({ query: { BrandID } }: any) {
+  const brandDetail = await axios.get(
+    `http://localhost:3000/api/brand/detail`,
+    {
+      params: { brandID: BrandID },
+    }
+  );
+  const response = await axios.get("http://localhost:3000/api/products/list", {
+    params: { page: 1, pageSize: pageSize, brand: BrandID },
+  });
   return {
     props: {
-      brand: {},
+      brand: brandDetail.data,
+      products: response.data,
     },
   };
 }
 
-export default function BrandSearch({ brand }: any) {
+export default function BrandSearch({ brand, products }: any) {
+  console.log(products);
   console.log(brand);
 
   return (
@@ -49,128 +61,28 @@ export default function BrandSearch({ brand }: any) {
               />
             </div>
             <div className="grid grid-cols-4 gap-x-5 gap-y-[30px]">
-              <ProductItem
-                image={"/product_img01.png"}
-                name="Damage Care Perfect Serum Original (New) - 80ml"
-                oriPrice={"A$19.65"}
-                salePrice={"A$16.25"}
-                discount={"10%"}
-                star={"4.7"}
-                starCount={150}
-                heartCount={69}
-              />
-              <ProductItem
-                image={"/product_img02.png"}
-                name="Damage Care Perfect Serum Original (New) - 80ml"
-                oriPrice={"A$19.65"}
-                salePrice={"A$16.25"}
-                discount={"10%"}
-                star={"4.7"}
-                starCount={150}
-                heartCount={69}
-              />
-              <ProductItem
-                image={"/product_img03.png"}
-                name="Damage Care Perfect Serum Original (New) - 80ml"
-                oriPrice={"A$19.65"}
-                salePrice={"A$16.25"}
-                discount={"10%"}
-                star={"4.7"}
-                starCount={150}
-                heartCount={69}
-              />
-              <ProductItem
-                image={"/product_img04.png"}
-                name="Damage Care Perfect Serum Original (New) - 80ml"
-                oriPrice={"A$19.65"}
-                salePrice={"A$16.25"}
-                discount={"10%"}
-                star={"4.7"}
-                starCount={150}
-                heartCount={69}
-              />
-              <ProductItem
-                image={"/product_img01.png"}
-                name="Damage Care Perfect Serum Original (New) - 80ml"
-                oriPrice={"A$19.65"}
-                salePrice={"A$16.25"}
-                discount={"10%"}
-                star={"4.7"}
-                starCount={150}
-                heartCount={69}
-              />
-              <ProductItem
-                image={"/product_img02.png"}
-                name="Damage Care Perfect Serum Original (New) - 80ml"
-                oriPrice={"A$19.65"}
-                salePrice={"A$16.25"}
-                discount={"10%"}
-                star={"4.7"}
-                starCount={150}
-                heartCount={69}
-              />
-              <ProductItem
-                image={"/product_img03.png"}
-                name="Damage Care Perfect Serum Original (New) - 80ml"
-                oriPrice={"A$19.65"}
-                salePrice={"A$16.25"}
-                discount={"10%"}
-                star={"4.7"}
-                starCount={150}
-                heartCount={69}
-              />
-              <ProductItem
-                image={"/product_img04.png"}
-                name="Damage Care Perfect Serum Original (New) - 80ml"
-                oriPrice={"A$19.65"}
-                salePrice={"A$16.25"}
-                discount={"10%"}
-                star={"4.7"}
-                starCount={150}
-                heartCount={69}
-              />
-              <ProductItem
-                image={"/product_img01.png"}
-                name="Damage Care Perfect Serum Original (New) - 80ml"
-                oriPrice={"A$19.65"}
-                salePrice={"A$16.25"}
-                discount={"10%"}
-                star={"4.7"}
-                starCount={150}
-                heartCount={69}
-              />
-              <ProductItem
-                image={"/product_img02.png"}
-                name="Damage Care Perfect Serum Original (New) - 80ml"
-                oriPrice={"A$19.65"}
-                salePrice={"A$16.25"}
-                discount={"10%"}
-                star={"4.7"}
-                starCount={150}
-                heartCount={69}
-              />
-              <ProductItem
-                image={"/product_img03.png"}
-                name="Damage Care Perfect Serum Original (New) - 80ml"
-                oriPrice={"A$19.65"}
-                salePrice={"A$16.25"}
-                discount={"10%"}
-                star={"4.7"}
-                starCount={150}
-                heartCount={69}
-              />
-              <ProductItem
-                image={"/product_img04.png"}
-                name="Damage Care Perfect Serum Original (New) - 80ml"
-                oriPrice={"A$19.65"}
-                salePrice={"A$16.25"}
-                discount={"10%"}
-                star={"4.7"}
-                starCount={150}
-                heartCount={69}
-              />
+              {products.data?.map((e: any, i: any) => {
+                return (
+                  <ProductItem
+                    key={i}
+                    image={`${CDN_URL}/${e.ProductImage}`}
+                    name={e.ProductName}
+                    oriPrice={e.InitPrice}
+                    salePrice={e.SellPrice}
+                    discount={e.discount}
+                    star={"4.7"}
+                    starCount={150}
+                    heartCount={69}
+                  />
+                );
+              })}
             </div>
-            <Pagination></Pagination>
+            <Pagination
+              totalPage={products.totalPage}
+              currentPage={products.page}
+              totalElement={products.total}
+              elementsPerPage={10}
+            />
           </div>
         </div>
       </Layout>
