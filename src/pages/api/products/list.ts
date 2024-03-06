@@ -8,13 +8,28 @@ export default async function handle(
   try {
     const params = req.query;
 
-    const { page = 1, pageSize = 1000 } = params;
+    const { page = 1, pageSize = 1000, brand } = params;
 
     const connect = await connectDB();
 
+    let br_select = "";
+    let br_join = "";
+    let br_condtion = "";
+
+    if (brand) {
+      br_select = '';
+      br_join =  ' inner join brand s3 on s1.BrandID = s3.BrandID ';
+      br_condtion = ` and s1.BrandID = '${brand}'`;
+    }
+
     const totalQuery =
-      `SELECT s1.*, s2.CategoryName FROM products s1 inner join categories s2 on s1.CategoryID = s2.CategoryID
-      WHERE s1.DeletedAt IS NULL`;
+      `SELECT s1.*, s2.CategoryName FROM products s1 
+      inner join categories s2 on s1.CategoryID = s2.CategoryID
+      ${br_join}
+      WHERE s1.DeletedAt IS NULL ${br_condtion}`;
+
+      console.log(totalQuery);
+      
 
     const [resultTotal]: any = await connect.execute(totalQuery);
 
