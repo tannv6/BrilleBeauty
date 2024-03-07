@@ -11,6 +11,7 @@ export default function Header({ brandListRecommended }: any) {
   const router = useRouter();
 
   const [brandList, setBrandList] = useState(brandListRecommended || []);
+  const [categoryList, setCategoryList] = useState([]);
 
   function handleKeyPress(e: any) {
     if (e.keyCode === 13) {
@@ -41,6 +42,10 @@ export default function Header({ brandListRecommended }: any) {
         setBrandList(response.data.data);
       });
     }
+
+    axios.get("/api/category/header").then((response) => {
+      setCategoryList(response.data.data);
+    });
   }, []);
 
   return (
@@ -154,346 +159,50 @@ export default function Header({ brandListRecommended }: any) {
               </div>
             </div>
           </li>
+
+          {categoryList?.map((e: any, i: any) => {
+            return (
+              <>
+                <li key={i} className="relative group">
+                  <Link
+                    className={`${pathname === `/category/${e.CategoryID}` ? "gnb_active" : ""
+                      } text-18 tracking-wide leading-[50px] text-gray-700`}
+                    href={`/category/${e.CategoryID}`}
+                  >
+                    {e.CategoryName}
+                  </Link>
+                  <div className="absolute hidden top-[49px] left-0 transform min-[1920px]:-translate-x-[40%] 2xl:-translate-x-[38%] bg-white w-full xl:w-[100vw] h-[400px] group-hover:block z-[100] border-b boder-gray-200 border-t">
+                    <div className="inner-container flex gap-[150px] mt-[55px]">
+                      {e.child?.map((e1: any, i1: any) => {
+                        return (
+                            <div key={i1}>
+                              <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">
+                                {e1.CategoryName}
+                              </h3>
+                              {e1.child?.map((e2: any, i2: any) => {
+                                return (
+                                  <>
+                                    <p key={i2} className="text-[18px] text-[#252525] leading-[35px] font-medium">
+                                      {e2.CategoryName}
+                                    </p>
+                                  </>
+                                );
+
+                              })}
+                            </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </li>
+              </>
+            );
+          })}
+
           <li className="relative group">
             <Link
-              className={`${
-                pathname === "/face" ? "gnb_active" : ""
-              } text-18 tracking-wide leading-[50px] text-gray-700`}
-              href={"/face"}
-            >
-              Face
-            </Link>
-            <div className="absolute hidden top-[49px] left-0 transform min-[1920px]:-translate-x-[40%] 2xl:-translate-x-[38%] bg-white w-full xl:w-[100vw] h-[400px] group-hover:block z-[100] border-b boder-gray-200 border-t">
-              <div className="inner-container flex gap-[150px] mt-[55px]">
-                <div>
-                  <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">
-                    Facecare
-                  </h3>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Ampoule
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Blending Powder
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Essence & Serum
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Lotion & Emulsion
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Moisturizer & Cream
-                  </p>
-                </div>
-                <div>
-                  <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">
-                    Masks
-                  </h3>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Gel Masks
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Peel-off Masks
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Sheet Masks
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Sleeping Masks
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Other Masks
-                  </p>
-                </div>
-                <div>
-                  <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">
-                    Facial Cleanser
-                  </h3>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Exfoliator, Peeling & Scrub
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Face Wash & Cleansers
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Face Wipe
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Makeup Remover
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Pore Clearing
-                  </p>
-                </div>
-                <div>
-                  <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">
-                    Face Makeup
-                  </h3>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    BB & CC Cream
-                  </p>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li className="relative group">
-            <Link
-              className={`${
-                pathname === "/eyes_lips" ? "gnb_active" : ""
-              } text-18 tracking-wide leading-[50px] text-gray-700`}
-              href={"/eyes_lips"}
-            >
-              Eyes & Lips
-            </Link>
-            <div className="absolute hidden top-[49px] left-0 transform min-[1920px]:-translate-x-[44%] 2xl:-translate-x-[43%] bg-white w-full xl:w-[100vw] h-[400px] group-hover:block z-[100] border-b boder-gray-200 border-t">
-              <div className="inner-container flex gap-[150px] mt-[55px]">
-                <div>
-                  <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">
-                    Eye Care
-                  </h3>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Eye Cream
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Eye Essence & Serum
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Eye Masks
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Eye Patch
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Eye Drops
-                  </p>
-                </div>
-                <div>
-                  <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">
-                    Eye Makeup
-                  </h3>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Contact Lenses
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Eye Primer
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Eyebrow
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Eyeliner
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Eyeshadow
-                  </p>
-                </div>
-                <div>
-                  <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">
-                    Lip Care
-                  </h3>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Lip Balm
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Lip Treatment
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Lip Masks
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Lip Oil
-                  </p>
-                </div>
-                <div>
-                  <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">
-                    Lip Makeup
-                  </h3>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Lip Gloss
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Lip Pencil
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Lipstick
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Lip Tint
-                  </p>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li className="relative group">
-            <Link
-              className={`${
-                pathname === "/hair_body" ? "gnb_active" : ""
-              } text-18 tracking-wide leading-[50px] text-gray-700`}
-              href={"/hair_body"}
-            >
-              Hair & Body
-            </Link>
-            <div className="absolute hidden top-[49px] left-0 transform 2xl:-translate-x-[51%] bg-white w-full xl:w-[100vw] h-[400px] group-hover:block z-[100] border-b boder-gray-200 border-t">
-              <div className="inner-container flex gap-[150px] mt-[55px]">
-                <div>
-                  <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">
-                    Body
-                  </h3>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Body Moisturizer & Lotion
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Personal Care
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Body Wash & Soap
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Body Scrub & Exfoliants
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Foot Care
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Hand Cream & Care
-                  </p>
-                </div>
-                <div>
-                  <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">
-                    Hair
-                  </h3>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Hair Care
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Hair Dye
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Hair Liner
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Hair Wax
-                  </p>
-                </div>
-                <div>
-                  <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">
-                    Oral
-                  </h3>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Oral Care
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Manual Toothbrushes
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Kids Oral Care
-                  </p>
-                </div>
-                <div>
-                  <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">
-                    Nail
-                  </h3>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Nail Care
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Nail Art
-                  </p>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li className="relative group">
-            <Link
-              className={`${
-                pathname === "/tools" ? "gnb_active" : ""
-              } text-18 tracking-wide leading-[50px] text-gray-700`}
-              href={"/tools"}
-            >
-              Tools
-            </Link>
-            <div className="absolute hidden top-[49px] left-0 transform min-[1920px]:-translate-x-[58%] 2xl:-translate-x-[60%] bg-white w-full xl:w-[100vw] h-[430px] group-hover:block z-[100] border-b boder-gray-200 border-t">
-              <div className="inner-container flex gap-[150px] mt-[55px]">
-                <div>
-                  <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">
-                    Hair & Body Tools
-                  </h3>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Body Care Electronics
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Hair Electronics
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Other Hair Tools
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Nail Beauty Tools
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Hair Accessories
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Other Body Care Tools
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Oral Care Tools
-                  </p>
-                </div>
-                <div>
-                  <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">
-                    Facial Tools & Accessories
-                  </h3>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Other Tools
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Cleansing Tool
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Skincare Electronics
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Razors & Trimmers
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Facial Massage Tools
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Facial Mask Tool
-                  </p>
-                </div>
-                <div>
-                  <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">
-                    Makeup Tools & Accessories
-                  </h3>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Other Makeup Tools
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Contact Lens Tools
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Makeup Brushes
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Eyelash Tools
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    Eyelid Tools
-                  </p>
-                  <p className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                    MMakeup Applicator
-                  </p>
-                </div>
-              </div>
-            </div>
-          </li>
-          <li className="relative group">
-            <Link
-              className={`${
-                pathname === "/sales" ? "gnb_active" : ""
-              } text-18 tracking-wide leading-[50px] text-gray-700`}
+              className={`${pathname === "/sales" ? "gnb_active" : ""
+                } text-18 tracking-wide leading-[50px] text-gray-700`}
               href={""}
             >
               Combo
