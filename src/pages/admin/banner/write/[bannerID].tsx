@@ -22,15 +22,36 @@ export const getServerSideProps = async (context: { params: any }) => {
       params: { bannerID },
     }
   );
+  const result = await axios.get("http://localhost:3000/api/category/all");
 
+  const catObject = result.data;
   return {
     props: {
       bannerDetail: bannerDetail.data,
+      catObject,
     },
   };
 };
-function BannerWrite({ bannerDetail, isNew }: any) {
+function BannerWrite({ bannerDetail, isNew, catObject }: any) {
   const router = useRouter();
+  const { level1, level2, level3 } = catObject;
+
+  const [level2List, setLevel2List] = useState(
+    bannerDetail?.CategoryLevel === 1
+      ? level2.filter((e: any) => e.ParentID === bannerDetail?.CategoryID)
+      : bannerDetail?.CategoryLevel === 2
+      ? level2.filter((e: any) => e.ParentID === bannerDetail?.ParentID)
+      : bannerDetail?.CategoryLevel === 3
+      ? level2.filter((e: any) => e.ParentID === bannerDetail?.ppID)
+      : []
+  );
+  const [level3List, setLevel3List] = useState(
+    bannerDetail?.CategoryLevel === 2
+      ? level3.filter((e: any) => e.ParentID === bannerDetail?.CategoryID)
+      : bannerDetail?.CategoryLevel === 3
+      ? level3.filter((e: any) => e.ParentID === bannerDetail?.ParentID)
+      : []
+  );
   const [banner, setBanner] = useState<{
     BannerID: any;
     BannerCategory: any;
@@ -41,6 +62,9 @@ function BannerWrite({ bannerDetail, isNew }: any) {
     ImageUpload: File | null;
     ShowDate: any;
     ShowEndDate: any;
+    CategoryID1: any;
+    CategoryID2: any;
+    CategoryID3: any;
   }>({
     BannerID: bannerDetail?.BannerID,
     BannerCategory: bannerDetail?.BannerCategory || "",
@@ -53,6 +77,22 @@ function BannerWrite({ bannerDetail, isNew }: any) {
     ShowEndDate: moment(bannerDetail?.ShowEndDate).format(
       "yyyy-MM-DD HH:mm:ss"
     ),
+    CategoryID1:
+      bannerDetail?.CategoryLevel === 1
+        ? bannerDetail?.CategoryID
+        : bannerDetail?.CategoryLevel === 2
+        ? bannerDetail?.ParentID
+        : bannerDetail?.CategoryLevel === 3
+        ? bannerDetail?.ppID
+        : "0",
+    CategoryID2:
+      bannerDetail?.CategoryLevel === 2
+        ? bannerDetail?.CategoryID
+        : bannerDetail?.CategoryLevel === 3
+        ? bannerDetail?.ParentID
+        : "0",
+    CategoryID3:
+      bannerDetail?.CategoryLevel === 3 ? bannerDetail?.CategoryID : "0",
   });
 
   const [detailImage, setDetailImage] = useState<any[]>([]);
@@ -98,7 +138,23 @@ function BannerWrite({ bannerDetail, isNew }: any) {
       router.push("/admin/banner/list");
     }
   }
-
+  const handleChangeCate = (level: number, id: number) => {
+    if (level === 1) {
+      setBanner({
+        ...banner,
+        CategoryID1: id,
+        CategoryID2: 0,
+        CategoryID3: 0,
+      });
+      setLevel2List(level2.filter((e: any) => e.ParentID === id));
+    }
+    if (level === 2) {
+      setBanner({ ...banner, CategoryID2: id, CategoryID3: 0 });
+      setLevel3List(level3.filter((e: any) => e.ParentID === id));
+    }
+    if (level === 3) {
+    }
+  };
   const src = banner.ImageUpload
     ? URL.createObjectURL(banner.ImageUpload)
     : `${CDN_URL}/${banner.BannerImg}`;
@@ -128,7 +184,7 @@ function BannerWrite({ bannerDetail, isNew }: any) {
                   scope="row"
                   className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
                 >
-                  Banner Category
+                  Banner Position
                 </th>
                 <td className="px-6 py-2" colSpan={3}>
                   <div className="flex gap-1">
@@ -139,6 +195,7 @@ function BannerWrite({ bannerDetail, isNew }: any) {
                         { id: "top", name: "top" },
                         { id: "middle", name: "middle" },
                         { id: "bottom", name: "bottom" },
+                        { id: "sub_category", name: "sub_category" },
                       ]}
                       onChange={(id: number) => {
                         handleChange({
@@ -148,6 +205,39 @@ function BannerWrite({ bannerDetail, isNew }: any) {
                       activeItem={banner.BannerCategory}
                       placeHolder="--Category--"
                     />
+                    {banner.BannerCategory === "sub_category" && (
+                      <div className="flex gap-1">
+                        <Dropdown
+                          containerClassName="w-[150px]"
+                          className="w-full h-[35px] rounded-md"
+                          options={level1}
+                          onChange={(id: number) => {
+                            handleChangeCate(1, id);
+                          }}
+                          activeItem={Number(banner.CategoryID1)}
+                        />
+                        <Dropdown
+                          containerClassName="w-[150px]"
+                          className="w-full h-[35px] rounded-md"
+                          options={level2List}
+                          onChange={(id: number) => {
+                            handleChangeCate(2, id);
+                          }}
+                          activeItem={Number(banner.CategoryID2)}
+                        />
+                        <Dropdown
+                          containerClassName="w-[150px]"
+                          className="w-full h-[35px] rounded-md"
+                          options={level3List}
+                          onChange={(id: number) => {
+                            handleChange({
+                              target: { name: "CategoryID3", value: id },
+                            });
+                          }}
+                          activeItem={Number(banner.CategoryID3)}
+                        />
+                      </div>
+                    )}
                   </div>
                 </td>
               </tr>

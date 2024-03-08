@@ -8,7 +8,7 @@ export default async function handle(
   try {
     const params = req.query;
 
-    const { page = 1, pageSize = 1000, brand, cate_id } = params;
+    const { page = 1, pageSize = 1000, brand, cate_id, sort } = params;
 
     const connect = await connectDB();
 
@@ -16,23 +16,26 @@ export default async function handle(
     let br_join = "";
     let br_condtion = "";
     let cate_condtion = "";
+    let order = "";
+
+    if (sort === "price_desc") {
+      order = " order by s1.SellPrice desc";
+    } else if (sort === "price_asc") {
+      order = " order by s1.SellPrice asc";
+    }
 
     if (brand) {
-      br_select = '';
-      br_join =  ' inner join brand s3 on s1.BrandID = s3.BrandID ';
+      br_select = "";
+      br_join = " inner join brand s3 on s1.BrandID = s3.BrandID ";
       br_condtion = ` and s1.BrandID = '${brand}'`;
     }
     if (cate_id) {
       cate_condtion = ` and s1.CategoryID = '${cate_id}'`;
     }
-    const totalQuery =
-      `SELECT s1.*, s2.CategoryName FROM products s1 
+    const totalQuery = `SELECT s1.*, s2.CategoryName FROM products s1 
       inner join categories s2 on s1.CategoryID = s2.CategoryID
       ${br_join}
-      WHERE s1.DeletedAt IS NULL ${br_condtion} ${cate_condtion}`;
-
-      console.log(totalQuery);
-      
+      WHERE s1.DeletedAt IS NULL ${br_condtion} ${cate_condtion} ${order}`;
 
     const [resultTotal]: any = await connect.execute(totalQuery);
 

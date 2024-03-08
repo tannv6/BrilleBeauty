@@ -21,6 +21,9 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       BannerLink,
       ShowDate,
       ShowEndDate,
+      CategoryID1,
+      CategoryID2,
+      CategoryID3,
     } = fields;
 
     let BannerImg = "";
@@ -39,6 +42,9 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     BannerLink='${BannerLink}',
     ShowDate='${ShowDate}',
     ShowEndDate='${ShowEndDate}',
+    CategoryID = '${
+      Number(CategoryID3) || Number(CategoryID2) || Number(CategoryID1)
+    }',
     UpdatedAt = now() where BannerID='${BannerID}';`;
 
     const [results] = await connect.execute(query);

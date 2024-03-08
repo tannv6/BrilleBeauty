@@ -10,7 +10,11 @@ export default async function handle(
 
     const connect = await connectDB();
 
-    const query = `select * from banners where DeletedAt is null and BannerID = '${bannerID}'`;
+    const query = `select a.*,b.Level as CategoryLevel, b.ParentID, c.ParentID as ppID
+    from banners a
+    left join categories b on a.CategoryID = b.CategoryID 
+    left join categories c on b.ParentID = c.CategoryID 
+    where a.DeletedAt is null and a.BannerID = '${bannerID}'`;
 
     const [result] = await connect.execute(query);
 

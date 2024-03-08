@@ -21,6 +21,9 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       BannerLink,
       ShowDate,
       ShowEndDate,
+      CategoryID1,
+      CategoryID2,
+      CategoryID3,
     } = fields;
 
     const connect = await connectDB();
@@ -38,6 +41,9 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     BannerLink='${BannerLink}',
     ShowDate='${ShowDate}',
     ShowEndDate='${ShowEndDate}',
+    CategoryID = '${
+      Number(CategoryID3) || Number(CategoryID2) || Number(CategoryID1)
+    }',
     CreatedAt= now();`;
 
     const [results] = await connect.execute(query);
