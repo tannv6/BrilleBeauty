@@ -1,8 +1,18 @@
 import React from "react";
 import BannerWrite1 from "./[bannerID]";
+import axios from "axios";
+export const getServerSideProps = async () => {
+  const result = await axios.get("http://localhost:3000/api/category/all");
 
-function BannerWrite() {
-  return <BannerWrite1 isNew />;
+  const catObject = result.data;
+  return {
+    props: {
+      catObject,
+    },
+  };
+};
+function BannerWrite({ catObject }: any) {
+  return <BannerWrite1 isNew catObject={catObject} />;
 }
 
 export default BannerWrite;

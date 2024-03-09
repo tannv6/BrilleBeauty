@@ -73,7 +73,7 @@ export default function Category({ products }: any) {
                             />
                         </div>
                         <div className="grid grid-cols-4 gap-x-5 gap-y-[30px]">
-                            {products.data?.map((e: any, i: any) => {
+                            {products?.data?.map((e: any, i: any) => {
                                 return (
                                     <>
                                     <ProductItem
