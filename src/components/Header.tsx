@@ -165,9 +165,9 @@ export default function Header({ brandListRecommended }: any) {
               <>
                 <li key={i} className="relative group">
                   <Link
-                    className={`${pathname === `/category/${e.CategoryID}` ? "gnb_active" : ""
+                    className={`${pathname?.slice(0, 20) === `/products/category/${e.CategoryID}` ? "gnb_active" : ""
                       } text-18 tracking-wide leading-[50px] text-gray-700`}
-                    href={`/category/${e.CategoryID}`}
+                    href={`/products/category/${e.CategoryID}`}
                   >
                     {e.CategoryName}
                   </Link>
@@ -175,21 +175,23 @@ export default function Header({ brandListRecommended }: any) {
                     <div className="inner-container flex gap-[150px] mt-[55px]">
                       {e.child?.map((e1: any, i1: any) => {
                         return (
-                            <div key={i1}>
+                          <div key={i1}>
+                            <Link href={`/products/category/${e.CategoryID}/${e1.CategoryID}`}>
                               <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">
                                 {e1.CategoryName}
                               </h3>
-                              {e1.child?.map((e2: any, i2: any) => {
-                                return (
-                                  <>
-                                    <p key={i2} className="text-[18px] text-[#252525] leading-[35px] font-medium">
-                                      {e2.CategoryName}
-                                    </p>
-                                  </>
-                                );
+                            </Link>
+                            {e1.child?.map((e2: any, i2: any) => {
+                              return (
+                                <Link href={`/products/category/${e.CategoryID}/${e1.CategoryID}/${e2.CategoryID}`}>
+                                  <p key={i2} className="text-[18px] text-[#252525] leading-[35px] font-medium">
+                                    {e2.CategoryName}
+                                  </p>
+                                </Link>
+                              );
 
-                              })}
-                            </div>
+                            })}
+                          </div>
                         );
                       })}
                     </div>
