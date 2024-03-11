@@ -54,6 +54,6 @@ export async function getWebSetting() {
 
   return {
     webSetting: result.data,
-    banner_top: response.data[0],
+    banner_top: response.data[0] || null,
   };
 }

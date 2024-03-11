@@ -3,7 +3,6 @@ import Link from "next/link";
 import Layout from "@/components/Layout";
 import Main from "@/components/Main";
 import axios from "axios";
-import connectDB from "@/app/db";
 import { getWebSetting } from "@/lib/functions";
 
 export const getServerSideProps: GetServerSideProps<{
@@ -29,14 +28,11 @@ export const getServerSideProps: GetServerSideProps<{
       params: { position: "main_middle", count: 1 },
     }
   );
-  const connect = await connectDB();
-  const sql = "select * from homeset where idx = 1";
-  const [result] = await connect.execute(sql);
   return {
     props: {
-      main_visual: response.data[0],
+      main_visual: response.data[0] || null,
       after_main_visual: response1.data,
-      main_middle: response2.data[0],
+      main_middle: response2.data[0] || null,
       ...(await getWebSetting()),
     },
   };

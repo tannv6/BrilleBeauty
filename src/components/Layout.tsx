@@ -67,8 +67,8 @@ export type WebSetting = {
 
 type Props = {
   children?: any;
-  webSetting: WebSetting;
-  banner_top: any;
+  webSetting?: WebSetting;
+  banner_top?: any;
 };
 
 function Layout({ children, webSetting, banner_top }: Props) {

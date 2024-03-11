@@ -8,17 +8,15 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { WebSetting } from "./Layout";
 import { CDN_URL } from "@/utils/constants";
 type Props = {
-  webSetting: WebSetting;
+  webSetting?: WebSetting;
   brandListRecommended?: any[];
-  banner_top: any;
+  banner_top?: any;
 };
 export default function Header({
   brandListRecommended,
   webSetting,
   banner_top,
 }: Props) {
-  console.log(webSetting);
-
   const pathname = usePathname();
   const router = useRouter();
 

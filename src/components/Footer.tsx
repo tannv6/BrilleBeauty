@@ -4,7 +4,7 @@ import Image from "next/image";
 import { WebSetting } from "./Layout";
 import { CDN_URL } from "@/utils/constants";
 type Props = {
-  webSetting: WebSetting;
+  webSetting?: WebSetting;
 };
 function Footer({ webSetting }: Props) {
   return (
