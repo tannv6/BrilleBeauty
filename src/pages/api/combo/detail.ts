@@ -13,6 +13,7 @@ export default async function handle(
     const [result, rows] = await connect.execute(query);
     const queryImage = `select * from comboimages where ComboID = '${comboID}' AND DeletedAt IS NULL;`;
     const [result2] = await connect.execute(queryImage);
+    connect.end();
     if (Array.isArray(result) && result.length > 0) {
       const combo: any = result[0];
       combo["IsBest"] = combo["IsBest"][0];

@@ -1,4 +1,3 @@
-import connectDB from "@/app/db";
 import axios from "axios";
 import { ReadonlyURLSearchParams } from "next/navigation";
 

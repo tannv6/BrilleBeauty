@@ -13,6 +13,7 @@ export default async function handle(
     const query = `select * from popups where DeletedAt is null and PopupID = '${popupID}'`;
 
     const [result] = await connect.execute(query);
+    connect.end();
 
     if (Array.isArray(result) && result.length > 0) {
       const popup: any = result[0];

@@ -69,6 +69,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       const queryDelImage = `UPDATE comboimages SET DeletedAt = now() WHERE ImageID IN (${DelImage})`;
       await connect.execute(queryDelImage);
     }
+    connect.end();
     return res.status(201).json({ result: "OK" });
   } catch (err) {
     return res.status(500).json({ error: err });

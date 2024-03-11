@@ -17,6 +17,7 @@ export default async function handle(
     const [result] = await connect.execute(query);
     const [result1] = await connect.execute(queryOption);
     const [result2] = await connect.execute(queryImage);
+    connect.end();
     if (Array.isArray(result) && result.length > 0) {
         const product: any = result[0];
         product["IsBest"] = product["IsBest"][0];

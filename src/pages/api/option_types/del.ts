@@ -10,6 +10,7 @@ export default async function handle(
     const connect = await connectDB();
     const query = `update product_option_types set DeletedAt = now() where PotID = '${PotID}'`;
     const [result, rows] = await connect.execute(query);
+    connect.end();
     return res.status(200).json(result);
   } catch (error) {
     return res.status(500).json({ error });

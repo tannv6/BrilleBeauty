@@ -48,7 +48,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     UpdatedAt = now() where BannerID='${BannerID}';`;
 
     const [results] = await connect.execute(query);
-
+    connect.end();
     return res.status(201).json({ result: "OK" });
   } catch (err) {
     return res.status(500).json({ error: err });

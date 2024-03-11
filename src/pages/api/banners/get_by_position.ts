@@ -19,7 +19,7 @@ export default async function handle(
     };`;
 
     const [result] = await connect.execute(query);
-
+    connect.end();
     if (Array.isArray(result) && result.length > 0) {
       return res.status(200).json(result);
     } else {

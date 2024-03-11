@@ -17,7 +17,7 @@ export default async function handle(
     where a.DeletedAt is null and a.BannerID = '${bannerID}'`;
 
     const [result] = await connect.execute(query);
-
+    connect.end();
     if (Array.isArray(result) && result.length > 0) {
       const banner: any = result[0];
       return res.status(200).json(banner);

@@ -23,6 +23,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     BrandName = '${BrandName}', UpdatedAt = now() WHERE BrandID = '${BrandID}'`;
     
     const [results] = await connect.execute(query);
+    connect.end();
     
     return res.status(201).json({ result: "OK" });
   } catch (err) {

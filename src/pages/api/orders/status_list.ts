@@ -9,6 +9,7 @@ export default async function handle(
     const connect = await connectDB();
     const query = `select * from status where StatusCategory = 'order'`;
     const [result] = await connect.execute(query);
+    connect.end();
     return res.status(200).json(result);
   } catch (error) {
     return res.status(500).json({ error });

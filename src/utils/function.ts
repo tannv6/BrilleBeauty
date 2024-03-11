@@ -1,5 +1,3 @@
-import connectDB from "@/app/db";
-import axios from "axios";
 import formidable from "formidable";
 import fs from "fs";
 

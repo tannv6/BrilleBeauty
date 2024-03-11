@@ -23,6 +23,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     UpdatedAt = now() where CategoryID='${CategoryID}';`;
 
     await connect.execute(query);
+    connect.end();
 
     return res.status(201).json({ result: "OK" });
   } catch (err) {

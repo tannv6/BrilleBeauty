@@ -15,6 +15,7 @@ import Td from "../components/Td";
 export const getServerSideProps = (async () => {
   const connect = await connectDB();
   const [response] = await connect.execute("SELECT * FROM brand WHERE DeletedAt IS NULL;");
+  connect.end();
   return {
     props: {
       response: JSON.parse(JSON.stringify(response)),

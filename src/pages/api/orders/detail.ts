@@ -19,6 +19,7 @@ export default async function handle(
     const [result] = await connect.execute(query);
 
     const [result2] = await connect.execute(queryDetails);
+    connect.end();
 
     if (Array.isArray(result) && result.length > 0) {
       const order: any = result[0];
