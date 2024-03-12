@@ -2,6 +2,8 @@ import Head from "next/head";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import "@/app/globals.css";
+import MainPopup from "./MainPopup";
+import { useState } from "react";
 
 export type WebSetting = {
   idx: any;
@@ -69,9 +71,11 @@ type Props = {
   children?: any;
   webSetting?: WebSetting;
   banner_top?: any;
+  popup: any[];
 };
 
-function Layout({ children, webSetting, banner_top }: Props) {
+function Layout({ children, webSetting, banner_top, popup }: Props) {
+  const [isOpen, setIsOpen] = useState(true);
   return (
     <>
       <Head>
@@ -83,7 +87,11 @@ function Layout({ children, webSetting, banner_top }: Props) {
       <Header webSetting={webSetting} banner_top={banner_top} />
 
       {children}
-
+      <MainPopup
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        popup={popup}
+      />
       <Footer webSetting={webSetting} />
     </>
   );

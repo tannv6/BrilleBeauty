@@ -51,8 +51,11 @@ export async function getWebSetting() {
     "http://localhost:3000/api/setting/web_info_detail"
   );
 
+  const result1 = await axios.get("http://localhost:3000/api/popups/list");
+
   return {
     webSetting: result.data,
     banner_top: response.data[0] || null,
+    popup: result1.data.data,
   };
 }
