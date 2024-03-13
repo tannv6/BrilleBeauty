@@ -58,6 +58,17 @@ export default function Header({
     });
   }, []);
 
+  const handleLinkClick = async (e: any, BrandID: number) => {
+    e.preventDefault();
+    await axios.post("/api/brand/increase_hit", {
+      CustomerID: 0,
+      BrandID,
+    });
+    
+    const href = e.target.getAttribute("href");
+    router.push(href);
+  };
+
   return (
     <div className="header container-main border-b border-gray-200">
       <div className="header_top flex justify-between items-center px-[120px] h-[120px] border-b border-gray-200">
@@ -141,9 +152,6 @@ export default function Header({
             </p>
             <div className="absolute hidden top-[49px] left-0 transform min-[1920px]:-translate-x-[35%] 2xl:-translate-x-[31%] bg-white w-full xl:w-[100vw] h-[322px] group-hover:block z-[100] border-b boder-gray-200 border-t">
               <div className="inner-container">
-                {/* <div className="flex items-end justify-end w-full">
-                <Image src="/close_ic.png" alt="" width={50} height={50}/>
-              </div> */}
                 <div className="flex items-center justify-center mt-10">
                   <div className="flex items-center w-[783px] border-b border-black">
                     <input
@@ -165,6 +173,7 @@ export default function Header({
                       {brandList?.map((e: any, i: any) => {
                         return (
                           <Link
+                            onClick={(evt) => handleLinkClick(evt, e.BrandID)}
                             key={i}
                             className="w-[120px] h-[46px] bg-[#f4f5f7] rounded-[23px] flex items-center justify-center text-[16px] text-[#545454]"
                             href={`/search/brand/${e.BrandID}`}

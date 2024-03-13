@@ -75,7 +75,6 @@ type Props = {
 };
 
 function Layout({ children, webSetting, banner_top, popup }: Props) {
-  const [isOpen, setIsOpen] = useState(true);
   return (
     <>
       <Head>
@@ -88,8 +87,6 @@ function Layout({ children, webSetting, banner_top, popup }: Props) {
 
       {children}
       <MainPopup
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
         popup={popup}
       />
       <Footer webSetting={webSetting} />
