@@ -34,7 +34,7 @@ export default function Category({id, cateName, products, subCate, page, total, 
     const handleChangePage = (page: number) => {
         setCPage(page);
         router.query.page = page.toString();
-        router.push(router);
+        router.push(router,undefined, { scroll: false });
     };
     return (
         <>
@@ -83,9 +83,9 @@ export default function Category({id, cateName, products, subCate, page, total, 
                                         <ProductItem
                                             image={"/product_img02.png"}
                                             name={e.ProductName}
-                                            oriPrice={"A$19.65"}
-                                            salePrice={"A$16.25"}
-                                            discount={"10%"}
+                                            oriPrice={e.InitPrice}
+                                            salePrice={e.SellPrice}
+                                            discount={Math.round((((e.InitPrice - e.SellPrice)/e.InitPrice)*100) *100)/100}
                                             star={"4.7"}
                                             starCount={150}
                                             heartCount={69}
