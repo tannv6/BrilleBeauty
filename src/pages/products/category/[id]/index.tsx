@@ -7,6 +7,7 @@ import SubVisual from "@/components/SubVisual";
 import Dropdown from "@/components/Dropdown";
 import ProductItem from "@/components/ProductItem";
 import Paginew from "@/components/Paginew";
+import { CDN_URL } from "@/utils/constants";
 export async function getServerSideProps({ params, query }: any) {
     const response = await axios.get("http://localhost:3000/api/products/category", {
         params: { page: query.page, pageSize: 12, cate_id: params.id, depth: 1 },
@@ -28,7 +29,7 @@ export async function getServerSideProps({ params, query }: any) {
         },
     };
 }
-export default function Category({id, cateName, products, subCate, page, total, totalPage }: any) {
+export default function Category({id, cateName, products, subCate, page, total, totalPage}: any) {
     const router = useRouter();
     const [cpage, setCPage] = useState(Number(page));
     const handleChangePage = (page: number) => {
@@ -81,7 +82,8 @@ export default function Category({id, cateName, products, subCate, page, total, 
                                 return (
                                     <>
                                         <ProductItem
-                                            image={"/product_img02.png"}
+                                            id={e.ProductID}
+                                            image={`${CDN_URL}/${e.ProductImage}`}
                                             name={e.ProductName}
                                             oriPrice={e.InitPrice}
                                             salePrice={e.SellPrice}
@@ -94,12 +96,6 @@ export default function Category({id, cateName, products, subCate, page, total, 
                                 );
                             })}
                         </div>
-                        {/* <Pagi
-                            totalPage={totalPage}
-                            currentPage={initPage}
-                            onChange={handleChangePage}
-                        >
-                        </Pagi> */}
                         {products.data.length ? (<><Paginew
                             tP={totalPage}
                             cP={cpage}

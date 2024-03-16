@@ -71,7 +71,7 @@ type Props = {
   children?: any;
   webSetting?: WebSetting;
   banner_top?: any;
-  popup: any[];
+  popup?: any[];
 };
 
 function Layout({ children, webSetting, banner_top, popup }: Props) {
