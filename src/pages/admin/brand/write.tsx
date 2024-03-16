@@ -1,17 +1,9 @@
 import React, { FormEvent, useState } from "react";
 import Layout from "../components/Layout";
-import Dropdown from "@/components/Dropdown";
 import axios from "axios";
-import connectDB from "@/app/db";
-import { GetServerSideProps } from "next";
-import { convertDatesToNumbers } from "@/utils/function";
-import Checkbox from "../components/Checkbox";
 import { useRouter } from "next/router";
-import DatePicker from "react-datepicker";
-import dateFormat from "dateformat";
 
 import "react-datepicker/dist/react-datepicker.css";
-import { log } from "console";
 
 function BrandWrite() {
   const router = useRouter();

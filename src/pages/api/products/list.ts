@@ -45,6 +45,7 @@ export default async function handle(
       totalQuery +
       ` limit ${(Number(page) - 1) * Number(pageSize)}, ${Number(pageSize)};`;
     const [result] = await connect.execute(query);
+    connect.end();
     return res.status(200).json({
       data: result,
       total,

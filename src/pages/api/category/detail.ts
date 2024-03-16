@@ -28,6 +28,7 @@ export default async function handle(
           });
         }
       }
+      connect.end();
       return res.status(200).json(object);
     } else {
       return res.status(200).json(null);

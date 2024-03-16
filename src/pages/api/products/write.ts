@@ -90,6 +90,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
         }
       }
     }
+    connect.end();
     return res.status(201).json({ result: "OK" });
   } catch (err) {
     return res.status(500).json({ error: err });

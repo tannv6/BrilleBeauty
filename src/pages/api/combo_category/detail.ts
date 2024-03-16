@@ -13,6 +13,7 @@ export default async function handle(
     const query = `select * from combocategories where DeletedAt is null and CategoryID = '${CategoryID}'`;
 
     const [result] = await connect.execute(query);
+    connect.end();
 
     if (Array.isArray(result) && result.length > 0) {
       const Category: any = result[0];

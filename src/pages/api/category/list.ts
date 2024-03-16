@@ -14,6 +14,7 @@ export default async function handle(
     left join products s4 on (s4.CategoryID = s1.CategoryID or s4.CategoryID = s2.CategoryID or s4.CategoryID = s3.CategoryID) and s4.DeletedAt is null
     where s1.Level = 1 and s1.DeletedAt is null group by s1.CategoryID`;
     const [result] = await connect.execute(query);
+    connect.end();
     return res.status(200).json({ data: result });
   } catch (error) {
     return res.status(500).json({ error });

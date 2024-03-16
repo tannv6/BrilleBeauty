@@ -26,6 +26,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       IsFull,
       PopupLink,
       PopupScreen,
+      IsUsePosition
     } = fields;
 
     const connect = await connectDB();
@@ -46,11 +47,13 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     IsShow=${Number(IsShow) || 0},
     IsCentered=${Number(IsCentered) || 0},
     IsFull=${Number(IsFull) || 0},
+    IsUsePosition=${Number(IsUsePosition) || 0},
     PopupLink='${PopupLink}',
     PopupScreen='${PopupScreen}',
     CreatedAt= now();`;
 
     const [results] = await connect.execute(query);
+    connect.end();
 
     return res.status(201).json({ result: "OK" });
   } catch (err) {

@@ -73,8 +73,10 @@ function BannerWrite({ bannerDetail, isNew, catObject }: any) {
     BannerDes: bannerDetail?.BannerDes || "",
     BannerLink: bannerDetail?.BannerLink || "",
     ImageUpload: null,
-    ShowDate: moment(bannerDetail?.ShowDate).format("yyyy-MM-DD HH:mm:ss"),
-    ShowEndDate: moment(bannerDetail?.ShowEndDate).format(
+    ShowDate: moment(bannerDetail?.ShowDate || undefined).format(
+      "yyyy-MM-DD HH:mm:ss"
+    ),
+    ShowEndDate: moment(bannerDetail?.ShowEndDate || undefined).format(
       "yyyy-MM-DD HH:mm:ss"
     ),
     CategoryID1:
@@ -195,6 +197,9 @@ function BannerWrite({ bannerDetail, isNew, catObject }: any) {
                         { id: "top", name: "top" },
                         { id: "middle", name: "middle" },
                         { id: "bottom", name: "bottom" },
+                        { id: "main_visual", name: "main_visual" },
+                        { id: "after_main_visual", name: "after_main_visual" },
+                        { id: "main_middle", name: "main_middle" },
                         { id: "sub_category", name: "sub_category" },
                       ]}
                       onChange={(id: number) => {

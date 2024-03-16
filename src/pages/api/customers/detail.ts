@@ -13,6 +13,7 @@ export default async function handle(
     const query = `select * from customers where DeletedAt is null and CustomerID = '${customerID}'`;
 
     const [result] = await connect.execute(query);
+    connect.end();
 
     if (Array.isArray(result) && result.length > 0) {
       const customer: any = result[0];

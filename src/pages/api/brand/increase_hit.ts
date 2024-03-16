@@ -2,6 +2,7 @@ import connectDB from "@/app/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import { NextRequest, NextResponse } from "next/server";
 import formidable from "formidable";
+
 export const config = {
   api: {
     bodyParser: false,
@@ -13,29 +14,13 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     const form = formidable({});
     const [fields] = await form.parse(req);
 
-    const {
-      OrdersCode,
-      CustomerID,
-      TotalAmount,
-      CustomerPhone,
-      Province,
-      District,
-      Village,
-      Address,
-    } = fields;
+    const { CustomerID, BrandID } = fields;
 
     const connect = await connectDB();
-
-    const query = `insert into orders SET 
-    OrdersCode='${OrdersCode}',
-    CustomerID='${CustomerID}',
-    TotalAmount='${TotalAmount}',
-    CustomerPhone='${CustomerPhone}',
-    Province='${Province}',
-    District='${District}',
-    Village='${Village}',
-    Address='${Address}',
-    CreatedAt= now();`;
+    const query = `INSERT INTO brandhit SET 
+    CustomerID = '${CustomerID}', 
+    BrandID = '${BrandID}', 
+    CreatedAt = now() `;
 
     const [results] = await connect.execute(query);
     connect.end();

@@ -15,6 +15,7 @@ export default async function handle(
     }')`;
     const [results] = await connect.execute(queryNew);
     const lastInsertedId = (results as any).insertId;
+    connect.end();
     return res.status(200).json({ lastInsertedId });
   } catch (error) {
     return res.status(500).json({ error });

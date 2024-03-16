@@ -9,6 +9,8 @@ import Td from "../components/Td";
 import Button from "../components/Button";
 import Modal from "../components/Modal";
 import axios from "axios";
+import { CDN_URL } from "@/utils/constants";
+import Image from "next/image";
 
 export const getServerSideProps = async () => {
   const result = await axios.get(
@@ -24,25 +26,42 @@ export const getServerSideProps = async () => {
 function List({ list }: any) {
   const [isOpenWrite, setIsOpenWrite] = useState(false);
   const [detail, setDetail] = useState<{
-    CategoryID: number | undefined;
+    CategoryID: string | undefined;
     CategoryName: string;
+    ImageUpload: File | null;
+    ThumbImage: string;
   }>({
-    CategoryID: 0,
+    CategoryID: "0",
     CategoryName: "",
+    ImageUpload: null,
+    ThumbImage: "",
   });
-  const handleOpenWrite = (CategoryName: string, CategoryID?: number) => {
+  const handleOpenWrite = (category: any) => {
     setDetail({
       ...detail,
-      CategoryID,
-      CategoryName,
+      CategoryID: category?.CategoryID || "",
+      CategoryName: category?.CategoryName || "",
+      ThumbImage: category?.ThumbImage || "",
     });
     setIsOpenWrite(true);
   };
-  const handleSubmit = async () => {
-    if (detail.CategoryID) {
-      await axios.post("/api/combo_category/update", { ...detail });
+  function handleChange(e: any) {
+    if (e.target.files) {
+      setDetail({ ...detail, [e.target.name]: e.target.files[0] });
     } else {
-      await axios.post("/api/combo_category/write", { ...detail });
+      setDetail({ ...detail, [e.target.name]: e.target.value });
+    }
+  }
+  const handleSubmit = async () => {
+    let formData = new FormData();
+
+    for (let [key, value] of Object.entries(detail)) {
+      formData.append(key, value || "");
+    }
+    if (detail.CategoryID) {
+      await axios.post("/api/combo_category/update", formData);
+    } else {
+      await axios.post("/api/combo_category/write", formData);
     }
     location.reload();
   };
@@ -52,11 +71,14 @@ function List({ list }: any) {
       window.location.reload();
     }
   };
+  const src = detail.ImageUpload
+    ? URL.createObjectURL(detail.ImageUpload)
+    : `${CDN_URL}/${detail.ThumbImage}`;
   return (
     <Layout>
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold mb-4">Combo Category List</h1>
-        <Button onClick={() => handleOpenWrite("")} color="blue">
+        <Button onClick={() => handleOpenWrite(null)} color="blue">
           + Add Category
         </Button>
       </div>
@@ -77,9 +99,7 @@ function List({ list }: any) {
                 <Td center>
                   <button
                     className="font-medium text-blue-600 hover:text-blue-800 me-3"
-                    onClick={() =>
-                      handleOpenWrite(e.CategoryName, e.CategoryID)
-                    }
+                    onClick={() => handleOpenWrite(e)}
                   >
                     <i className="fas fa-edit"></i>
                   </button>
@@ -109,13 +129,31 @@ function List({ list }: any) {
                 type="text"
                 name="CategoryName"
                 id="CategoryName"
-                onChange={(e) =>
-                  setDetail({ ...detail, CategoryName: e.target.value })
-                }
+                onChange={handleChange}
                 value={detail.CategoryName}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                 placeholder="Type Category name"
                 required
+              />
+              <label
+                htmlFor="name"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white mt-1"
+              >
+                Thumb Image
+              </label>
+              <input
+                name="ImageUpload"
+                onChange={handleChange}
+                className="relative m-0 block w-full min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
+                type="file"
+                id="ImageUpload"
+              />
+              <Image
+                className="mt-2"
+                src={src}
+                alt={""}
+                width={100}
+                height={100}
               />
             </div>
           </div>

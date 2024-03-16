@@ -9,6 +9,7 @@ export default async function handle(
     const connect = await connectDB();
     const query = `select * from categories where DeletedAt is null`;
     const [result] = await connect.execute(query);
+    connect.end();
     const catObject: any = {
       level1: [],
       level2: [],

@@ -5,8 +5,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
 import { ChangeEvent, useEffect, useState } from "react";
-
-export default function Header({ brandListRecommended }: any) {
+import { WebSetting } from "./Layout";
+import { CDN_URL } from "@/utils/constants";
+type Props = {
+  webSetting?: WebSetting;
+  brandListRecommended?: any[];
+  banner_top?: any;
+};
+export default function Header({
+  brandListRecommended,
+  webSetting,
+  banner_top,
+}: Props) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -48,12 +58,28 @@ export default function Header({ brandListRecommended }: any) {
     });
   }, []);
 
+  const handleLinkClick = async (e: any, BrandID: number) => {
+    e.preventDefault();
+    await axios.post("/api/brand/increase_hit", {
+      CustomerID: 0,
+      BrandID,
+    });
+    
+    const href = e.target.getAttribute("href");
+    router.push(href);
+  };
+
   return (
     <div className="header container-main border-b border-gray-200">
       <div className="header_top flex justify-between items-center px-[120px] h-[120px] border-b border-gray-200">
         <div className="logo">
           <Link href={"/"}>
-            <Image src="/logo_main.png" alt="" width={234} height={33} />
+            <Image
+              src={`${CDN_URL}${webSetting?.logos || ""}`}
+              alt=""
+              width={234}
+              height={33}
+            />
           </Link>
         </div>
         <div className="search-container flex items-center mx-5">
@@ -72,7 +98,12 @@ export default function Header({ brandListRecommended }: any) {
             />
           </div>
           <div className="img_sale ml-5">
-            <Image src="/img_sale.png" alt="" width={218} height={64} />
+            <Image
+              src={`${CDN_URL}${banner_top?.BannerImg || ""}`}
+              alt=""
+              width={218}
+              height={64}
+            />
           </div>
         </div>
         <div className="header_right flex items-center">
@@ -121,9 +152,6 @@ export default function Header({ brandListRecommended }: any) {
             </p>
             <div className="absolute hidden top-[49px] left-0 transform min-[1920px]:-translate-x-[35%] 2xl:-translate-x-[31%] bg-white w-full xl:w-[100vw] h-[322px] group-hover:block z-[100] border-b boder-gray-200 border-t">
               <div className="inner-container">
-                {/* <div className="flex items-end justify-end w-full">
-                <Image src="/close_ic.png" alt="" width={50} height={50}/>
-              </div> */}
                 <div className="flex items-center justify-center mt-10">
                   <div className="flex items-center w-[783px] border-b border-black">
                     <input
@@ -145,6 +173,7 @@ export default function Header({ brandListRecommended }: any) {
                       {brandList?.map((e: any, i: any) => {
                         return (
                           <Link
+                            onClick={(evt) => handleLinkClick(evt, e.BrandID)}
                             key={i}
                             className="w-[120px] h-[46px] bg-[#f4f5f7] rounded-[23px] flex items-center justify-center text-[16px] text-[#545454]"
                             href={`/search/brand/${e.BrandID}`}
@@ -165,8 +194,12 @@ export default function Header({ brandListRecommended }: any) {
               <>
                 <li key={i} className="relative group">
                   <Link
-                    className={`${pathname?.slice(0, 20) === `/products/category/${e.CategoryID}` ? "gnb_active" : ""
-                      } text-18 tracking-wide leading-[50px] text-gray-700`}
+                    className={`${
+                      pathname?.slice(0, 20) ===
+                      `/products/category/${e.CategoryID}`
+                        ? "gnb_active"
+                        : ""
+                    } text-18 tracking-wide leading-[50px] text-gray-700`}
                     href={`/products/category/${e.CategoryID}`}
                   >
                     {e.CategoryName}
@@ -176,20 +209,27 @@ export default function Header({ brandListRecommended }: any) {
                       {e.child?.map((e1: any, i1: any) => {
                         return (
                           <div key={i1}>
-                            <Link href={`/products/category/${e.CategoryID}/${e1.CategoryID}`}>
+                            <Link
+                              href={`/products/category/${e.CategoryID}/${e1.CategoryID}`}
+                            >
                               <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">
                                 {e1.CategoryName}
                               </h3>
                             </Link>
                             {e1.child?.map((e2: any, i2: any) => {
                               return (
-                                <Link href={`/products/category/${e.CategoryID}/${e1.CategoryID}/${e2.CategoryID}`}>
-                                  <p key={i2} className="text-[18px] text-[#252525] leading-[35px] font-medium">
+                                <Link
+                                  key={i2}
+                                  href={`/products/category/${e.CategoryID}/${e1.CategoryID}/${e2.CategoryID}`}
+                                >
+                                  <p
+                                    key={i2}
+                                    className="text-[18px] text-[#252525] leading-[35px] font-medium"
+                                  >
                                     {e2.CategoryName}
                                   </p>
                                 </Link>
                               );
-
                             })}
                           </div>
                         );
@@ -203,8 +243,9 @@ export default function Header({ brandListRecommended }: any) {
 
           <li className="relative group">
             <Link
-              className={`${pathname === "/sales" ? "gnb_active" : ""
-                } text-18 tracking-wide leading-[50px] text-gray-700`}
+              className={`${
+                pathname === "/sales" ? "gnb_active" : ""
+              } text-18 tracking-wide leading-[50px] text-gray-700`}
               href={""}
             >
               Combo

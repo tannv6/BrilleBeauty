@@ -94,6 +94,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
         WHERE idx = 1;`;
 
     await connect.execute(query);
+    connect.end();
     return res.status(201).json({ result: "OK" });
   } catch (err) {
     return res.status(500).json({ error: err });

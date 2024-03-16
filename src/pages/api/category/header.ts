@@ -31,9 +31,11 @@ export default async function handle(
       }
       data1.push(object);
       }
+      connect.end();
       return res.status(200).json({ data: data1 });
     }
     else {
+      connect.end();
       return res.status(200).json(null);
     }
   } catch (error) {

@@ -12,6 +12,7 @@ export default async function handle(
       search ? ` and BrandName like '%${search}%'` : ""
     }`;
     const [result] = await connect.execute(query);
+    connect.end();
     return res.status(200).json({ data: result });
   } catch (error) {
     return res.status(500).json({ error });

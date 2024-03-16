@@ -33,7 +33,15 @@ function list({ response }: any) {
   };
   return (
     <Layout>
+      <div className="flex justify-between items-center">
       <h1 className="text-2xl font-bold mb-4">Category List</h1>
+        <Link
+          href={"/admin/category/write"}
+          className="flex justify-center items-center bg-blue-600 text-white p-2 rounded w-[160px] h-[40px]"
+        >
+          Add New Category
+        </Link>
+      </div>
       <div className="flex items-center justify-center">
           <Table colWidths={["10%", "40%", "20%", "20%", "10%"]}>
             <Thead>

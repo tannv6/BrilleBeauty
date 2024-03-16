@@ -24,6 +24,7 @@ export default async function handle(
  
 
     const [result] = await connect.execute(totalQuery);
+    connect.end();
     return res.status(200).json({
       data: result,
     });

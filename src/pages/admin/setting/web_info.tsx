@@ -9,6 +9,7 @@ export const getServerSideProps = async () => {
   const connect = await connectDB();
   const sql = "select * from homeset where idx = 1";
   const [result] = await connect.execute(sql);
+  connect.end();
   return {
     props: {
       data: Array.isArray(result)

@@ -6,7 +6,7 @@ export default async function handle(
   res: NextApiResponse
 ) {
   try {
-    const { bannerID } = req.query;
+    const { position, count } = req.query;
 
     const connect = await connectDB();
 
@@ -14,15 +14,16 @@ export default async function handle(
     from banners a
     left join categories b on a.CategoryID = b.CategoryID 
     left join categories c on b.ParentID = c.CategoryID 
-    where a.DeletedAt is null and a.BannerID = '${bannerID}'`;
+    where a.DeletedAt is null and a.BannerCategory = '${position}' limit ${
+      count || 1
+    };`;
 
     const [result] = await connect.execute(query);
     connect.end();
     if (Array.isArray(result) && result.length > 0) {
-      const banner: any = result[0];
-      return res.status(200).json(banner);
+      return res.status(200).json(result);
     } else {
-      return res.status(200).json(null);
+      return res.status(200).json([]);
     }
   } catch (error) {
     return res.status(500).json({ error });
