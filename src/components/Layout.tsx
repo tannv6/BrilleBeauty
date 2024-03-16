@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { AuthProvider } from "./Providers";
 import "@/app/globals.css";
 import MainPopup from "./MainPopup";
 import { useState } from "react";
@@ -85,11 +86,12 @@ function Layout({ children, webSetting, banner_top, popup }: Props) {
 
       <Header webSetting={webSetting} banner_top={banner_top} />
 
-      {children}
-      <MainPopup
-        popup={popup}
-      />
-      <Footer webSetting={webSetting} />
+      <AuthProvider>
+        {children}
+        <MainPopup popup={popup} />
+      </AuthProvider>
+
+      <Footer />
     </>
   );
 }
