@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { AuthProvider } from "./Providers";
 import "@/app/globals.css";
 
 function Layout({ children }: any) {
@@ -14,7 +15,9 @@ function Layout({ children }: any) {
 
       <Header />
 
-      {children}
+      <AuthProvider>
+       {children} 
+      </AuthProvider>
 
       <Footer />
     </>
