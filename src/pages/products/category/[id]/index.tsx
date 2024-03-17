@@ -82,7 +82,9 @@ export default function Category({id, cateName, products, subCate, page, total, 
                                     <>
                                         <ProductItem
                                             image={"/product_img02.png"}
-                                            name={e.ProductName}
+                                            name={<Link href={`/product_detail/${e.ProductID}`}
+                                            className="font-bold text-[18px]">{e.ProductName}
+                                            </Link>}
                                             oriPrice={"A$19.65"}
                                             salePrice={"A$16.25"}
                                             discount={"10%"}

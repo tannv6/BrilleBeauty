@@ -22,6 +22,7 @@ export default function Header({
 
   const [brandList, setBrandList] = useState(brandListRecommended || []);
   const [categoryList, setCategoryList] = useState([]);
+  const [comboCategoryList, setComboCategoryList] = useState([]);
 
   function handleKeyPress(e: any) {
     if (e.keyCode === 13) {
@@ -56,7 +57,21 @@ export default function Header({
     axios.get("/api/category/header").then((response) => {
       setCategoryList(response.data.data);
     });
+    axios.get("/api/combo_category/header").then((response) => {
+      setComboCategoryList(response.data.data);
+    });
   }, []);
+
+  const handleLinkClick = async (e: any, BrandID: number) => {
+    e.preventDefault();
+    await axios.post("/api/brand/increase_hit", {
+      CustomerID: 0,
+      BrandID,
+    });
+
+    const href = e.target.getAttribute("href");
+    router.push(href);
+  };
 
   return (
     <div className="header container-main border-b border-gray-200">
@@ -131,19 +146,16 @@ export default function Header({
           </div>
         </div>
       </div>
-      <nav className="gnb inner-container">
+      <nav className="relative gnb inner-container">
         <ul className="flex justify-center items-center custom-gap-45 h-[50px] font-medium">
-          <li className="relative group">
+          <li className="group">
             <p
               className={`text-18 tracking-wide leading-[50px] text-gray-700 select-none`}
             >
               Brands
             </p>
-            <div className="absolute hidden top-[49px] left-0 transform min-[1920px]:-translate-x-[35%] 2xl:-translate-x-[31%] bg-white w-full xl:w-[100vw] h-[322px] group-hover:block z-[100] border-b boder-gray-200 border-t">
+            <div className="absolute hidden top-[49px] left-1/2 transform -translate-x-1/2 bg-white w-full xl:w-[100vw] h-[322px] group-hover:block z-[100] border-b boder-gray-200 border-t">
               <div className="inner-container">
-                {/* <div className="flex items-end justify-end w-full">
-                <Image src="/close_ic.png" alt="" width={50} height={50}/>
-              </div> */}
                 <div className="flex items-center justify-center mt-10">
                   <div className="flex items-center w-[783px] border-b border-black">
                     <input
@@ -165,6 +177,7 @@ export default function Header({
                       {brandList?.map((e: any, i: any) => {
                         return (
                           <Link
+                            onClick={(evt) => handleLinkClick(evt, e.BrandID)}
                             key={i}
                             className="w-[120px] h-[46px] bg-[#f4f5f7] rounded-[23px] flex items-center justify-center text-[16px] text-[#545454]"
                             href={`/search/brand/${e.BrandID}`}
@@ -181,22 +194,22 @@ export default function Header({
           </li>
 
           {categoryList?.map((e: any, i: any) => {
+            console.log(pathname?.slice(19));
             return (
               <>
-                <li key={i} className="relative group">
+                <li key={i} className="group">
                   <Link
-                    className={`${
-                      pathname?.slice(0, 20) ===
+                    className={`${pathname?.slice(0) ==
                       `/products/category/${e.CategoryID}`
-                        ? "gnb_active"
-                        : ""
-                    } text-18 tracking-wide leading-[50px] text-gray-700`}
+                      ? "gnb_active"
+                      : ""
+                      } text-18 tracking-wide leading-[50px] text-gray-700`}
                     href={`/products/category/${e.CategoryID}`}
                   >
                     {e.CategoryName}
                   </Link>
-                  <div className="absolute hidden top-[49px] left-0 transform min-[1920px]:-translate-x-[40%] 2xl:-translate-x-[38%] bg-white w-full xl:w-[100vw] h-[400px] group-hover:block z-[100] border-b boder-gray-200 border-t">
-                    <div className="inner-container flex gap-[150px] mt-[55px]">
+                  <div className="absolute hidden top-[49px] left-1/2 transform -translate-x-1/2 bg-white w-full xl:w-[100vw] h-[400px] group-hover:block z-[100] border-b boder-gray-200 border-t">
+                    <div className="inner-container flex justify-center gap-[80px] mt-[55px] whitespace-nowrap">
                       {e.child?.map((e1: any, i1: any) => {
                         return (
                           <div key={i1}>
@@ -232,18 +245,35 @@ export default function Header({
             );
           })}
 
-          <li className="relative group">
+          <li className="group">
             <Link
-              className={`${
-                pathname === "/sales" ? "gnb_active" : ""
-              } text-18 tracking-wide leading-[50px] text-gray-700`}
-              href={""}
+              className={`${pathname === "/sales" ? "gnb_active" : ""
+                } text-18 tracking-wide leading-[50px] text-gray-700`}
+              href="/search/combo"
             >
               Combo
             </Link>
-            <div className="absolute hidden top-[49px] left-0 transform min-[1920px]:-translate-x-[63%] 2xl:-translate-x-[66%] bg-white w-full xl:w-[100vw] h-[420px] group-hover:block z-[100] border-b boder-gray-200 border-t">
-              <div className="inner-container flex gap-[70px] mt-[55px]">
-                <div>
+            <div className="absolute hidden top-[49px] left-1/2 transform -translate-x-1/2 bg-white w-full xl:w-[100vw] h-[420px] group-hover:block z-[100] border-b boder-gray-200 border-t">
+              <div className="inner-container flex gap-[70px] mt-[55px] justify-center">
+
+                {comboCategoryList?.map((e: any, i: any) => {
+                  return (<>
+                    <div>
+                      <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">
+                        {e.CategoryName}
+                      </h3>
+                      <Link href={`/combo/category/${e.CategoryID}`}>
+                        <Image
+                          src={`${CDN_URL}/${e.ThumbImage}`}
+                          alt=""
+                          width={250}
+                          height={250}
+                        />
+                      </Link>
+                    </div>
+                  </>)
+                })}
+                {/* <div>
                   <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">
                     Last Minute Sale{" "}
                   </h3>
@@ -294,7 +324,8 @@ export default function Header({
                       height={250}
                     />
                   </Link>
-                </div>
+                </div> */}
+
               </div>
             </div>
           </li>

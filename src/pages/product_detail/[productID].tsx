@@ -12,15 +12,138 @@ import Image from "next/image";
 import Pagi from "@/components/Pagi";
 import ProductRelated from "@/components/ProductRelated";
 import Link from "next/link";
-export default function Face() {
+import axios from "axios";
+
+const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
+export const getServerSideProps = async (context: { params: any, query: any }) => {
+  const { params, query } = context;
+  const { productID } = params;
+  const productDetail = await axios.get(
+    `http://localhost:3000/api/products/detail`,
+    {
+      params: { productID },
+    }
+  );
+
+  const response = await axios.get("http://localhost:3000/api/products/category", {
+    params: { cate_id: params.id2, depth: 3 },
+});
+
+  const result1 = await axios.get(
+    "http://localhost:3000/api/option_types/list"
+  );
+
+  const result2 = await axios.get(
+    "http://localhost:3000/api/option_types/detail"
+  );
+
+  return {
+    props: {
+    optionTypes: result1.data.data,
+    optionTypes2: result2.data.data,
+      product: productDetail.data,
+      productRelate: response.data,
+      ...response.data,
+    },
+  };
+};
+
+export default function Face({ product, optionTypes, optionTypes2, productRelate }: any) {
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
-  const [NumProduct, setNumProduct] = useState(1);
+  // const [NumProduct, setNumProduct] = useState(1);
   const [isHeart, setIsHeart] = useState<boolean>(true);
+  const [NumProduct, setNumProduct] = useState<{ [key: number]: number }>({});
+
+  const selectedOptionType = optionTypes.find((optionType: any) => optionType.PotID === product.PotID);
+
+
+  const [dropdownState, setDropdownState] = useState({
+    activeItem: product.ProductID || (optionTypes2.length > 0 ? optionTypes2[0]?.ProductID : null),
+  });
+
+  const [selectedOptions, setSelectedOptions] = useState<{ [key: number]: boolean }>({});
+
+  const handleChange = (id: number) => {
+    if (selectedOptions[id]) {
+      alert("You have selected this option before!");
+    } else {
+      setSelectedOptions((prevOptions) => ({
+        ...prevOptions,
+        [id]: true,
+      }));
+
+      setDropdownState((prevOptions: any) => ({
+        ...prevOptions,
+        activeItem: id,
+      }));
+
+      setNumProduct((prevNumProducts) => ({
+        ...prevNumProducts,
+        [id]: 1, 
+      }));
+    }
+  };
+
+  const handleDeleteOption = (id: number) => {
+    setSelectedOptions((prevOptions) => ({
+      ...prevOptions,
+      [id]: false,
+    }));
+
+    setNumProduct((prevNumProducts) => {
+      const updatedNumProducts = { ...prevNumProducts };
+      delete updatedNumProducts[id];
+      return updatedNumProducts;
+    });
+  };
+
+  const updateNumProduct = (id: number, value: number) => {
+    setNumProduct((prevNumProducts) => ({
+      ...prevNumProducts,
+      [id]: value,
+    }));
+  };
+
+  const calculateNewPrice = (price: number, numProduct: number) => {
+    return price * numProduct;
+  };
+
+  const totalOptionPrice = Object.keys(selectedOptions).reduce((total, optionId) => {
+    if (selectedOptions[parseInt(optionId)]) {
+      const option = optionTypes2.find((option: any) => option.PoID === parseInt(optionId));
+      const optionPrice = option ? calculateNewPrice(option.PoInitPrice, NumProduct[option.PoID] || 1) : 0;
+      return total + optionPrice;
+    }
+    return total;
+  }, 0);
+
+  const optionElements = optionTypes2.map((option: any) => (
+    selectedOptions[option.PoID] && (
+      <div className="py-5" key={option.PoID}>
+        <div className="flex items-center justify-between">
+          <div className="max-w-[200px]">
+            <p className="text-[#454545] min-w-[60px]">{option.PoName}</p>
+          </div>
+          <div className="flex flex-row">
+            <button className="rounded-l w-[33px] h-[33px] bg-[url('/product_detail/product_number_desc_btn.png')]" onClick={() => { updateNumProduct(option.PoID, Math.max((NumProduct[option.PoID] || 1) - 1, 0)) }}></button>
+            <input type="number" value={NumProduct[option.PoID] || 1} onChange={(e) => { updateNumProduct(option.PoID, Number(e.target.value)) }} className="pt-1 border border-x-0 text-center min-w-[46px] max-w-[46px] h-[33px] outline-0" />
+            <button className="rounded-r w-[33px] h-[33px] bg-[url('/product_detail/product_number_asc_btn.png')]" onClick={() => { updateNumProduct(option.PoID, (NumProduct[option.PoID] || 1) + 1) }}></button>
+          </div>
+          <div className="flex flex-row items-center gap-2">
+            <p className="text-xl font-bold">{calculateNewPrice(option.PoInitPrice, NumProduct[option.PoID] || 1)}</p>
+            <button className="rounded w-[33px] h-[33px] bg-[url('/product_detail/product_del_btn.png')]" onClick={() => handleDeleteOption(option.PoID)}></button>
+          </div>
+        </div>
+      </div>
+    )
+  ));
+
+
   return (
     <>
       <Layout>
         <div id="main">
-          <SubNav title1="Damage Care Perfect Serum Original (New) - 80ml"/>
+          <SubNav title1={product.ProductName}/>
           <div className="inner-container mt-[70px] mb-[60px]">
             <div className="flex flex-row justify-between">
               <div className="basis-[556px]">
@@ -56,16 +179,15 @@ export default function Face() {
               </div>
               <div className="basis-[580px] flex flex-col">
                 <div className="pb-5">
-                  <p className="text-[32px] font-bold">Damage Care Perfect Serum
-                    Original (New) - 80ml
+                  <p className="text-[32px] font-bold">{product.ProductName}
                   </p>
                   <p className="pt-2">
-                    <span className="text-[28px] font-bold text-[#ef426f]">A$16.25</span>
-                    <span className="line-through text-lg text-[#999999] pl-3">A$19.65</span>
+                    <span className="text-[28px] font-bold text-[#ef426f]">A${product.InitPrice}</span>
+                    <span className="line-through text-lg text-[#999999] pl-3">A${product.SellPrice}</span>
                   </p>
                 </div>
                 <hr />
-                <div className="py-5">
+                {/* <div className="py-5">
                   <p className="flex">
                     <span className="text-lg min-w-[190px]">Color</span>
                     <span className="text-lg text-[#757575]">Orange</span>
@@ -75,49 +197,36 @@ export default function Face() {
                     <span className="text-lg text-[#757575]">2022 Version</span>
                   </p>
                 </div>
-                <hr />
+                <hr /> */}
                 <div className="py-5">
                   <p className="flex">
                     <span className="text-lg min-w-[190px]">Product Highlight</span>
-                    <span className="text-lg text-[#757575]">Repair your hair within 3 days with miracle oil serum.
-                      Mise en scène Perfect Serum is an oil-infused hair
-                      serum that provides intensive damage care...</span>
+                    <span className="text-lg text-[#757575]">{product.Description}</span>
                   </p>
                 </div>
                 <hr />
                 <div className="py-5">
                   <div className="flex items-center">
-                    <span className="text-lg min-w-[190px]">Volume / Weight</span>
-                    <Dropdown
-                      className="w-[397px] text-[#757575]"
-                      options={[
-                        { id: 1, name: "80ml" },
-                        { id: 2, name: "100ml" },
-                      ]}
-                      onChange={() => { }}
-                      activeItem={1}
-                    />
+                    <span className="text-lg min-w-[190px]"> {selectedOptionType && (
+                        <span>{selectedOptionType.PotName}</span>
+                      )}</span>
+                        <Dropdown
+                          className="w-[397px] text-[#757575]"
+                          options={optionTypes2.map((e: any, i: any) => {
+                            return {
+                              id: e.PoID,
+                              name: e.PoName,
+                            };
+                          })}
+                          onChange={(id: number) => handleChange(id)}
+                          activeItem={dropdownState.activeItem}
+                        />
                   </div>
                 </div>
                 <hr />
-                <div className="py-5">
-                  <div className="flex items-center justify-between">
-                    <div className="max-w-[200px]">
-                      <p className="text-[#454545]">Damage Care Perfect Serum
-                        Original (New) - 80ml</p>
-                      <p className="text-[15px] text-[#999999] pt-1">- [Required selection]</p>
-                    </div>
-                    <div className="flex flex-row">
-                      <button className="rounded-l w-[33px] h-[33px] bg-[url('/product_detail/product_number_desc_btn.png')]" onClick={() => { setNumProduct(Math.max((NumProduct - 1), 0)) }}></button>
-                      <input type="number" value={NumProduct} onChange={(e) => { setNumProduct(Number(e.target.value)) }} className="pt-1 border border-x-0 text-center min-w-[46px] max-w-[46px] h-[33px] outline-0" />
-                      <button className="rounded-r w-[33px] h-[33px] bg-[url('/product_detail/product_number_asc_btn.png')]" onClick={() => { setNumProduct(NumProduct + 1) }}></button>
-                    </div>
-                    <div className="flex flex-row items-center gap-2">
-                      <p className="text-xl font-bold">A$16.25</p>
-                      <button className="rounded w-[33px] h-[33px] bg-[url('/product_detail/product_del_btn.png')]"></button>
-                    </div>
-                  </div>
-                </div>
+                <>
+                {optionElements}
+                </>
                 <hr />
                 <div className="pt-5">
                   <div className="flex justify-between items-center">
@@ -125,7 +234,9 @@ export default function Face() {
                       <span className="text-lg">Total</span>
                       <span className="text-[#757575] pl-1">(Quantity)</span>
                     </p>
-                    <p className="text-[28px] font-bold text-[#ef426f]">A$16.25</p>
+                    <p className="text-[28px] font-bold text-[#ef426f]">
+                      {Object.keys(selectedOptions).length === 0 ? `A$${product.InitPrice}` : ` A$${totalOptionPrice}`}
+                    </p>
                   </div>
                   <div className="flex gap-3 pt-5">
                     <button
@@ -207,7 +318,27 @@ export default function Face() {
               <ProductDetailNav tab="3"></ProductDetailNav>
             </div>
             <p className="text-xl mb-[30px] font-bold">RELATED PRODUCTS</p>
-            <ProductRelated></ProductRelated>
+            {productRelate.data?.map((e: any, i: any) => {
+                                return (
+                                    <>
+                                    <ProductRelated
+                                      key = {i}
+                                      image={"/product_img02.png"}
+                                      name={<Link href={`/product_detail/${e.ProductID}`}
+                                      className="font-bold text-[18px]">{e.ProductName}
+                                      </Link>}
+                                      oriPrice={`A$${e.InitPrice}`}
+                                      salePrice={`A$${e.SellPrice}`}
+                                      discount={"10%"}
+                                      star={"4.7"}
+                                      starCount={150}
+                                      heartCount={69}
+                                    />
+                                    </>
+                                );
+                            })}
+
+            {/* <ProductRelated></ProductRelated> */}
           </div>
         </div>
       </Layout>
