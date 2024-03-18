@@ -1,6 +1,10 @@
 import "@/app/globals.css";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+
 
 function ProductItem({
   id,
@@ -13,6 +17,7 @@ function ProductItem({
   starCount,
   heartCount,
 }: any) {
+
   return (
     <>
       <div className="font-Arial flex flex-col">

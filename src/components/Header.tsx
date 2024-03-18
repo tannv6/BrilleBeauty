@@ -146,15 +146,15 @@ export default function Header({
           </div>
         </div>
       </div>
-      <nav className="gnb inner-container">
+      <nav className="relative gnb inner-container">
         <ul className="flex justify-center items-center custom-gap-45 h-[50px] font-medium">
-          <li className="relative group">
+          <li className="group">
             <p
               className={`text-18 tracking-wide leading-[50px] text-gray-700 select-none`}
             >
               Brands
             </p>
-            <div className="absolute hidden top-[49px] left-0 transform min-[1920px]:-translate-x-[35%] 2xl:-translate-x-[31%] bg-white w-full xl:w-[100vw] h-[322px] group-hover:block z-[100] border-b boder-gray-200 border-t">
+            <div className="absolute hidden top-[49px] left-1/2 transform -translate-x-1/2 bg-white w-full xl:w-[100vw] h-[322px] group-hover:block z-[100] border-b boder-gray-200 border-t">
               <div className="inner-container">
                 <div className="flex items-center justify-center mt-10">
                   <div className="flex items-center w-[783px] border-b border-black">
@@ -197,7 +197,7 @@ export default function Header({
             console.log(pathname?.slice(19));
             return (
               <>
-                <li key={i} className="relative group">
+                <li key={i} className="group">
                   <Link
                     className={`${pathname?.slice(0) ==
                       `/products/category/${e.CategoryID}`
@@ -208,8 +208,8 @@ export default function Header({
                   >
                     {e.CategoryName}
                   </Link>
-                  <div className="absolute hidden top-[49px] left-0 transform min-[1920px]:-translate-x-[40%] 2xl:-translate-x-[38%] bg-white w-full xl:w-[100vw] h-[400px] group-hover:block z-[100] border-b boder-gray-200 border-t">
-                    <div className="inner-container flex gap-[150px] mt-[55px]">
+                  <div className="absolute hidden top-[49px] left-1/2 transform -translate-x-1/2 bg-white w-full xl:w-[100vw] h-[400px] group-hover:block z-[100] border-b boder-gray-200 border-t">
+                    <div className="inner-container flex justify-center gap-[80px] mt-[55px] whitespace-nowrap">
                       {e.child?.map((e1: any, i1: any) => {
                         return (
                           <div key={i1}>
@@ -245,7 +245,7 @@ export default function Header({
             );
           })}
 
-          <li className="relative group">
+          <li className="group">
             <Link
               className={`${pathname === "/sales" ? "gnb_active" : ""
                 } text-18 tracking-wide leading-[50px] text-gray-700`}
@@ -253,8 +253,8 @@ export default function Header({
             >
               Combo
             </Link>
-            <div className="absolute hidden top-[49px] left-0 transform min-[1920px]:-translate-x-[63%] 2xl:-translate-x-[66%] bg-white w-full xl:w-[100vw] h-[420px] group-hover:block z-[100] border-b boder-gray-200 border-t">
-              <div className="inner-container flex gap-[70px] mt-[55px]">
+            <div className="absolute hidden top-[49px] left-1/2 transform -translate-x-1/2 bg-white w-full xl:w-[100vw] h-[420px] group-hover:block z-[100] border-b boder-gray-200 border-t">
+              <div className="inner-container flex gap-[70px] mt-[55px] justify-center">
 
                 {comboCategoryList?.map((e: any, i: any) => {
                   return (<>
