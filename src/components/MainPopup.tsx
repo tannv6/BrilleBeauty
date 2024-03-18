@@ -3,7 +3,7 @@ import { setCookie, setCookieClient } from "@/utils/cookie";
 import Image from "next/image";
 import React, { Fragment, useEffect, useState } from "react";
 type Props = {
-  popup: {
+  popup?: {
     PopupID: any;
     PopupTitle: any;
     PopupContent: any;
@@ -24,7 +24,7 @@ type Props = {
   }[];
 };
 function MainPopup({ popup }: Props) {
-  const [scrollEnabled, setScrollEnabled] = useState(popup?.length > 0);
+  const [scrollEnabled, setScrollEnabled] = useState(Number(popup?.length) > 0);
   const [popupList, setPopupList] = useState(popup || []);
   const hanldeClosePop = (id: number) => {
     const popCopy = [...popupList];

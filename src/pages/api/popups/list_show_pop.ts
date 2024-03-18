@@ -16,7 +16,7 @@ export default async function handle(
     
     const cookies = JSON.parse(cookies1?.toString() || "{}" )
     const connect = await connectDB();
-    const totalQuery = `select * from popups where DeletedAt is null order by PopupID desc`;
+    const totalQuery = `select * from popups where DeletedAt is null and IsShow = 1 order by PopupID desc`;
 
     const [resultTotal]: any = await connect.execute(totalQuery);
 
