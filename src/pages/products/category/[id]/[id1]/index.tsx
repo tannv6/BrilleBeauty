@@ -35,7 +35,7 @@ export default function Category({id, id1, cateName, products, subCate, page, to
     const handleChangePage = (page: number) => {
         setCPage(page);
         router.query.page = page.toString();
-        router.push(router);
+        router.push(router,undefined, { scroll: false });
     };
     return (
         <>

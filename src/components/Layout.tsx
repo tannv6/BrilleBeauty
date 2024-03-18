@@ -1,6 +1,7 @@
 import Head from "next/head";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { AuthProvider } from "./Providers";
 import "@/app/globals.css";
 import MainPopup from "./MainPopup";
 
@@ -70,7 +71,7 @@ type Props = {
   children?: any;
   webSetting?: WebSetting;
   banner_top?: any;
-  popup: any[];
+  popup?: any[];
 };
 
 function Layout({ children, webSetting, banner_top, popup }: Props) {
@@ -84,11 +85,12 @@ function Layout({ children, webSetting, banner_top, popup }: Props) {
 
       <Header webSetting={webSetting} banner_top={banner_top} />
 
-      {children}
-      <MainPopup
-        popup={popup}
-      />
-      <Footer webSetting={webSetting} />
+      <AuthProvider>
+        {children}
+        <MainPopup popup={popup} />
+      </AuthProvider>
+
+      <Footer />
     </>
   );
 }

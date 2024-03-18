@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 function ProductItem({
+  id,
   image,
   name,
   oriPrice,
@@ -29,12 +30,12 @@ function ProductItem({
           </div>
         </div>
         <div className="p-5 pb-10 border border-t-0 border-[#dbdbdb]">
-          <Link href={`/product_detail`} className="font-bold text-[18px]">{name}</Link>
+          <Link href={`/product_detail/${id}`} className="font-bold text-[18px]">{name}</Link>
           <p className="pt-2">
-            <span className="line-through text-[#bbbbbb]">{oriPrice}</span>
-            <span className="pl-[10px] text-[20px] font-bold">{salePrice}</span>
+            <span className="line-through text-[#bbbbbb]">${oriPrice}</span>
+            <span className="pl-[10px] text-[20px] font-bold">${salePrice}</span>
             <span className="pl-[15px] text-[22px] text-[#fe3a40] font-bold">
-              {discount}
+              {discount}%
             </span>
           </p>
           <div className="flex items-center pt-3">

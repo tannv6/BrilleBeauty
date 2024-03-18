@@ -7,6 +7,7 @@ import SubVisual from "@/components/SubVisual";
 import Dropdown from "@/components/Dropdown";
 import ProductItem from "@/components/ProductItem";
 import Paginew from "@/components/Paginew";
+import { CDN_URL } from "@/utils/constants";
 export async function getServerSideProps({ params, query }: any) {
     const response = await axios.get("http://localhost:3000/api/products/category", {
         params: { page: query.page, pageSize: 12, cate_id: params.id, depth: 1 },
@@ -28,13 +29,13 @@ export async function getServerSideProps({ params, query }: any) {
         },
     };
 }
-export default function Category({id, cateName, products, subCate, page, total, totalPage }: any) {
+export default function Category({id, cateName, products, subCate, page, total, totalPage}: any) {
     const router = useRouter();
     const [cpage, setCPage] = useState(Number(page));
     const handleChangePage = (page: number) => {
         setCPage(page);
         router.query.page = page.toString();
-        router.push(router);
+        router.push(router,undefined, { scroll: false });
     };
     return (
         <>
@@ -81,11 +82,12 @@ export default function Category({id, cateName, products, subCate, page, total, 
                                 return (
                                     <>
                                         <ProductItem
-                                            image={"/product_img02.png"}
+                                            id={e.ProductID}
+                                            image={`${CDN_URL}/${e.ProductImage}`}
                                             name={e.ProductName}
-                                            oriPrice={"A$19.65"}
-                                            salePrice={"A$16.25"}
-                                            discount={"10%"}
+                                            oriPrice={e.InitPrice}
+                                            salePrice={e.SellPrice}
+                                            discount={Math.round((((e.InitPrice - e.SellPrice)/e.InitPrice)*100) *100)/100}
                                             star={"4.7"}
                                             starCount={150}
                                             heartCount={69}
@@ -94,12 +96,6 @@ export default function Category({id, cateName, products, subCate, page, total, 
                                 );
                             })}
                         </div>
-                        {/* <Pagi
-                            totalPage={totalPage}
-                            currentPage={initPage}
-                            onChange={handleChangePage}
-                        >
-                        </Pagi> */}
                         {products.data.length ? (<><Paginew
                             tP={totalPage}
                             cP={cpage}
