@@ -27,7 +27,6 @@ export function setCookieClient(name: any, value: any, days: any) {
 export function getCookieClient(name: any) {
   var nameEQ = name + "=";
   var ca = document.cookie.split(";");
-  console.log(ca);
   
   for (var i = 0; i < ca.length; i++) {
     var c = ca[i];

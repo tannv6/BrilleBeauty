@@ -99,7 +99,6 @@ function PopupWrite({ popupDetail, isNew }: any) {
   const src = popup.ImageUpload
     ? URL.createObjectURL(popup.ImageUpload)
     : `${CDN_URL}/${popup.PopupImage}`;
-  console.log(popup);
   return (
     <Layout>
       <div className="flex justify-between items-center">

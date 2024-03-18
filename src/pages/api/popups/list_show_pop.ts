@@ -12,13 +12,9 @@ export default async function handle(
     const params = req.query;
     const cookies2 = parse(req.headers.cookie || '');
 
-    console.log(req.headers);
-    
-    
     const { page = 1, pageSize = 1000, cookies1 } = params;
     
     const cookies = JSON.parse(cookies1?.toString() || "{}" )
-    console.log(cookies);
     const connect = await connectDB();
     const totalQuery = `select * from popups where DeletedAt is null order by PopupID desc`;
 
