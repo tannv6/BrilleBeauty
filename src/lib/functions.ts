@@ -39,7 +39,7 @@ export function objectToSearchParams(obj: { [key: string]: any }) {
   return searchParams.toString();
 }
 
-export async function getWebSetting() {
+export async function getWebSetting(cookies: any) {
   const response = await axios.get(
     "http://localhost:3000/api/banners/get_by_position",
     {
@@ -53,7 +53,7 @@ export async function getWebSetting() {
 
   const result1 = await axios.get(
     "http://localhost:3000/api/popups/list_show_pop",
-    { withCredentials: true }
+    { params: { cookies1: JSON.stringify(cookies) }, withCredentials: true }
   );
 
   return {

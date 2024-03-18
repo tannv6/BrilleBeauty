@@ -1,5 +1,6 @@
 import connectDB from "@/app/db";
 import { getCookieValue } from "@/utils/cookie";
+import { parse } from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handle(
@@ -7,10 +8,17 @@ export default async function handle(
   res: NextApiResponse
 ) {
   try {
+    res.setHeader('Access-Control-Allow-Credentials', "true");
     const params = req.query;
+    const cookies2 = parse(req.headers.cookie || '');
 
-    const { page = 1, pageSize = 1000 } = params;
-
+    console.log(req.headers);
+    
+    
+    const { page = 1, pageSize = 1000, cookies1 } = params;
+    
+    const cookies = JSON.parse(cookies1?.toString() || "{}" )
+    console.log(cookies);
     const connect = await connectDB();
     const totalQuery = `select * from popups where DeletedAt is null order by PopupID desc`;
 
@@ -26,9 +34,7 @@ export default async function handle(
     connect.end();
     return res.status(200).json({
       data: (result as any[]).filter((e) => {
-        const cookieValue = getCookieValue({ req, res }, `pop_${e.PopupID}`);
-        console.log(cookieValue);
-        
+        const cookieValue = cookies[`pop_${e.PopupID}`];
         return !cookieValue;
       }),
       total,

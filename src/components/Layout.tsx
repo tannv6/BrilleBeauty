@@ -3,7 +3,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import "@/app/globals.css";
 import MainPopup from "./MainPopup";
-import { useState } from "react";
 
 export type WebSetting = {
   idx: any;

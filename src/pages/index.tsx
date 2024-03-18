@@ -4,12 +4,15 @@ import Layout from "@/components/Layout";
 import Main from "@/components/Main";
 import axios from "axios";
 import { getWebSetting } from "@/lib/functions";
-
+import { parse } from 'cookie';
 export const getServerSideProps: GetServerSideProps<{
   main_visual: any;
   after_main_visual: any[];
   main_middle: any;
-}> = async () => {
+}> = async (context:any) => {
+  const { req } = context;
+  const cookies = parse(req.headers.cookie || '');
+  
   const response = await axios.get(
     "http://localhost:3000/api/banners/get_by_position",
     {
@@ -33,7 +36,7 @@ export const getServerSideProps: GetServerSideProps<{
       main_visual: response.data[0] || null,
       after_main_visual: response1.data,
       main_middle: response2.data[0] || null,
-      ...(await getWebSetting()),
+      ...(await getWebSetting(cookies)),
     },
   };
 };
