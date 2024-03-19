@@ -194,7 +194,6 @@ export default function Header({
           </li>
 
           {categoryList?.map((e: any, i: any) => {
-            console.log(pathname?.slice(19));
             return (
               <>
                 <li key={i} className="group">

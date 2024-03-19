@@ -5,11 +5,21 @@ import Main from "@/components/Main";
 import axios from "axios";
 import { getWebSetting } from "@/lib/functions";
 import { parse } from "cookie";
+import { getSession } from "next-auth/react";
 export const getServerSideProps: GetServerSideProps<{
   main_visual: any;
   after_main_visual: any[];
   main_middle: any;
 }> = async (context: any) => {
+  const session = await getSession(context);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
   const { req } = context;
   const cookies = parse(req.headers.cookie || "");
 
