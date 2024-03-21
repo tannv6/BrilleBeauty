@@ -12,6 +12,14 @@ import Input from "../../components/Input";
 import moment from "moment";
 import Image from "next/image";
 import { SRLWrapper } from "simple-react-lightbox";
+import dynamic from "next/dynamic";
+
+const CustomEditor = dynamic(
+  () => {
+    return import("@/components/CkEditor");
+  },
+  { ssr: false }
+);
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 export const getServerSideProps = async (context: { params: any }) => {
   const { params } = context;
@@ -656,7 +664,7 @@ function ProductWrite({
                     Description
                   </th>
                   <td className="px-6 py-2" colSpan={3}>
-                    <textarea
+                    {/* <textarea
                       value={product.Description}
                       name="Description"
                       onChange={handleChange}
@@ -664,7 +672,8 @@ function ProductWrite({
                       rows={4}
                       className="block p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder=""
-                    />
+                    /> */}
+                    <CustomEditor initialData="<h1>Hello from CKEditor in Next.js!</h1>" />
                   </td>
                 </tr>
               </tbody>
