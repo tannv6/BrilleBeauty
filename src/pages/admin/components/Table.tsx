@@ -5,7 +5,7 @@ type Props = {
 };
 function Table({ children, colWidths }: Props) {
   return (
-    <table className="min-w-full bg-white shadow-md rounded-xl">
+    <table className="min-w-full bg-white shadow-md rounded-md">
       <colgroup>
         {colWidths?.map((e: any, i: any) => {
           return <col key={i} width={e} />;

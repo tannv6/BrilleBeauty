@@ -1,33 +1,11 @@
 import connectDB from "@/app/db";
 import { NextApiRequest, NextApiResponse } from "next";
-import { NextRequest, NextResponse } from "next/server";
 import formidable from "formidable";
-import fs from "fs";
+import { saveFile } from "@/utils/function";
 export const config = {
   api: {
     bodyParser: false,
   },
-};
-
-function getFileExtension(filename: string) {
-  return filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2);
-}
-
-const saveFile = async (file: formidable.File) => {
-  const data = fs.readFileSync(file.filepath);
-  await fs.writeFileSync(
-    `./public/uploads/products/${file.newFilename}.${getFileExtension(
-      file.originalFilename || ""
-    )}`,
-    data
-  );
-  await fs.unlinkSync(file.filepath);
-  return {
-    ufile: `/products/${file.newFilename}.${getFileExtension(
-      file.originalFilename || ""
-    )}`,
-    rfile: file.originalFilename,
-  };
 };
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
@@ -50,15 +28,17 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       CategoryID2,
       CategoryID3,
       SaleEndDate,
+      PriceOnSaleDate,
       DelImage,
       PotID,
       Options,
+      BrandID,
     } = fields;
 
     let ProductImage = "";
 
     if (image) {
-      ProductImage = (await saveFile(image)).ufile;
+      ProductImage = (await saveFile(image, "/products")).ufile;
     }
     const connect = await connectDB();
     const query = `UPDATE products SET 
@@ -68,14 +48,17 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     Description = '${Description}', 
     SaleDate = '${SaleDate}', 
     SaleEndDate = '${SaleEndDate}',
+    PriceOnSaleDate = '${PriceOnSaleDate || 0}',
     IsBest = ${IsBest}, 
     IsBigSale = ${IsBigSale}, 
     IsNew = ${IsNew},
-    ProductImage = '${ProductImage}',
+    ProductImage = ${ProductImage ? `'${ProductImage}'` : "ProductImage"},
     CategoryID = '${
       Number(CategoryID3) || Number(CategoryID2) || Number(CategoryID1)
     }',
-    PotID = '${PotID}'
+    PotID = '${PotID}',
+    BrandID = '${BrandID}',
+    UpdatedAt = now()
     WHERE ProductID = '${ProductID}'`;
 
     await connect.execute(query);
@@ -84,7 +67,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       queryImage +=
         "INSERT INTO productimages(ProductID,ImageURL, FileName) VALUES ";
       for (let index = 0; index < detailImages.length; index++) {
-        const imgName = await saveFile(detailImages[index]);
+        const imgName = await saveFile(detailImages[index], "/products");
         if (index > 0) {
           queryImage += ",";
         }
@@ -92,8 +75,8 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       }
     }
     queryImage && (await connect.execute(queryImage));
-    if (DelImage) {
-      const queryDelImage = `DELETE FROM productimages WHERE ImageID IN (${DelImage})`;
+    if (DelImage?.[0]) {
+      const queryDelImage = `UPDATE productimages SET DeletedAt = now() WHERE ImageID IN (${DelImage})`;
       await connect.execute(queryDelImage);
     }
     if (Options) {
@@ -114,6 +97,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
         }
       }
     }
+    connect.end();
     return res.status(201).json({ result: "OK" });
   } catch (err) {
     return res.status(500).json({ error: err });

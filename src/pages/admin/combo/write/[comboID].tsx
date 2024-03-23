@@ -10,6 +10,9 @@ import Checkbox from "../../components/Checkbox";
 import Link from "next/link";
 import Input from "../../components/Input";
 import moment from "moment";
+import { SRLWrapper } from "simple-react-lightbox";
+import Image from "next/image";
+const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 export const getServerSideProps = async (context: { params: any }) => {
   const { params } = context;
   const { comboID } = params;
@@ -20,14 +23,28 @@ export const getServerSideProps = async (context: { params: any }) => {
     }
   );
 
+  const result1 = await axios.get(
+    "http://localhost:3000/api/combo_category/list"
+  );
+
+  const result2 = await axios.get("http://localhost:3000/api/season/list");
 
   return {
     props: {
       comboDetail: comboDetail.data,
+      categoryList: result1.data.data.map((e: any) => ({
+        id: e.CategoryID,
+        name: e.CategoryName,
+        IsSeasonal: e.IsSeasonal || 0,
+      })),
+      seasonList: result2.data.data.map((e: any) => ({
+        id: e.SeasonID,
+        name: e.SeasonName,
+      })),
     },
   };
 };
-function ComboWrite({comboDetail, isNew }: any) {
+function ComboWrite({ comboDetail, isNew, categoryList, seasonList }: any) {
   const router = useRouter();
   const [combo, setCombo] = useState<{ [key: string]: any }>({
     ComboID: comboDetail?.ComboID || "",
@@ -37,10 +54,15 @@ function ComboWrite({comboDetail, isNew }: any) {
     Description: comboDetail?.Description || "",
     SaleDate: moment(comboDetail?.SaleDate).format("yyyy-MM-DD HH:mm:ss"),
     SaleEndDate: moment(comboDetail?.SaleEndDate).format("yyyy-MM-DD HH:mm:ss"),
-    IsBest: 0,
-    IsBigSale: 0,
-    IsNew: 0,
-    ComboImage: "",
+    IsBest: comboDetail?.IsBest || 0,
+    IsBigSale: comboDetail?.IsBigSale || 0,
+    IsNew: comboDetail?.IsNew || 0,
+    ComboImage: comboDetail?.ComboImage || "",
+    CategoryID: comboDetail?.CategoryID || "",
+    DelImage: "",
+    DetailImages: comboDetail?.Images || [],
+    IsSeasonal: comboDetail?.IsSeasonal || 0,
+    SeasonID: comboDetail?.SeasonID || 0,
   });
 
   const [detailImage, setDetailImage] = useState<any[]>([]);
@@ -61,6 +83,15 @@ function ComboWrite({comboDetail, isNew }: any) {
       setCombo({ ...combo, [e.target.name]: e.target.files[0] });
     } else if (["IsBest", "IsBigSale", "IsNew"].includes(e.target.name)) {
       setCombo({ ...combo, [e.target.name]: e.target.checked ? 1 : 0 });
+    } else if (["CategoryID"].includes(e.target.name)) {
+      setCombo({
+        ...combo,
+        [e.target.name]: e.target.value,
+        IsSeasonal:
+          categoryList.find(
+            (elm: any) => elm.IsSeasonal && elm.id === e.target.value
+          ) || 0,
+      });
     } else {
       setCombo({ ...combo, [e.target.name]: e.target.value });
     }
@@ -89,235 +120,323 @@ function ComboWrite({comboDetail, isNew }: any) {
       router.push("/admin/combo/list");
     }
   }
+  const handleRemoveDetailImage = (id: number) => {
+    const delImageArr: string[] = combo.DelImage.split(",").filter(
+      (e: any) => e
+    );
+    if (!delImageArr.includes(id.toString())) {
+      delImageArr.push(id.toString());
+    }
+    const imageArr = [...combo.DetailImages];
+    const imageIdx = imageArr?.findIndex((e: any) => e.ImageID == id);
+    (imageArr as any[]).splice(imageIdx, 1);
+    setCombo({
+      ...combo,
+      DelImage: delImageArr.join(","),
+      DetailImages: imageArr,
+    });
+  };
 
+  const thumbSrc =
+    typeof combo.ComboImage === "object"
+      ? URL.createObjectURL(combo.ComboImage)
+      : comboDetail?.ComboImage
+      ? `${CDN_URL}/${comboDetail?.ComboImage}`
+      : "";
   return (
     <Layout>
-      <h1 className="text-2xl font-bold mb-4">Add New Combo</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="relative overflow-x-auto">
-          <table
-            style={{ tableLayout: "fixed" }}
-            className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-          >
-            <colgroup>
-              <col width={"140px"} />
-              <col width={"*"} />
-              <col width={"140px"} />
-              <col width={"*"} />
-            </colgroup>
-            <tbody>
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th
-                  scope="row"
-                  className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Combo Name
-                </th>
-                <td className="px-6 py-2" colSpan={3}>
-                  <input
-                    type="text"
-                    name="ComboName"
-                    value={combo.ComboName}
-                    id="ComboName"
-                    onChange={handleChange}
-                    className="h-[35px] outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  />
-                </td>
-              </tr>
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th
-                  scope="row"
-                  className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  SaleDate
-                </th>
-                <td className="px-6 py-2" colSpan={3}>
-                  <div className="flex items-center gap-1">
-                    <DatePicker
-                      showIcon
-                      dateFormat={"yyyy-MM-dd HH:mm:ss"}
-                      className="inline-flex items-center border h-[35px] px-2 w-[180px] ouline-0"
-                      calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
-                      selected={
-                        combo.SaleDate ? new Date(combo.SaleDate) : new Date()
-                      }
-                      onChange={(date) =>
-                        handleChange({
-                          target: {
-                            name: "SaleDate",
-                            value: moment(date).format("yyyy-MM-DD HH:mm:ss"),
-                          },
-                        })
-                      }
-                    />
-                    ~
-                    <DatePicker
-                      showIcon
-                      dateFormat={"yyyy-MM-dd HH:mm:ss"}
-                      className="inline-flex border h-[35px] px-2 w-[180px]"
-                      calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
-                      selected={
-                        combo.SaleEndDate
-                          ? new Date(combo.SaleEndDate)
-                          : new Date()
-                      }
-                      onChange={(date) =>
-                        handleChange({
-                          target: {
-                            name: "SaleEndDate",
-                            value: moment(date).format("yyyy-MM-DD HH:mm:ss"),
-                          },
-                        })
-                      }
-                    />
-                  </div>
-                </td>
-              </tr>
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th
-                  scope="row"
-                  className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Thumbnail Image
-                </th>
-                <td className="px-6 py-2" colSpan={3}>
-                  <input
-                    name="ComboImage"
-                    onChange={handleChange}
-                    className="relative m-0 block w-full min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
-                    type="file"
-                    id="formFile"
-                  />
-                </td>
-              </tr>
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th
-                  scope="row"
-                  className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Options
-                </th>
-                <td className="px-6 py-2">
-                  <Checkbox
-                    name="IsBest"
-                    checked={combo.IsBest}
-                    onChange={handleChange}
-                    label={"Best"}
-                  />
-                  <Checkbox
-                    name="IsBigSale"
-                    checked={combo.IsBigSale}
-                    onChange={handleChange}
-                    label={"Big Sale"}
-                  />
-                  <Checkbox
-                    name="IsNew"
-                    checked={combo.IsNew}
-                    onChange={handleChange}
-                    label={"New"}
-                  />
-                </td>
-              </tr>
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th
-                  scope="row"
-                  className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Original Price
-                </th>
-                <td className="px-6 py-2">
-                  <input
-                    type="text"
-                    name="InitPrice"
-                    id="InitPrice"
-                    value={combo.InitPrice}
-                    onChange={handleChange}
-                    className="h-[40px] outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  />
-                </td>
-                <th
-                  scope="row"
-                  className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Sell Price
-                </th>
-                <td className="px-6 py-2">
-                  <input
-                    type="text"
-                    name="SellPrice"
-                    id="SellPrice"
-                    value={combo.SellPrice}
-                    onChange={handleChange}
-                    className="h-[40px] outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  />
-                </td>
-              </tr>
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th
-                  scope="row"
-                  className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Detail Images
-                </th>
-                <td className="px-6 py-2" colSpan={3}>
-                  <input
-                    id="file1"
-                    type="file"
-                    hidden
-                    onChange={handleChangeImage}
-                  />
-                  <label
-                    className="inline-block cursor-pointer border border-gray-400 rounded p-2"
-                    htmlFor="file1"
+      <SRLWrapper
+        options={{
+          thumbnails: {
+            showThumbnails: false,
+          },
+        }}
+      >
+        <h1 className="text-2xl font-bold mb-4">Add New Combo</h1>
+        <form onSubmit={handleSubmit}>
+          <div className="relative overflow-x-auto">
+            <table
+              style={{ tableLayout: "fixed" }}
+              className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+            >
+              <colgroup>
+                <col width={"140px"} />
+                <col width={"*"} />
+                <col width={"140px"} />
+                <col width={"*"} />
+              </colgroup>
+              <tbody>
+                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                  <th
+                    scope="row"
+                    className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
                   >
-                    Choose File
-                  </label>
-                  {detailImage.map((e, i) => {
-                    return (
-                      <div key={i}>
-                        {e.name}
-                        <button
-                          className="ms-1 px-[2px] text-[10px] text-white bg-gray-800 rounded"
-                          onClick={() => handleRemoveFile(i)}
-                        >
-                          Remove
-                        </button>
+                    Combo Name
+                  </th>
+                  <td className="px-6 py-2" colSpan={3}>
+                    <input
+                      type="text"
+                      name="ComboName"
+                      value={combo.ComboName}
+                      id="ComboName"
+                      onChange={handleChange}
+                      className="h-[35px] outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    />
+                  </td>
+                </tr>
+                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                  <th
+                    scope="row"
+                    className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    Category
+                  </th>
+                  <td className="px-6 py-2" colSpan={3}>
+                    <Dropdown
+                      containerClassName="w-[150px] me-2"
+                      className="w-full h-[40px] rounded-md"
+                      options={categoryList}
+                      onChange={(id: number) => {
+                        handleChange({
+                          target: {
+                            name: "CategoryID",
+                            value: id,
+                          },
+                        });
+                      }}
+                      activeItem={Number(combo.CategoryID)}
+                    />
+                    {Boolean(combo.IsSeasonal) && (
+                      <Dropdown
+                        containerClassName="w-[150px]"
+                        className="w-full h-[40px] rounded-md"
+                        options={seasonList}
+                        onChange={(id: number) => {
+                          handleChange({
+                            target: {
+                              name: "SeasonID",
+                              value: id,
+                            },
+                          });
+                        }}
+                        activeItem={Number(combo.SeasonID)}
+                        placeHolder="--Season--"
+                      />
+                    )}
+                  </td>
+                </tr>
+                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                  <th
+                    scope="row"
+                    className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    SaleDate
+                  </th>
+                  <td className="px-6 py-2" colSpan={3}>
+                    <div className="flex items-center gap-1">
+                      <DatePicker
+                        showIcon
+                        dateFormat={"yyyy-MM-dd HH:mm:ss"}
+                        className="inline-flex items-center border h-[35px] px-2 w-[180px] ouline-0"
+                        calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
+                        selected={
+                          combo.SaleDate ? new Date(combo.SaleDate) : new Date()
+                        }
+                        onChange={(date) =>
+                          handleChange({
+                            target: {
+                              name: "SaleDate",
+                              value: moment(date).format("yyyy-MM-DD HH:mm:ss"),
+                            },
+                          })
+                        }
+                      />
+                      ~
+                      <DatePicker
+                        showIcon
+                        dateFormat={"yyyy-MM-dd HH:mm:ss"}
+                        className="inline-flex border h-[35px] px-2 w-[180px]"
+                        calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
+                        selected={
+                          combo.SaleEndDate
+                            ? new Date(combo.SaleEndDate)
+                            : new Date()
+                        }
+                        onChange={(date) =>
+                          handleChange({
+                            target: {
+                              name: "SaleEndDate",
+                              value: moment(date).format("yyyy-MM-DD HH:mm:ss"),
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                  </td>
+                </tr>
+                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                  <th
+                    scope="row"
+                    className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    Thumbnail Image
+                  </th>
+                  <td className="px-6 py-2" colSpan={3}>
+                    <input
+                      name="ComboImage"
+                      onChange={handleChange}
+                      className="relative m-0 block w-full min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
+                      type="file"
+                      id="formFile"
+                    />
+                    {thumbSrc && (
+                      <Image
+                        className="mt-2"
+                        width={100}
+                        height={100}
+                        src={thumbSrc}
+                        alt=""
+                      />
+                    )}
+                  </td>
+                </tr>
+                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                  <th
+                    scope="row"
+                    className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    Original Price
+                  </th>
+                  <td className="px-6 py-2">
+                    <input
+                      type="text"
+                      name="InitPrice"
+                      id="InitPrice"
+                      value={combo.InitPrice}
+                      onChange={handleChange}
+                      className="h-[40px] outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    />
+                  </td>
+                  <th
+                    scope="row"
+                    className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    Sell Price
+                  </th>
+                  <td className="px-6 py-2">
+                    <input
+                      type="text"
+                      name="SellPrice"
+                      id="SellPrice"
+                      value={combo.SellPrice}
+                      onChange={handleChange}
+                      className="h-[40px] outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    />
+                  </td>
+                </tr>
+                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                  <th
+                    scope="row"
+                    className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    Detail Images
+                  </th>
+                  <td className="px-6 py-2" colSpan={3}>
+                    <input
+                      id="file1"
+                      type="file"
+                      hidden
+                      onChange={handleChangeImage}
+                    />
+                    <label
+                      className="inline-block cursor-pointer border border-gray-400 rounded p-2"
+                      htmlFor="file1"
+                    >
+                      Choose File
+                    </label>
+                    <div className="flex flex-wrap gap-3 mt-3">
+                      {detailImage.map((e: File, i) => {
+                        const imageUrl = URL.createObjectURL(e);
+                        return (
+                          <div key={i} className="relative">
+                            <Image
+                              width={100}
+                              height={100}
+                              src={imageUrl}
+                              alt=""
+                            />
+                            <button
+                              type="button"
+                              className="bg-gray-200 rounded-full text-rose-500 text-[20px] absolute top-[-7px] right-[-7px]"
+                              onClick={() => handleRemoveFile(i)}
+                            >
+                              <i className="fas fa-times-circle"></i>
+                            </button>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    {comboDetail?.ComboID ? (
+                      <div className="flex flex-wrap gap-3 mt-3">
+                        {combo.DetailImages?.map((e: any, i: any) => {
+                          return (
+                            <div key={i} className="relative">
+                              <Image
+                                width={100}
+                                height={100}
+                                src={`${CDN_URL}/${e.ImageURL}`}
+                                alt=""
+                              />
+                              <button
+                                type="button"
+                                className="bg-gray-200 rounded-full text-rose-500 text-[20px] absolute top-[-7px] right-[-7px]"
+                                onClick={() =>
+                                  handleRemoveDetailImage(e.ImageID)
+                                }
+                              >
+                                <i className="fas fa-times-circle"></i>
+                              </button>
+                            </div>
+                          );
+                        })}
                       </div>
-                    );
-                  })}
-                </td>
-              </tr>
-              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  Description
-                </th>
-                <td className="px-6 py-2" colSpan={3}>
-                  <textarea
-                    value={combo.Description}
-                    name="Description"
-                    onChange={handleChange}
-                    id="message"
-                    rows={4}
-                    className="block p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder=""
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div className="flex justify-center mt-3">
-          <button
-            type="submit"
-            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-          >
-            Submit
-          </button>
-        </div>
-      </form>
+                    ) : (
+                      ""
+                    )}
+                  </td>
+                </tr>
+                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                  <th
+                    scope="row"
+                    className="px-6 py-4 font-bold text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    Description
+                  </th>
+                  <td className="px-6 py-2" colSpan={3}>
+                    <textarea
+                      value={combo.Description}
+                      name="Description"
+                      onChange={handleChange}
+                      id="message"
+                      rows={4}
+                      className="block p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder=""
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="flex justify-center mt-3">
+            <button
+              type="submit"
+              className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      </SRLWrapper>
     </Layout>
   );
 }

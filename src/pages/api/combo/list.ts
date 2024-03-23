@@ -6,10 +6,31 @@ export default async function handle(
   res: NextApiResponse
 ) {
   try {
+    const params = req.query;
+
+    const { page = 1, pageSize = 1000 } = params;
+
     const connect = await connectDB();
-    const query = `select * from combo where DeletedAt is null;`;
+
+    const totalQuery = `select s1.*, s2.IsSeasonal, s2.CategoryName from combo s1 left join combocategories s2 on
+                        s1.CategoryID = s2.CategoryID where s1.DeletedAt is null`;
+
+    const [resultTotal]: any = await connect.execute(totalQuery);
+
+    const total = resultTotal.length;
+
+    const query =
+      totalQuery +
+      ` limit ${(Number(page) - 1) * Number(pageSize)}, ${Number(pageSize)};`;
     const [result] = await connect.execute(query);
-    return res.status(200).json({ data: result });
+    connect.end();
+    return res.status(200).json({
+      data: result,
+      total,
+      currentPage: page,
+      pageSize,
+      totalPage: Math.ceil(total / Number(pageSize)),
+    });
   } catch (error) {
     return res.status(500).json({ error });
   }

@@ -5,6 +5,10 @@ import { GetServerSideProps } from "next";
 import axios from "axios";
 import Table from "../components/Table";
 import moment from "moment";
+import Thead from "../components/Thead";
+import Tr from "../components/Tr";
+import Th from "../components/Th";
+import Td from "../components/Td";
 
 export const getServerSideProps = (async () => {
   const response = await axios.get("http://localhost:3000/api/category/list");
@@ -29,34 +33,40 @@ function list({ response }: any) {
   };
   return (
     <Layout>
+      <div className="flex justify-between items-center">
       <h1 className="text-2xl font-bold mb-4">Category List</h1>
+        <Link
+          href={"/admin/category/write"}
+          className="flex justify-center items-center bg-blue-600 text-white p-2 rounded w-[160px] h-[40px]"
+        >
+          Add New Category
+        </Link>
+      </div>
       <div className="flex items-center justify-center">
-        <div className="min-w-full overflow-x-auto">
           <Table colWidths={["10%", "40%", "20%", "20%", "10%"]}>
-            <thead>
-              <tr className="bg-blue-gray-100 text-gray-700">
-                <th className="py-3 px-4 text-left">ID</th>
-                <th className="py-3 px-4 text-left">Category Name</th>
-                <th className="py-3 px-4 text-left">Total Products</th>
-                <th className="py-3 px-4 text-left">Created time</th>
-                <th className="py-3 px-4 text-center">Action</th>
-              </tr>
-            </thead>
+            <Thead>
+              <Tr>
+                <Th>ID</Th>
+                <Th>Category Name</Th>
+                <Th>Total Products</Th>
+                <Th>Created time</Th>
+                <Th center>Action</Th>
+              </Tr>
+            </Thead>
             <tbody className="text-blue-gray-900">
               {response.map((e: any, i: any) => {
                 return (
-                  <tr key={i} className="border-b border-blue-gray-200">
-                    <td className="py-3 px-4">{response.length - i}</td>
-                    <td className="py-3 px-4">{e.CategoryName}</td>
-                    <td className="py-3 px-4">{e.totalProducts}</td>
-                    <td className="py-3 px-4">
+                  <Tr key={i}>
+                    <Td>{response.length - i}</Td>
+                    <Td>{e.CategoryName}</Td>
+                    <Td>{e.totalProducts}</Td>
+                    <Td>
                       {moment(e.CreatedAt).format("yyyy.MM.DD HH:mm:ss")}
-                    </td>
-                    <td className="py-3 px-4">
-                      <div className="flex gap-4 justify-center">
+                    </Td>
+                    <Td center>
                         <Link
                           href={`/admin/category/write/${e.CategoryID}`}
-                          className="font-medium text-blue-600 hover:text-blue-800"
+                          className="font-medium text-blue-600 hover:text-blue-800 me-4"
                         >
                           <i className="fas fa-edit"></i>
                         </Link>
@@ -66,15 +76,13 @@ function list({ response }: any) {
                         >
                           <i className="fas fa-trash-alt"></i>
                         </button>
-                      </div>
-                    </td>
-                  </tr>
+                    </Td>
+                  </Tr>
                 );
               })}
             </tbody>
           </Table>
         </div>
-      </div>
     </Layout>
   );
 }

@@ -55,6 +55,7 @@ export default function Find() {
                                     name="status"
                                     checked={selectedTab === 'phone'}
                                     onChange={() => handleTabChanges('phone')}
+                                    className='hidden'
                                 />
                             <label htmlFor="phone" className="text-[18px] text-[#252525] font-normal  peer-checked/phone">
                                 <span className="w-8 h-8 inline-block mr-2 rounded-full border border-grey"></span>
@@ -65,6 +66,7 @@ export default function Find() {
                                     type="radio" name="status"                             
                                     checked={selectedTab === 'email'}
                                     onChange={() => handleTabChanges('email')}
+                                    className='hidden'
                                     />
                             <label htmlFor="email" className=" ml-[80px] text-[18px] w-1/2 text-[#252525] font-normal  peer-checked/email">
                                     <span className="w-8 h-8 inline-block mr-2 rounded-full border border-grey"></span>
@@ -179,6 +181,7 @@ export default function Find() {
                                 name="status"
                                 checked={selectedTab2 === 'phone2'}
                                 onChange={() => handleTabChanges2('phone2')}
+                                className='hidden'
                             />
                         <label htmlFor="phone2" className="text-[18px] text-[#252525] font-normal  peer-checked/phone">
                             <span className="w-8 h-8 inline-block mr-2 rounded-full border border-grey"></span>
@@ -189,6 +192,7 @@ export default function Find() {
                                 type="radio" name="status"                             
                                 checked={selectedTab2 === 'email2'}
                                 onChange={() => handleTabChanges2('email2')}
+                                className='hidden'
                                 />
                         <label htmlFor="email2" className=" ml-[80px] text-[18px] w-1/2 text-[#252525] font-normal  peer-checked/email">
                                 <span className="w-8 h-8 inline-block mr-2 rounded-full border border-grey"></span>

@@ -8,6 +8,7 @@ import { GetServerSideProps } from "next";
 export const getServerSideProps = (async () => {
   const connect = await connectDB();
   const [response] = await connect.execute("SELECT * FROM admin");
+  connect.end();
   return { props: { response: (response as any)[0]?.AdminUName } };
 }) satisfies GetServerSideProps<{ response: any }>;
 

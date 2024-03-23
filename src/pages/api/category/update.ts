@@ -35,6 +35,7 @@ export default async function handle(
     }
     queryUpdate && (await connect.execute(queryUpdate));
     queryDelete && (await connect.execute(queryDelete));
+    connect.end();
     return res.status(200).json({ status: "success" });
   } catch (error) {
     return res.status(500).json({ error });

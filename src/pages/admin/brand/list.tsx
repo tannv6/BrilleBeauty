@@ -4,23 +4,31 @@ import { GetServerSideProps } from "next";
 import connectDB from "@/app/db";
 import Link from "next/link";
 import Image from "next/image";
-
+import axios from "axios";
+import Table from "../components/Table";
+import Thead from "../components/Thead";
+import Tr from "../components/Tr";
+import Th from "../components/Th";
+import Tbody from "../components/Tbody";
+import Td from "../components/Td";
 
 export const getServerSideProps = (async () => {
   const connect = await connectDB();
-  const [response] = await connect.execute("SELECT * FROM brand");
+  const [response] = await connect.execute("SELECT * FROM brand WHERE DeletedAt IS NULL;");
+  connect.end();
   return {
     props: {
-      response: (response as Array<any>).map((e) => ({
-        ...e,
-        CreatedAt: new Date(e.CreatedAt).getTime(),
-        UpdatedAt: new Date(e.UpdatedAt).getTime(),
-        DeletedAt: new Date(e.DeletedAt).getTime(),
-      })),
+      response: JSON.parse(JSON.stringify(response)),
     },
   };
 }) satisfies GetServerSideProps<{ response: any }>;
 function list({ response }: any) {
+  const handleDelete = async (id: number) => {
+    if (confirm("Are you sure delete this brand?")) {
+      await axios.put(`/api/brand/del`, { BrandID: id });
+      window.location.reload();
+    }
+  };
   return (
     <Layout>
       <div className="flex justify-between items-center">
@@ -33,35 +41,39 @@ function list({ response }: any) {
         </Link>
       </div>
       <div className="flex items-center justify-center">
-        <div className="min-w-full overflow-x-auto">
-          <table className="min-w-full bg-white shadow-md rounded-xl">
-            <thead>
-              <tr className="bg-blue-gray-100 text-gray-700">
-                <th className="py-3 px-4 text-left">ID</th>
-                <th className="py-3 px-4 text-left">Product Name</th>
-                <th className="py-3 px-4 text-left">Action</th>
-              </tr>
-            </thead>
-            <tbody className="text-blue-gray-900">
-              {response.map((e: any, i: any) => {
-                return (
-                  <tr key={i} className="border-b border-blue-gray-200">
-                    <td className="py-3 px-4">{e.BrandID}</td>
-                    <td className="py-3 px-4">{e.BrandName}</td>
-                    <td className="py-3 px-4">
-                      <Link
-                        href={`/admin/brand/${e.BrandID}`}
-                        className="font-medium text-blue-600 hover:text-blue-800"
-                      >
-                        Edit
-                      </Link>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+        <Table colWidths={["100px", "*", "200px"]}>
+          <Thead>
+            <Tr className="bg-blue-gray-100 text-gray-700">
+              <Th>ID</Th>
+              <Th>Brand Name</Th>
+              <Th center>Action</Th>
+            </Tr>
+          </Thead>
+          <Tbody className="text-blue-gray-900">
+            {response.map((e: any, i: any) => {
+              return (
+                <Tr key={i} className="border-b border-blue-gray-200">
+                  <Td>{e.BrandID}</Td>
+                  <Td>{e.BrandName}</Td>
+                  <Td center>
+                    <Link
+                      href={`/admin/brand/${e.BrandID}`}
+                      className="font-medium text-blue-600 hover:text-blue-800 me-3"
+                    >
+                      <i className="fas fa-edit"></i>
+                    </Link>
+                    <button
+                      className="text-red-500"
+                      onClick={() => handleDelete(e.BrandID)}
+                    >
+                      <i className="fas fa-trash-alt"></i>
+                    </button>
+                  </Td>
+                </Tr>
+              );
+            })}
+          </Tbody>
+        </Table>
       </div>
     </Layout>
   );

@@ -164,9 +164,6 @@ input[type="radio"] + label:hover span{
 transform: scale(1.2);
 }  */
 
-input[type="radio"] {
-  display: none;
-}
 
 input[type="radio"]:checked + label span {
 background-color: #252525;
@@ -183,6 +180,31 @@ input[type="radio"]:checked + label{
   color: #252525;
   display: flex;
   align-items: center;
+}
+
+.tox-tinymce {
+  border-radius: 0 !important;
+}
+
+.App img {
+  display: none;
+}
+
+.img_star {
+  width: 18px; 
+  height: 18px;
+  background-image: url('/start_ic.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+.img_star_none {
+  width: 18px; 
+  height: 18px;
+  background-image: url('/start_g_ic.png'); 
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 /* .container-main {

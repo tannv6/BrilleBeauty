@@ -1,33 +1,11 @@
 import connectDB from "@/app/db";
 import { NextApiRequest, NextApiResponse } from "next";
-import { NextRequest, NextResponse } from "next/server";
 import formidable from "formidable";
-import fs from "fs";
+import { saveFile } from "@/utils/function";
 export const config = {
   api: {
     bodyParser: false,
   },
-};
-
-function getFileExtension(filename: string) {
-  return filename.slice(((filename.lastIndexOf(".") - 1) >>> 0) + 2);
-}
-
-const saveFile = async (file: formidable.File) => {
-  const data = fs.readFileSync(file.filepath);
-  await fs.writeFileSync(
-    `./public/uploads/combo/${file.newFilename}.${getFileExtension(
-      file.originalFilename || ""
-    )}`,
-    data
-  );
-  await fs.unlinkSync(file.filepath);
-  return {
-    ufile: `/combo/${file.newFilename}.${getFileExtension(
-      file.originalFilename || ""
-    )}`,
-    rfile: file.originalFilename,
-  };
 };
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
@@ -46,21 +24,25 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       IsBigSale = 0,
       IsNew = 0,
       SaleEndDate,
+      CategoryID,
+      SeasonID,
     } = fields;
 
     let ComboImage = "";
 
     if (image) {
-      ComboImage = (await saveFile(image)).ufile;
+      ComboImage = (await saveFile(image, "/combo")).ufile;
     }
     const connect = await connectDB();
-    const query = `INSERT INTO Combo SET 
+    const query = `INSERT INTO combo SET 
     ComboName = '${ComboName}', 
     InitPrice = '${InitPrice}', 
     SellPrice = '${SellPrice}',
     Description = '${Description}', 
     SaleDate = '${SaleDate}', 
     SaleEndDate = '${SaleEndDate}',
+    SeasonID = ${SeasonID ? `'${SeasonID}'` : "SeasonID"},
+    CategoryID = '${CategoryID}',
     IsBest = ${IsBest}, 
     IsBigSale = ${IsBigSale}, 
     IsNew = ${IsNew},
@@ -73,7 +55,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       queryImage +=
         "INSERT INTO comboimages(ComboID,ImageURL, FileName) VALUES ";
       for (let index = 0; index < detailImages.length; index++) {
-        const imgName = await saveFile(detailImages[index]);
+        const imgName = await saveFile(detailImages[index], "/combo");
         if (index > 0) {
           queryImage += ",";
         }
@@ -81,6 +63,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       }
     }
     await connect.execute(queryImage);
+    connect.end();
     return res.status(201).json({ result: "OK" });
   } catch (err) {
     return res.status(500).json({ error: err });

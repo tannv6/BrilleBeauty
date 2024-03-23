@@ -44,6 +44,12 @@ function List({ list }: any) {
     }
     location.reload();
   };
+  const handleDelete = async (id: number) => {
+    if (confirm("Are you sure delete this option type?")) {
+      await axios.put(`/api/option_types/del`, { PotID: id });
+      window.location.reload();
+    }
+  };
   return (
     <Layout>
       <div className="flex justify-between items-center">
@@ -64,7 +70,7 @@ function List({ list }: any) {
           {list.map((e: any, i: any) => {
             return (
               <Tr key={i}>
-                <Td>{e.PotID}</Td>
+                <Td>{list.length - i}</Td>
                 <Td>{e.PotName}</Td>
                 <Td center>
                   <button
@@ -74,11 +80,11 @@ function List({ list }: any) {
                     <i className="fas fa-edit"></i>
                   </button>
                   <button
-                          className="text-red-500"
-                          onClick={() => {}}
-                        >
-                          <i className="fas fa-trash-alt"></i>
-                        </button>
+                    className="text-red-500"
+                    onClick={() => handleDelete(e.PotID)}
+                  >
+                    <i className="fas fa-trash-alt"></i>
+                  </button>
                 </Td>
               </Tr>
             );

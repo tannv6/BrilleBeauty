@@ -1,8 +1,6 @@
-import Link from "next/link";
 import React, { Fragment } from "react";
 
 function Pagingnation({ tP, cP = 1, tE = 0, per = 5, onChange }: any) {
-  const totalPage = Math.ceil(tE / per);
   const handleChangePage = (page: number) => {
     onChange && onChange(page);
   };
@@ -20,7 +18,16 @@ function Pagingnation({ tP, cP = 1, tE = 0, per = 5, onChange }: any) {
       : cP + Math.ceil((per + 1) / 2) - 1;
   return (
     <div>
-      <ol className="flex justify-center gap-1 text-xs font-medium">
+      <ol className="flex justify-center gap-1 text-xs font-medium mt-3">
+        <li>
+          <button
+            type="button"
+            onClick={() => cP !== 1 && handleChangePage(1)}
+            className="inline-flex size-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900 rtl:rotate-180"
+          >
+            <i className="fas fa-angle-double-left"></i>
+          </button>
+        </li>
         {cP !== 1 ? (
           <li>
             <button
@@ -65,7 +72,6 @@ function Pagingnation({ tP, cP = 1, tE = 0, per = 5, onChange }: any) {
             </button>
           </li>
         )}
-
         {Array(tP || 0)
           .fill(1)
           .map((e, i) => {
@@ -133,6 +139,15 @@ function Pagingnation({ tP, cP = 1, tE = 0, per = 5, onChange }: any) {
             </button>
           </li>
         )}
+        <li>
+          <button
+            type="button"
+            onClick={() => cP !== tP && handleChangePage(tP)}
+            className="inline-flex size-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900 rtl:rotate-180"
+          >
+            <i className="fas fa-angle-double-right"></i>
+          </button>
+        </li>
       </ol>
     </div>
   );

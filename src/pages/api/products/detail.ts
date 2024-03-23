@@ -17,9 +17,14 @@ export default async function handle(
     const [result] = await connect.execute(query);
     const [result1] = await connect.execute(queryOption);
     const [result2] = await connect.execute(queryImage);
+    connect.end();
     if (Array.isArray(result) && result.length > 0) {
         const product: any = result[0];
+        product["IsBest"] = product["IsBest"][0];
+        product["IsBigSale"] = product["IsBigSale"][0];
+        product["IsNew"] = product["IsNew"][0];
         product['Options'] = result1;
+        product['Images'] = result2;
         return res.status(200).json(product);
       } else {
         return res.status(200).json(null);
