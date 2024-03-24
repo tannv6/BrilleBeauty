@@ -2,7 +2,7 @@ import Layout from "@/components/Layout";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
-import { signIn, signOut } from "next-auth/react";
+import { signIn } from "next-auth/react";
 
 export default function Login() {
   const [error, setError] = useState("");
@@ -53,13 +53,12 @@ export default function Login() {
             >
               Login
             </button>
-            <button
-            onClick={()=>signOut()}
-              type="button"
+            <Link
+              href={"/register"}
               className={`w-full h-[54px] border border-[#dbdbdb] flex items-center justify-center text-[18px] text-[#999] border-b-[#252525] font-bold`}
             >
               Register
-            </button>
+            </Link>
           </div>
           <form id="form_login" onSubmit={loginForm}>
             <div className="mt-10">

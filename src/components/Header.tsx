@@ -7,21 +7,20 @@ import { useRouter } from "next/router";
 import { ChangeEvent, useEffect, useState } from "react";
 import { WebSetting } from "./Layout";
 import { CDN_URL } from "@/utils/constants";
-import { signOut } from "next-auth/react";
+import { getSession, signOut, useSession } from "next-auth/react";
 type Props = {
   webSetting?: WebSetting;
   brandListRecommended?: any[];
   banner_top?: any;
-  session?: any;
 };
 export default function Header({
   brandListRecommended,
   webSetting,
   banner_top,
-  session,
 }: Props) {
   const pathname = usePathname();
   const router = useRouter();
+  const { data: session, status }: any = useSession();
 
   const [brandList, setBrandList] = useState(brandListRecommended || []);
   const [categoryList, setCategoryList] = useState([]);
@@ -115,25 +114,31 @@ export default function Header({
         </div>
         <div className="header_right flex items-center">
           {session ? (
-          <button className="p-0 m-0 bg-[none]" onClick={()=>signOut()}>
-            <div className="txt flex items-center">
-              <p className=" text-18 tracking-wide text-gray-700">
-                Logout
-              </p>
-            </div>
-          </button>) : (
-          <Link href={"/login"}>
-            <div className="txt flex items-center">
-              <p className=" text-18 tracking-wide text-gray-700">
-                Login
-              </p>
-            </div>
-          </Link>)}
+            <button className="p-0 m-0 bg-[none]" onClick={() => signOut()}>
+              <div className="txt flex items-center">
+                <p className=" text-18 tracking-wide text-gray-700">
+                  {status !== "loading" && "Logout"}
+                </p>
+              </div>
+            </button>
+          ) : (
+            <Link href={"/login"}>
+              <div className="txt flex items-center">
+                <p className=" text-18 tracking-wide text-gray-700">
+                  {status !== "loading" && "Login"}
+                </p>
+              </div>
+            </Link>
+          )}
           <span className="m-0 mx-5">|</span>
           <Link href={session ? "/account/aboutme" : "/register"}>
             <div className="txt flex items-center">
               <p className=" text-18 tracking-wide text-gray-700">
-                {session ? "My Account" : "Register"}
+                {status !== "loading"
+                  ? session
+                    ? "My Account"
+                    : "Register"
+                  : ""}
               </p>
             </div>
           </Link>
