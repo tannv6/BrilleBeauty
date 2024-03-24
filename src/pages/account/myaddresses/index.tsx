@@ -1,8 +1,40 @@
 import Layout from "@/components/Layout";
 import MypageNav from "@/components/MypageNav";
 import SubNav from "@/components/SubNav";
+import axios from "axios";
+import { GetServerSideProps } from "next";
+import { getSession } from "next-auth/react";
+import Pagination from "@/components/Pagi";
+import { pageSize } from "@/lib/constants";
+import moment from "moment";
+import Link from "next/link";
 
-export default function MyAddresses() {
+export const getServerSideProps = (async (context: any) => {
+  const session = await getSession(context);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
+  const { params } = context;
+  const page = params?.page || 1;
+  const result1 = await axios.get(
+    `http://localhost:3000/api/order_address/list`,
+    {
+      params: { session: JSON.stringify(session), page, pageSize },
+    }
+  );
+  return {
+    props: {
+      ...result1.data,
+      page,
+    },
+  };
+}) satisfies GetServerSideProps<{ data: any }>;
+export default function MyAddresses({ data, page, total, totalPage }: any) {
   return (
     <>
       <Layout>
@@ -12,61 +44,67 @@ export default function MyAddresses() {
             <div className="flex flex-row gap-[60px]">
               <MypageNav></MypageNav>
               <div className="grow mt-[17px]">
-                <p className="text-2xl pb-4 border-b border-black">My Addresses</p>
+                <div className="flex justify-between pb-4 items-center border-b border-black">
+                  <p className="text-2xl">
+                    My Addresses
+                  </p>
+                  <Link
+                    className="flex justify-center items-center bg-blue-600 text-white py-2 px-3 rounded h-[40px]"
+                    href="/account/myaddresses/write"
+                  >
+                    Add New Address
+                  </Link>
+                </div>
                 <table className="table-auto min-w-full">
                   <colgroup>
+                    <col width="10%" />
+                    <col width="30%" />
                     <col width="25%" />
-                    <col width="*" />
+                    <col width="15%" />
+                    <col width="20%" />
                   </colgroup>
-                  <tbody>
-                    <tr className="border-b border-[#757575]">
-                      <th scope="row" className="text-lg bg-[#fefafa]">Add New Address</th>
-                      <td>
-                        <div className="flex flex-col">
-                          <div className="flex items-center py-5 pl-5 justify-between border-b">
-                            <p>Name<span className="text-[#ef426f]">*</span></p>
-                            <div className="flex gap-[10px]">
-                              <input type="text" placeholder="My" className="px-[10px] w-[220px] h-[50px] border rounded-[2px]" />
-                              <input type="text" placeholder="Huyen" className="px-[10px] w-[220px] h-[50px] border rounded-[2px]" />
-                            </div>
-                          </div>
-                          <div className="py-5 pl-5 flex items-center justify-between border-b">
-                            <p>Phone Number<span className="text-[#ef426f]">*</span></p>
-                            <input type="tel" className="px-[10px] w-[450px] h-[50px] border rounded-[2px]"></input>
-                          </div>
-                          <div className="py-5 pl-5 flex items-center justify-between border-b">
-                            <p>Company Name</p>
-                            <input type="text" className="px-[10px] w-[450px] h-[50px] border rounded-[2px]"></input>
-                          </div>
-                          <div className="py-5 pl-5 flex items-center justify-between border-b">
-                            <p>Street Address<span className="text-[#ef426f]">*</span></p>
-                            <input type="text" className="px-[10px] w-[450px] h-[50px] border rounded-[2px]"></input>
-                          </div>
-                          <div className="py-5 pl-5 flex items-center justify-between border-b">
-                            <p>Suburb/City</p>
-                            <input type="text" className="px-[10px] w-[450px] h-[50px] border rounded-[2px]"></input>
-                          </div>
-                          <div className="py-5 pl-5 flex items-center justify-between border-b">
-                            <p>State/Province</p>
-                            <input type="text" className="px-[10px] w-[450px] h-[50px] border rounded-[2px]"></input>
-                          </div>
-                          <div className="py-5 pl-5 flex items-center justify-between border-b">
-                            <p>Zip/Postal Code</p>
-                            <input type="text" className="px-[10px] w-[450px] h-[50px] border rounded-[2px]"></input>
-                          </div>
-                          <div className="py-5 pl-5 flex items-center justify-between border-b">
-                            <p>Country</p>
-                            <input type="text" className="px-[10px] w-[450px] h-[50px] border rounded-[2px]"></input>
-                          </div>
-                        </div>
-                      </td>
+                  <thead>
+                    <tr>
+                      <th className="py-3 px-4 text-left">ID</th>
+                      <th className="py-3 px-4 text-left">Name</th>
+                      <th className="py-3 px-4 text-left">PhoneNumber</th>
+                      <th className="py-3 px-4 text-left">Default</th>
+                      <th className="py-3 px-4 text-left">Reg Date</th>
                     </tr>
+                  </thead>
+                  <tbody>
+                    {data?.map((e: any, i: number) => {
+                      return (
+                        <tr
+                          key={i}
+                          className="border-b border-blue-gray-200 last:border-0"
+                        >
+                          <td className="py-3 px-4 text-left">
+                            {total - (page - 1) * pageSize - i}
+                          </td>
+                          <td className="py-3 px-4 text-left">
+                            {e.FirstName} {e.LastName}
+                          </td>
+                          <td className="py-3 px-4 text-left">
+                            {e.PhoneNumber}
+                          </td>
+                          <td className="py-3 px-4 text-left">
+                            {e.IsDefault ? "Yes" : "No"}
+                          </td>
+                          <td className="py-3 px-4 text-left">
+                            {moment(e.CreatedAt).format("yyyy-MM-dd")}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
-                <div className="flex justify-end mt-[50px] gap-[10px]">
-                  <button className="w-[220px] h-[60px] rounded bg-[#cccccc] text-lg">Cancel</button>
-                  <button className="w-[220px] h-[60px] rounded bg-[#f04b76] text-lg text-[#fff]">Add</button>
-                </div>
+                <Pagination
+                  totalPage={totalPage}
+                  currentPage={page}
+                  totalElement={total}
+                  elementsPerPage={10}
+                />
               </div>
             </div>
           </div>

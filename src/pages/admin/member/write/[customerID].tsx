@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
-import Layout from "../../components/Layout";
+import AdminLayout from "../../components/AdminLayout";
 import Checkbox from "../../components/Checkbox";
 import Link from "next/link";
 import Input from "../../components/Input";
@@ -131,7 +131,7 @@ function CustomerWrite({
   };
 
   return (
-    <Layout>
+    <AdminLayout>
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold mb-4">
           {isNew ? "Add New Customer" : "Edit Customer"}
@@ -140,7 +140,7 @@ function CustomerWrite({
       <form onSubmit={handleSubmit}>
         <div className="relative">
           <table
-            style={{ tableLayout: "fixed" }}
+            style={{ tableAdminLayout: "fixed" }}
             className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
           >
             <colgroup>
@@ -311,7 +311,7 @@ function CustomerWrite({
           </button>
         </div>
       </form>
-    </Layout>
+    </AdminLayout>
   );
 }
 

@@ -1,10 +1,11 @@
 import React, { useId } from "react";
 
 function Checkbox({ name, label, checked, onChange }: any) {
-    const id = useId();
+  const id = useId();
   return (
     <div className="inline-flex items-center align-middle">
       <input
+        value={1}
         checked={checked}
         name={name}
         id={id}

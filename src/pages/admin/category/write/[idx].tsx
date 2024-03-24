@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Layout from "../../components/Layout";
+import AdminLayout from "../../components/AdminLayout";
 import axios from "axios";
 import "./write.css";
 import { useRouter } from "next/router";
@@ -149,7 +149,7 @@ function Write({ data, idx }: any) {
   };
 
   return (
-    <Layout>
+    <AdminLayout>
       {categories.CategoryID ? (
         <div className={`${categories?.isDel ? "opacity-25 pointer-events-none" : ""}`}>
           <div className="level1">
@@ -272,7 +272,7 @@ function Write({ data, idx }: any) {
           Save
         </button>
       </div>
-    </Layout>
+    </AdminLayout>
   );
 }
 

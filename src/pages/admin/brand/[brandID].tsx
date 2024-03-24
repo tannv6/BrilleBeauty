@@ -1,5 +1,5 @@
 import React, { FormEvent, useState } from "react";
-import Layout from "../components/Layout";
+import AdminLayout from "../components/AdminLayout";
 import axios from "axios";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
@@ -49,12 +49,12 @@ function BrandWrite({ brandDetail }: any) {
   }
 
   return (
-    <Layout>
+    <AdminLayout>
       <h1 className="text-2xl font-bold mb-4">Update Brand</h1>
       <form onSubmit={handleSubmit}>
         <div className="relative overflow-x-auto">
           <table
-            style={{ tableLayout: "fixed" }}
+            style={{ tableAdminLayout: "fixed" }}
             className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
           >
             <colgroup>
@@ -96,7 +96,7 @@ function BrandWrite({ brandDetail }: any) {
           </button>
         </div>
       </form>
-    </Layout>
+    </AdminLayout>
   );
 }
 

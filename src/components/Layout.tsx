@@ -72,9 +72,10 @@ type Props = {
   webSetting?: WebSetting;
   banner_top?: any;
   popup?: any[];
+  session?: any;
 };
 
-function Layout({ children, webSetting, banner_top, popup }: Props) {
+function Layout({ children, webSetting, banner_top, popup, session }: Props) {
   return (
     <>
       <Head>
@@ -121,7 +122,11 @@ function Layout({ children, webSetting, banner_top, popup }: Props) {
         <link rel="canonical" href={webSetting?.domain_url} />
       </Head>
 
-      <Header webSetting={webSetting} banner_top={banner_top} />
+      <Header
+        webSetting={webSetting}
+        banner_top={banner_top}
+        session={session}
+      />
 
       <AuthProvider>
         {children}

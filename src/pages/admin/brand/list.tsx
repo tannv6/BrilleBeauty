@@ -1,5 +1,5 @@
 import React from "react";
-import Layout from "../components/Layout";
+import AdminLayout from "../components/AdminLayout";
 import { GetServerSideProps } from "next";
 import connectDB from "@/app/db";
 import Link from "next/link";
@@ -30,7 +30,7 @@ function list({ response }: any) {
     }
   };
   return (
-    <Layout>
+    <AdminLayout>
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold mb-4">Brand List</h1>
         <Link
@@ -75,7 +75,7 @@ function list({ response }: any) {
           </Tbody>
         </Table>
       </div>
-    </Layout>
+    </AdminLayout>
   );
 }
 

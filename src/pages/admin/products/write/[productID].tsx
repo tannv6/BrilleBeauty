@@ -3,9 +3,9 @@ import Dropdown from "@/components/Dropdown";
 import axios from "axios";
 import { useRouter } from "next/router";
 import DatePicker from "react-datepicker";
-
+import he from "he";
 import "react-datepicker/dist/react-datepicker.css";
-import Layout from "../../components/Layout";
+import AdminLayout from "../../components/AdminLayout";
 import Checkbox from "../../components/Checkbox";
 import Link from "next/link";
 import Input from "../../components/Input";
@@ -243,14 +243,8 @@ function ProductWrite({
       ? `${CDN_URL}/${productDetail?.ProductImage}`
       : "";
   return (
-    <Layout>
-      <SRLWrapper
-        options={{
-          thumbnails: {
-            showThumbnails: false,
-          },
-        }}
-      >
+    <AdminLayout>
+      <>
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold mb-4">
             {isNew ? "Add New Product" : "Edit Product"}
@@ -259,7 +253,7 @@ function ProductWrite({
         <form onSubmit={handleSubmit}>
           <div className="relative overflow-x-auto">
             <table
-              style={{ tableLayout: "fixed" }}
+              style={{ tableAdminLayout: "fixed" }}
               className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
             >
               <colgroup>
@@ -664,16 +658,11 @@ function ProductWrite({
                     Description
                   </th>
                   <td className="px-6 py-2" colSpan={3}>
-                    {/* <textarea
-                      value={product.Description}
+                    <CustomEditor
                       name="Description"
+                      value={he.decode(productDetail?.Description || "")}
                       onChange={handleChange}
-                      id="message"
-                      rows={4}
-                      className="block p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder=""
-                    /> */}
-                    <CustomEditor initialData="<h1>Hello from CKEditor in Next.js!</h1>" />
+                    />
                   </td>
                 </tr>
               </tbody>
@@ -694,8 +683,8 @@ function ProductWrite({
             </button>
           </div>
         </form>
-      </SRLWrapper>
-    </Layout>
+      </>
+    </AdminLayout>
   );
 }
 

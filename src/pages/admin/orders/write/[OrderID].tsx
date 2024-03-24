@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
-import Layout from "../../components/Layout";
+import AdminLayout from "../../components/AdminLayout";
 import Checkbox from "../../components/Checkbox";
 import Link from "next/link";
 import Input from "../../components/Input";
@@ -26,7 +26,10 @@ export const getServerSideProps = async (context: { params: any }) => {
       params: { OrderID },
     }
   );
-  const result1 = await axios.get(`http://localhost:3000/api/adress/province`);
+  const result7 = await axios.get(`http://localhost:3000/api/adress/countries`);
+  const result1 = await axios.get(`http://localhost:3000/api/adress/province`, {
+    params: { CountryID: orderDetail.data?.CountryID },
+  });
   const result2 = await axios.get(`http://localhost:3000/api/adress/district`, {
     params: { ProvinceID: orderDetail.data?.ProvinceID },
   });
@@ -46,7 +49,8 @@ export const getServerSideProps = async (context: { params: any }) => {
   return {
     props: {
       orderDetail: orderDetail.data.order,
-      provinceList: result1.data.data,
+      countryList: result7.data.data,
+      provinceListInit: result1.data.data,
       districtListInit: result2.data.data,
       communeListInit: result3.data.data,
       statusList: result4.data,
@@ -58,8 +62,8 @@ export const getServerSideProps = async (context: { params: any }) => {
 };
 function OrderWrite({
   orderDetail,
-  isNew,
-  provinceList,
+  isNew,countryList,
+  provinceListInit,
   districtListInit,
   communeListInit,
   statusList,
@@ -68,6 +72,7 @@ function OrderWrite({
   payMethodList,
 }: any) {
 
+  const [provinceList, setProvinceList] = useState(provinceListInit || []);
   const [districtList, setDistrictList] = useState(districtListInit || []);
   const [communeList, setCommuneList] = useState(communeListInit || []);
 
@@ -86,6 +91,7 @@ function OrderWrite({
     Note: any;
     CustomerNote: any;
     RecieverName: any;
+    CountryID:any;
     ProvinceID: any;
     DistrictID: any;
     CommuneID: any;
@@ -103,6 +109,7 @@ function OrderWrite({
     Note: orderDetail?.Note || "",
     CustomerNote: orderDetail?.CustomerNote || "",
     RecieverName: orderDetail?.RecieverName || "",
+    CountryID: orderDetail?.CountryID || "",
     ProvinceID: orderDetail?.ProvinceID || "",
     DistrictID: orderDetail?.DistrictID || "",
     CommuneID: orderDetail?.CommuneID || "",
@@ -152,6 +159,14 @@ function OrderWrite({
     }
   }
 
+  const handleGetProvince = async (CountryID: number) => {
+    const result1 = await axios.get(
+      `http://localhost:3000/api/adress/province`,
+      { params: { CountryID } }
+    );
+    setProvinceList(result1.data.data);
+  };
+
   const handleGetDistrict = async (ProvinceID: number) => {
     const result1 = await axios.get(
       `http://localhost:3000/api/adress/district`,
@@ -169,7 +184,7 @@ function OrderWrite({
   };
 
   return (
-    <Layout>
+    <AdminLayout>
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold mb-4">
           {isNew ? "Add New Order" : "Edit Order"}
@@ -183,7 +198,7 @@ function OrderWrite({
       <form onSubmit={handleSubmit}>
         <div className="relative">
           <table
-            style={{ tableLayout: "fixed" }}
+            style={{ tableAdminLayout: "fixed" }}
             className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
           >
             <colgroup>
@@ -243,7 +258,6 @@ function OrderWrite({
                       name: e.StatusName,
                     }))}
                     onChange={(id: number) => {
-                      handleGetDistrict(id);
                       handleChange({
                         target: { name: "StatusID", value: id },
                       });
@@ -278,6 +292,22 @@ function OrderWrite({
                 </th>
                 <td className="px-6 py-2">
                   <div className="flex gap-1">
+                    <Dropdown
+                      containerClassName="w-[120px]"
+                      className="w-full h-[35px] rounded-md"
+                      options={countryList?.map((e: any, i: any) => ({
+                        id: e.CountryID,
+                        name: e.CountryName,
+                      }))}
+                      onChange={(id: number) => {
+                        handleGetProvince(id);
+                        handleChange({
+                          target: { name: "CountryID", value: id },
+                        });
+                      }}
+                      activeItem={Number(order.CountryID)}
+                      placeHolder="--Country--"
+                    />
                     <Dropdown
                       containerClassName="w-[120px]"
                       className="w-full h-[35px] rounded-md"
@@ -499,7 +529,7 @@ function OrderWrite({
           </button>
         </div>
       </form>
-    </Layout>
+    </AdminLayout>
   );
 }
 

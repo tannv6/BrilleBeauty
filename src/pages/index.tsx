@@ -11,16 +11,8 @@ export const getServerSideProps: GetServerSideProps<{
   after_main_visual: any[];
   main_middle: any;
 }> = async (context: any) => {
-  const session = await getSession(context);
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/login",
-        permanent: false,
-      },
-    };
-  }
   const { req } = context;
+  const session = await getSession(context);
   const cookies = parse(req.headers.cookie || "");
 
   const response = await axios.get(
@@ -67,6 +59,7 @@ export const getServerSideProps: GetServerSideProps<{
       best_main: response3.data,
       new_main: response4.data,
       sale_main: response5.data,
+      session,
       ...(await getWebSetting(cookies)),
     },
   };

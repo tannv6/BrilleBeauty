@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Layout from "../../components/Layout";
+import AdminLayout from "../../components/AdminLayout";
 import Link from "next/link";
 import Table from "../../components/Table";
 import Thead from "../../components/Thead";
@@ -55,7 +55,7 @@ function ComboList({ response, initPage, total, totalPage }: any) {
   };
 
   return (
-    <Layout>
+    <AdminLayout>
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold mb-4">Combo List</h1>
         <Link
@@ -122,7 +122,7 @@ function ComboList({ response, initPage, total, totalPage }: any) {
         per={10}
         onChange={handleChangePage}
       />
-    </Layout>
+    </AdminLayout>
   );
 }
 

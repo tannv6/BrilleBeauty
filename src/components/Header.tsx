@@ -7,15 +7,18 @@ import { useRouter } from "next/router";
 import { ChangeEvent, useEffect, useState } from "react";
 import { WebSetting } from "./Layout";
 import { CDN_URL } from "@/utils/constants";
+import { signOut } from "next-auth/react";
 type Props = {
   webSetting?: WebSetting;
   brandListRecommended?: any[];
   banner_top?: any;
+  session?: any;
 };
 export default function Header({
   brandListRecommended,
   webSetting,
   banner_top,
+  session,
 }: Props) {
   const pathname = usePathname();
   const router = useRouter();
@@ -111,11 +114,27 @@ export default function Header({
           </div>
         </div>
         <div className="header_right flex items-center">
-          <Link href={"/member"}>
+          {session ? (
+          <button className="p-0 m-0 bg-[none]" onClick={()=>signOut()}>
             <div className="txt flex items-center">
-              <p className=" text-18 tracking-wide text-gray-700">Login</p>
-              <span className="m-0 mx-1">/</span>
-              <p className=" text-18 tracking-wide text-gray-700">Register</p>
+              <p className=" text-18 tracking-wide text-gray-700">
+                Logout
+              </p>
+            </div>
+          </button>) : (
+          <Link href={"/login"}>
+            <div className="txt flex items-center">
+              <p className=" text-18 tracking-wide text-gray-700">
+                Login
+              </p>
+            </div>
+          </Link>)}
+          <span className="m-0 mx-5">|</span>
+          <Link href={session ? "/account/aboutme" : "/register"}>
+            <div className="txt flex items-center">
+              <p className=" text-18 tracking-wide text-gray-700">
+                {session ? "My Account" : "Register"}
+              </p>
             </div>
           </Link>
           <span className="m-0 mx-5">|</span>
@@ -198,11 +217,11 @@ export default function Header({
               <>
                 <li key={i} className="group">
                   <Link
-                    className={`${pathname?.slice(0) ==
-                      `/products/category/${e.CategoryID}`
-                      ? "gnb_active"
-                      : ""
-                      } text-18 tracking-wide leading-[50px] text-gray-700`}
+                    className={`${
+                      pathname?.slice(0) == `/products/category/${e.CategoryID}`
+                        ? "gnb_active"
+                        : ""
+                    } text-18 tracking-wide leading-[50px] text-gray-700`}
                     href={`/products/category/${e.CategoryID}`}
                   >
                     {e.CategoryName}
@@ -246,31 +265,33 @@ export default function Header({
 
           <li className="group">
             <Link
-              className={`${pathname === "/sales" ? "gnb_active" : ""
-                } text-18 tracking-wide leading-[50px] text-gray-700`}
+              className={`${
+                pathname === "/sales" ? "gnb_active" : ""
+              } text-18 tracking-wide leading-[50px] text-gray-700`}
               href="/search/combo"
             >
               Combo
             </Link>
             <div className="absolute hidden top-[49px] left-1/2 transform -translate-x-1/2 bg-white w-full xl:w-[100vw] h-[420px] group-hover:block z-[100] border-b boder-gray-200 border-t">
               <div className="inner-container flex gap-[70px] mt-[55px] justify-center">
-
                 {comboCategoryList?.map((e: any, i: any) => {
-                  return (<>
-                    <div>
-                      <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">
-                        {e.CategoryName}
-                      </h3>
-                      <Link href={`/combo/category/${e.CategoryID}`}>
-                        <Image
-                          src={`${CDN_URL}/${e.ThumbImage}`}
-                          alt=""
-                          width={250}
-                          height={250}
-                        />
-                      </Link>
-                    </div>
-                  </>)
+                  return (
+                    <>
+                      <div>
+                        <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">
+                          {e.CategoryName}
+                        </h3>
+                        <Link href={`/combo/category/${e.CategoryID}`}>
+                          <Image
+                            src={`${CDN_URL}/${e.ThumbImage}`}
+                            alt=""
+                            width={250}
+                            height={250}
+                          />
+                        </Link>
+                      </div>
+                    </>
+                  );
                 })}
                 {/* <div>
                   <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">
@@ -324,7 +345,6 @@ export default function Header({
                     />
                   </Link>
                 </div> */}
-
               </div>
             </div>
           </li>

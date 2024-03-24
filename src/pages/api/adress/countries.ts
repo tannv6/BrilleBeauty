@@ -8,11 +8,10 @@ export default async function handle(
   try {
     const params = req.query;
 
-    const { page = 1, pageSize = 1000, CountryID } = params;
+    const { page = 1, pageSize = 1000 } = params;
 
     const connect = await connectDB();
-    const totalQuery = `select * from province where CountryID = '${CountryID}' and DeletedAt is null`;
-console.log(totalQuery);
+    const totalQuery = `select * from countries where DeletedAt is null`;
 
     const [resultTotal]: any = await connect.execute(totalQuery);
 

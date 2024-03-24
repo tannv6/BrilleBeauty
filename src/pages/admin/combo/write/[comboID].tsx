@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
-import Layout from "../../components/Layout";
+import AdminLayout from "../../components/AdminLayout";
 import Checkbox from "../../components/Checkbox";
 import Link from "next/link";
 import Input from "../../components/Input";
@@ -144,7 +144,7 @@ function ComboWrite({ comboDetail, isNew, categoryList, seasonList }: any) {
       ? `${CDN_URL}/${comboDetail?.ComboImage}`
       : "";
   return (
-    <Layout>
+    <AdminLayout>
       <SRLWrapper
         options={{
           thumbnails: {
@@ -156,7 +156,7 @@ function ComboWrite({ comboDetail, isNew, categoryList, seasonList }: any) {
         <form onSubmit={handleSubmit}>
           <div className="relative overflow-x-auto">
             <table
-              style={{ tableLayout: "fixed" }}
+              style={{ tableAdminLayout: "fixed" }}
               className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
             >
               <colgroup>
@@ -437,7 +437,7 @@ function ComboWrite({ comboDetail, isNew, categoryList, seasonList }: any) {
           </div>
         </form>
       </SRLWrapper>
-    </Layout>
+    </AdminLayout>
   );
 }
 

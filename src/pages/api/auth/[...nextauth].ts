@@ -39,12 +39,12 @@ export default NextAuth({
         token.id = user.id;
         token.name = user.name;
       }
-
       return token;
     },
-    session({ session, token }) {
+    session({ session, token }: any) {
       if (token && session.user) {
         session.user.name = token.name;
+        session.user.id = token.id;
       }
 
       return session;

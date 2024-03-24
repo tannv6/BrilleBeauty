@@ -1,5 +1,5 @@
 import React, { FormEvent, useState } from "react";
-import Layout from "../components/Layout";
+import AdminLayout from "../components/AdminLayout";
 import connectDB from "@/app/db";
 import { useRouter } from "next/router";
 import axios from "axios";
@@ -244,14 +244,14 @@ function WebInfo({ data }: any) {
     }
   }
   return (
-    <Layout>
+    <AdminLayout>
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold mb-4">Setting Web Infomation</h1>
       </div>
       <form onSubmit={handleSubmit}>
         <div className="relative">
           <table
-            style={{ tableLayout: "fixed" }}
+            style={{ tableAdminLayout: "fixed" }}
             className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
           >
             <colgroup>
@@ -308,7 +308,7 @@ function WebInfo({ data }: any) {
           </table>
           <h1 className="text-2xl font-bold mb-2 mt-4">SEO Tools</h1>
           <table
-            style={{ tableLayout: "fixed" }}
+            style={{ tableAdminLayout: "fixed" }}
             className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
           >
             <colgroup>
@@ -365,7 +365,7 @@ function WebInfo({ data }: any) {
           </table>
           <h1 className="text-2xl font-bold mb-2 mt-4">Business Information</h1>
           <table
-            style={{ tableLayout: "fixed" }}
+            style={{ tableAdminLayout: "fixed" }}
             className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
           >
             <colgroup>
@@ -430,7 +430,7 @@ function WebInfo({ data }: any) {
           </button>
         </div>
       </form>
-    </Layout>
+    </AdminLayout>
   );
 }
 
