@@ -2,9 +2,16 @@
 import React, { useState } from 'react';
 import Layout from '@/components/Layout'
 import SubNav from '@/components/SubNav';
-import Editors from '@/components/Editor';
 import Upload from '@/components/Upload';
 import Start from '@/components/Start';
+import dynamic from 'next/dynamic';
+
+const CustomEditor = dynamic(
+    () => {
+      return import("@/components/CkEditor");
+    },
+    { ssr: false }
+  );
 
 
 export default function Write() {
@@ -51,7 +58,7 @@ export default function Write() {
                     <tr >
                         <td className='w-full py-[5px]' colSpan={2}>
                             <div>
-                                <Editors />
+                                <CustomEditor name={''} value={''} onChange={undefined} />
                             </div>
                         </td>
                     </tr>

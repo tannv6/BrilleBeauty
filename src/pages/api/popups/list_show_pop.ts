@@ -1,5 +1,4 @@
 import connectDB from "@/app/db";
-import { getCookieValue } from "@/utils/cookie";
 import { parse } from "cookie";
 import { NextApiRequest, NextApiResponse } from "next";
 

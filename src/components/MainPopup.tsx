@@ -1,5 +1,5 @@
 import { CDN_URL } from "@/utils/constants";
-import { setCookie, setCookieClient } from "@/utils/cookie";
+import { setCookieClient } from "@/utils/cookie";
 import Image from "next/image";
 import React, { Fragment, useEffect, useState } from "react";
 type Props = {
