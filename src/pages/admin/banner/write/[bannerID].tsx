@@ -12,6 +12,7 @@ import Input from "../../components/Input";
 import moment from "moment";
 import { SRLWrapper } from "simple-react-lightbox";
 import Image from "next/image";
+import { bannerCategories } from "@/utils/constants";
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 export const getServerSideProps = async (context: { params: any }) => {
   const { params } = context;
@@ -191,17 +192,9 @@ function BannerWrite({ bannerDetail, isNew, catObject }: any) {
                 <td className="px-6 py-2" colSpan={3}>
                   <div className="flex gap-1">
                     <Dropdown
-                      containerClassName="w-[120px]"
+                      containerClassName="w-[150px]"
                       className="w-full h-[35px] rounded-md"
-                      options={[
-                        { id: "top", name: "top" },
-                        { id: "middle", name: "middle" },
-                        { id: "bottom", name: "bottom" },
-                        { id: "main_visual", name: "main_visual" },
-                        { id: "after_main_visual", name: "after_main_visual" },
-                        { id: "main_middle", name: "main_middle" },
-                        { id: "sub_category", name: "sub_category" },
-                      ]}
+                      options={Object.values(bannerCategories)}
                       onChange={(id: number) => {
                         handleChange({
                           target: { name: "BannerCategory", value: id },

@@ -1,4 +1,5 @@
 import connectDB from "@/app/db";
+import { bannerCategories } from "@/utils/constants";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handle(
@@ -8,10 +9,16 @@ export default async function handle(
   try {
     const params = req.query;
 
-    const { page = 1, pageSize = 1000 } = params;
+    const { page = 1, pageSize = 1000,cate } = params;
+
+    let cateSql = "";
+
+    if (typeof cate === "string" && Object.keys(bannerCategories).includes(cate)) {
+      cateSql = `and BannerCategory = '${cate}'`
+    }
 
     const connect = await connectDB();
-    const totalQuery = `select * from banners where DeletedAt is null order by BannerID desc`;
+    const totalQuery = `select * from banners where DeletedAt is null ${cateSql} order by BannerID desc`;
 
     const [resultTotal]: any = await connect.execute(totalQuery);
 
@@ -28,7 +35,7 @@ export default async function handle(
       total,
       currentPage: page,
       pageSize,
-      totalPage: Math.ceil(total / Number(pageSize)),
+      totalPage: Math.ceil(total / Number(pageSize)) || 1,
     });
   } catch (error) {
     return res.status(500).json({ error });

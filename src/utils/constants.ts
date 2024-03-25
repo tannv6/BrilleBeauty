@@ -1,3 +1,13 @@
+export const bannerCategories = {
+  top: { id: "top", name: "Top" },
+  middle: { id: "middle", name: "Middle" },
+  bottom: { id: "bottom", name: "Bottom" },
+  main_visual: { id: "main_visual", name: "Main Visual" },
+  after_main_visual: { id: "after_main_visual", name: "After Main Visual" },
+  main_middle: { id: "main_middle", name: "Main Middle" },
+  sub_category: { id: "sub_category", name: "Sub Category" },
+};
+
 export const listMenu = [
   {
     id: 1,
@@ -53,7 +63,13 @@ export const listMenu = [
     id: 6,
     label: "Banner",
     mapLinks: ["/admin/banner"],
-    children: [{ id: 1, label: "Banner List", link: "/admin/banner/list/1" }],
+    children: [
+      {
+        id: 1,
+        label: "Banner List",
+        link: `/admin/banner/list/1?cate=${Object.keys(bannerCategories)[0]}`,
+      },
+    ],
     icon: "fas fa-sliders-h",
   },
   {
