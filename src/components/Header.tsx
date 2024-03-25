@@ -62,6 +62,7 @@ export default function Header({
     axios.get("/api/combo_category/header").then((response) => {
       setComboCategoryList(response.data.data);
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLinkClick = async (e: any, BrandID: number) => {

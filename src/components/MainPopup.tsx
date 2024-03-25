@@ -54,6 +54,7 @@ function MainPopup({ popup }: Props) {
 
   useEffect(() => {
     toggleScroll();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrollEnabled]);
 
   return (

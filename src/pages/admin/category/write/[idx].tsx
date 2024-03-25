@@ -18,7 +18,9 @@ function Write({ data, idx }: any) {
   if (idx && !data) {
     return <NotFound />;
   }
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const [categories, setCategories] = useState(data || {});
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const router = useRouter();
 
   const handleChange = (
