@@ -251,7 +251,7 @@ function WebInfo({ data }: any) {
       <form onSubmit={handleSubmit}>
         <div className="relative">
           <table
-            style={{ tableAdminLayout: "fixed" }}
+            style={{ tableLayout: "fixed" }}
             className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
           >
             <colgroup>
@@ -308,7 +308,7 @@ function WebInfo({ data }: any) {
           </table>
           <h1 className="text-2xl font-bold mb-2 mt-4">SEO Tools</h1>
           <table
-            style={{ tableAdminLayout: "fixed" }}
+            style={{ tableLayout: "fixed" }}
             className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
           >
             <colgroup>
@@ -365,7 +365,7 @@ function WebInfo({ data }: any) {
           </table>
           <h1 className="text-2xl font-bold mb-2 mt-4">Business Information</h1>
           <table
-            style={{ tableAdminLayout: "fixed" }}
+            style={{ tableLayout: "fixed" }}
             className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
           >
             <colgroup>

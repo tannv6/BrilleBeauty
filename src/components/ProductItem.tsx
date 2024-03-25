@@ -6,7 +6,7 @@ import axios from "axios";
 import { Product } from "@/lib/types";
 
 type Props = {
-  id: any;
+  id?: any;
   image: any;
   name: any;
   oriPrice: any;

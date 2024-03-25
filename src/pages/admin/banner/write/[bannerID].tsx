@@ -171,7 +171,7 @@ function BannerWrite({ bannerDetail, isNew, catObject }: any) {
       <form onSubmit={handleSubmit}>
         <div className="relative">
           <table
-            style={{ tableAdminLayout: "fixed" }}
+            style={{ tableLayout: "fixed" }}
             className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
           >
             <colgroup>
