@@ -1,8 +1,7 @@
 import axios from "axios";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-
-export default NextAuth({
+export const authOptions: any = {
   pages: {
     signIn: "/login",
   },
@@ -34,7 +33,7 @@ export default NextAuth({
     }),
   ],
   callbacks: {
-    jwt: async ({ token, user }) => {
+    jwt: async ({ token, user }: any) => {
       if (user) {
         token.id = user.id;
         token.name = user.name;
@@ -50,4 +49,5 @@ export default NextAuth({
       return session;
     },
   },
-});
+};
+export default NextAuth(authOptions);
