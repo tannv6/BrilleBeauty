@@ -35,7 +35,7 @@ export default function Category({id, id1, cateName, products, subCate, page, to
     const handleChangePage = (page: number) => {
         setCPage(page);
         router.query.page = page.toString();
-        router.push(router);
+        router.push(router,undefined, { scroll: false });
     };
     return (
         <>
@@ -84,7 +84,10 @@ export default function Category({id, id1, cateName, products, subCate, page, to
                                         <ProductItem
                                             key = {i}
                                             image={"/product_img02.png"}
-                                            name={e.ProductName}
+                                            name={
+                                            <Link href={`/product_detail/${e.ProductID}`}
+                                            className="font-bold text-[18px]">{e.ProductName}
+                                            </Link>}
                                             oriPrice={"A$19.65"}
                                             salePrice={"A$16.25"}
                                             discount={"10%"}

@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { ChangeEvent, useEffect, useState } from "react";
 import { WebSetting } from "./Layout";
 import { CDN_URL } from "@/utils/constants";
+import { getSession, signOut, useSession } from "next-auth/react";
 type Props = {
   webSetting?: WebSetting;
   brandListRecommended?: any[];
@@ -19,9 +20,11 @@ export default function Header({
 }: Props) {
   const pathname = usePathname();
   const router = useRouter();
+  const { data: session, status }: any = useSession();
 
   const [brandList, setBrandList] = useState(brandListRecommended || []);
   const [categoryList, setCategoryList] = useState([]);
+  const [comboCategoryList, setComboCategoryList] = useState([]);
 
   function handleKeyPress(e: any) {
     if (e.keyCode === 13) {
@@ -56,6 +59,10 @@ export default function Header({
     axios.get("/api/category/header").then((response) => {
       setCategoryList(response.data.data);
     });
+    axios.get("/api/combo_category/header").then((response) => {
+      setComboCategoryList(response.data.data);
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLinkClick = async (e: any, BrandID: number) => {
@@ -64,7 +71,7 @@ export default function Header({
       CustomerID: 0,
       BrandID,
     });
-    
+
     const href = e.target.getAttribute("href");
     router.push(href);
   };
@@ -107,11 +114,33 @@ export default function Header({
           </div>
         </div>
         <div className="header_right flex items-center">
-          <Link href={"/member"}>
+          {session ? (
+            <button className="p-0 m-0 bg-[none]" onClick={() => signOut()}>
+              <div className="txt flex items-center">
+                <p className=" text-18 tracking-wide text-gray-700">
+                  {status !== "loading" && "Logout"}
+                </p>
+              </div>
+            </button>
+          ) : (
+            <Link href={"/login"}>
+              <div className="txt flex items-center">
+                <p className=" text-18 tracking-wide text-gray-700">
+                  {status !== "loading" && "Login"}
+                </p>
+              </div>
+            </Link>
+          )}
+          <span className="m-0 mx-5">|</span>
+          <Link href={session ? "/account/aboutme" : "/register"}>
             <div className="txt flex items-center">
-              <p className=" text-18 tracking-wide text-gray-700">Login</p>
-              <span className="m-0 mx-1">/</span>
-              <p className=" text-18 tracking-wide text-gray-700">Register</p>
+              <p className=" text-18 tracking-wide text-gray-700">
+                {status !== "loading"
+                  ? session
+                    ? "My Account"
+                    : "Register"
+                  : ""}
+              </p>
             </div>
           </Link>
           <span className="m-0 mx-5">|</span>
@@ -142,15 +171,15 @@ export default function Header({
           </div>
         </div>
       </div>
-      <nav className="gnb inner-container">
+      <nav className="relative gnb inner-container">
         <ul className="flex justify-center items-center custom-gap-45 h-[50px] font-medium">
-          <li className="relative group">
+          <li className="group">
             <p
               className={`text-18 tracking-wide leading-[50px] text-gray-700 select-none`}
             >
               Brands
             </p>
-            <div className="absolute hidden top-[49px] left-0 transform min-[1920px]:-translate-x-[35%] 2xl:-translate-x-[31%] bg-white w-full xl:w-[100vw] h-[322px] group-hover:block z-[100] border-b boder-gray-200 border-t">
+            <div className="absolute hidden top-[49px] left-1/2 transform -translate-x-1/2 bg-white w-full xl:w-[100vw] h-[322px] group-hover:block z-[100] border-b boder-gray-200 border-t">
               <div className="inner-container">
                 <div className="flex items-center justify-center mt-10">
                   <div className="flex items-center w-[783px] border-b border-black">
@@ -192,11 +221,10 @@ export default function Header({
           {categoryList?.map((e: any, i: any) => {
             return (
               <>
-                <li key={i} className="relative group">
+                <li key={i} className="group">
                   <Link
                     className={`${
-                      pathname?.slice(0, 20) ===
-                      `/products/category/${e.CategoryID}`
+                      pathname?.slice(0) == `/products/category/${e.CategoryID}`
                         ? "gnb_active"
                         : ""
                     } text-18 tracking-wide leading-[50px] text-gray-700`}
@@ -204,8 +232,8 @@ export default function Header({
                   >
                     {e.CategoryName}
                   </Link>
-                  <div className="absolute hidden top-[49px] left-0 transform min-[1920px]:-translate-x-[40%] 2xl:-translate-x-[38%] bg-white w-full xl:w-[100vw] h-[400px] group-hover:block z-[100] border-b boder-gray-200 border-t">
-                    <div className="inner-container flex gap-[150px] mt-[55px]">
+                  <div className="absolute hidden top-[49px] left-1/2 transform -translate-x-1/2 bg-white w-full xl:w-[100vw] h-[400px] group-hover:block z-[100] border-b boder-gray-200 border-t">
+                    <div className="inner-container flex justify-center gap-[80px] mt-[55px] whitespace-nowrap">
                       {e.child?.map((e1: any, i1: any) => {
                         return (
                           <div key={i1}>
@@ -241,18 +269,37 @@ export default function Header({
             );
           })}
 
-          <li className="relative group">
+          <li className="group">
             <Link
               className={`${
                 pathname === "/sales" ? "gnb_active" : ""
               } text-18 tracking-wide leading-[50px] text-gray-700`}
-              href={""}
+              href="/search/combo"
             >
               Combo
             </Link>
-            <div className="absolute hidden top-[49px] left-0 transform min-[1920px]:-translate-x-[63%] 2xl:-translate-x-[66%] bg-white w-full xl:w-[100vw] h-[420px] group-hover:block z-[100] border-b boder-gray-200 border-t">
-              <div className="inner-container flex gap-[70px] mt-[55px]">
-                <div>
+            <div className="absolute hidden top-[49px] left-1/2 transform -translate-x-1/2 bg-white w-full xl:w-[100vw] h-[420px] group-hover:block z-[100] border-b boder-gray-200 border-t">
+              <div className="inner-container flex gap-[70px] mt-[55px] justify-center">
+                {comboCategoryList?.map((e: any, i: any) => {
+                  return (
+                    <>
+                      <div>
+                        <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">
+                          {e.CategoryName}
+                        </h3>
+                        <Link href={`/combo/category/${e.CategoryID}`}>
+                          <Image
+                            src={`${CDN_URL}/${e.ThumbImage}`}
+                            alt=""
+                            width={250}
+                            height={250}
+                          />
+                        </Link>
+                      </div>
+                    </>
+                  );
+                })}
+                {/* <div>
                   <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">
                     Last Minute Sale{" "}
                   </h3>
@@ -303,7 +350,7 @@ export default function Header({
                       height={250}
                     />
                   </Link>
-                </div>
+                </div> */}
               </div>
             </div>
           </li>

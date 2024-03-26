@@ -30,7 +30,7 @@ export default function Category({id, cateName, products, page, total, totalPage
     const handleChangePage = (page: number) => {
         setCPage(page);
         router.query.page = page.toString();
-        router.push(router);
+        router.push(router,undefined, { scroll: false });
     };
     return (
         <>

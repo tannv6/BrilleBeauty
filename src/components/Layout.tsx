@@ -4,7 +4,6 @@ import Footer from "@/components/Footer";
 import { AuthProvider } from "./Providers";
 import "@/app/globals.css";
 import MainPopup from "./MainPopup";
-import { useState } from "react";
 
 export type WebSetting = {
   idx: any;
@@ -72,25 +71,64 @@ type Props = {
   children?: any;
   webSetting?: WebSetting;
   banner_top?: any;
-  popup: any[];
+  popup?: any[];
 };
 
 function Layout({ children, webSetting, banner_top, popup }: Props) {
   return (
     <>
       <Head>
-        <title>BrilleBeauty</title>
+        <title>{webSetting?.browser_title || "BrilleBeauty"}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="description" content="BrilleBeauty" />
+        <meta
+          name="description"
+          content={webSetting?.og_des || "BrilleBeauty"}
+        />
+        <meta charSet="UTF-8" />
+        <meta
+          name="keywords"
+          content={webSetting?.meta_keyword || "BrilleBeauty"}
+        />
+        <meta
+          name="author"
+          content={webSetting?.meta_keyword || "BrilleBeauty"}
+        />
+        <meta name="robots" content="index, follow" />
+        <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
+        <meta httpEquiv="content-language" content="us" />
+        <meta httpEquiv="content-type" content="text/html; charset=UTF-8" />
+        <meta
+          property="og:title"
+          content={webSetting?.browser_title || "BrilleBeauty"}
+        />
+        <meta
+          property="og:description"
+          content={webSetting?.og_des || "BrilleBeauty"}
+        />
+        <meta property="og:image" content={webSetting?.og_img} />
+        <meta property="og:url" content={webSetting?.og_url} />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content={webSetting?.og_img} />
+        <meta
+          name="twitter:title"
+          content={webSetting?.browser_title || "BrilleBeauty"}
+        />
+        <meta
+          name="twitter:description"
+          content={webSetting?.og_des || "BrilleBeauty"}
+        />
+        <meta name="twitter:image" content={webSetting?.og_img} />
+        <link rel="canonical" href={webSetting?.domain_url} />
       </Head>
 
-      <Header webSetting={webSetting} banner_top={banner_top} />
+      <AuthProvider>
+        <Header webSetting={webSetting} banner_top={banner_top} />
 
-      {children}
-      <MainPopup
-        popup={popup}
-      />
-      <Footer webSetting={webSetting} />
+        {children}
+        <MainPopup popup={popup} />
+
+        <Footer />
+      </AuthProvider>
     </>
   );
 }

@@ -5,7 +5,7 @@ import "@/app/globals.css";
 import { listMenu } from "@/utils/constants";
 import { usePathname } from "next/navigation";
 import SimpleReactLightbox from 'simple-react-lightbox';
-function Layout({ children }: any) {
+function AdminLayout({ children }: any) {
   const pathname = usePathname();
 
   const initMenu = listMenu.find((e) =>
@@ -98,4 +98,4 @@ function Layout({ children }: any) {
   );
 }
 
-export default Layout;
+export default AdminLayout;

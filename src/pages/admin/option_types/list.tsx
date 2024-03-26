@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Layout from "../components/Layout";
+import AdminLayout from "../components/AdminLayout";
 import Table from "../components/Table";
 import Thead from "../components/Thead";
 import Th from "../components/Th";
@@ -51,7 +51,7 @@ function List({ list }: any) {
     }
   };
   return (
-    <Layout>
+    <AdminLayout>
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold mb-4">Option Type List</h1>
         <Button onClick={() => handleOpenWrite("")} color="blue">
@@ -124,7 +124,7 @@ function List({ list }: any) {
           </button>
         </form>
       </Modal>
-    </Layout>
+    </AdminLayout>
   );
 }
 

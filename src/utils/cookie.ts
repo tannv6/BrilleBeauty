@@ -1,20 +1,3 @@
-import Cookies from "cookies";
-
-export function setCookie(
-  ctx: any,
-  name: string,
-  value: string,
-  options?: Cookies.SetOption
-) {
-  const cookies = new Cookies(ctx.req, ctx.res);
-  cookies.set(name, value, options);
-}
-
-export function getCookieValue(ctx: any, name: string) {
-  const cookies = new Cookies(ctx.req, ctx.res, {keys: ['pop']});
-  return cookies.get(name);
-}
-
 export function setCookieClient(name: any, value: any, days: any) {
   var expires = "";
   if (days) {
@@ -27,7 +10,6 @@ export function setCookieClient(name: any, value: any, days: any) {
 export function getCookieClient(name: any) {
   var nameEQ = name + "=";
   var ca = document.cookie.split(";");
-  console.log(ca);
   
   for (var i = 0; i < ca.length; i++) {
     var c = ca[i];

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Layout from "../../components/Layout";
+import AdminLayout from "../../components/AdminLayout";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
 import Image from "next/image";
@@ -55,7 +55,7 @@ function ProductList({ response, initPage, total, totalPage }: any) {
     }
   };
   return (
-    <Layout>
+    <AdminLayout>
       <SRLWrapper
         options={{
           thumbnails: {
@@ -130,7 +130,7 @@ function ProductList({ response, initPage, total, totalPage }: any) {
           onChange={handleChangePage}
         />
       </SRLWrapper>
-    </Layout>
+    </AdminLayout>
   );
 }
 

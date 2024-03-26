@@ -3,15 +3,23 @@ import Dropdown from "@/components/Dropdown";
 import axios from "axios";
 import { useRouter } from "next/router";
 import DatePicker from "react-datepicker";
-
+import he from "he";
 import "react-datepicker/dist/react-datepicker.css";
-import Layout from "../../components/Layout";
+import AdminLayout from "../../components/AdminLayout";
 import Checkbox from "../../components/Checkbox";
 import Link from "next/link";
 import Input from "../../components/Input";
 import moment from "moment";
 import Image from "next/image";
 import { SRLWrapper } from "simple-react-lightbox";
+import dynamic from "next/dynamic";
+
+const CustomEditor = dynamic(
+  () => {
+    return import("@/components/CkEditor");
+  },
+  { ssr: false }
+);
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 export const getServerSideProps = async (context: { params: any }) => {
   const { params } = context;
@@ -235,14 +243,8 @@ function ProductWrite({
       ? `${CDN_URL}/${productDetail?.ProductImage}`
       : "";
   return (
-    <Layout>
-      <SRLWrapper
-        options={{
-          thumbnails: {
-            showThumbnails: false,
-          },
-        }}
-      >
+    <AdminLayout>
+      <>
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold mb-4">
             {isNew ? "Add New Product" : "Edit Product"}
@@ -656,14 +658,10 @@ function ProductWrite({
                     Description
                   </th>
                   <td className="px-6 py-2" colSpan={3}>
-                    <textarea
-                      value={product.Description}
+                    <CustomEditor
                       name="Description"
+                      value={he.decode(productDetail?.Description || "")}
                       onChange={handleChange}
-                      id="message"
-                      rows={4}
-                      className="block p-2.5 w-full text-sm text-gray-900 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder=""
                     />
                   </td>
                 </tr>
@@ -685,8 +683,8 @@ function ProductWrite({
             </button>
           </div>
         </form>
-      </SRLWrapper>
-    </Layout>
+      </>
+    </AdminLayout>
   );
 }
 

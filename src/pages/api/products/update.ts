@@ -2,6 +2,7 @@ import connectDB from "@/app/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import formidable from "formidable";
 import { saveFile } from "@/utils/function";
+import he from "he";
 export const config = {
   api: {
     bodyParser: false,
@@ -35,6 +36,8 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       BrandID,
     } = fields;
 
+    const des = he.encode(Description?.[0] || "");
+
     let ProductImage = "";
 
     if (image) {
@@ -45,7 +48,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     ProductName = '${ProductName}', 
     InitPrice = '${InitPrice}', 
     SellPrice = '${SellPrice}',
-    Description = '${Description}', 
+    Description = '${des}', 
     SaleDate = '${SaleDate}', 
     SaleEndDate = '${SaleEndDate}',
     PriceOnSaleDate = '${PriceOnSaleDate || 0}',

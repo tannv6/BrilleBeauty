@@ -1,5 +1,5 @@
 import React, { FormEvent, useState } from "react";
-import Layout from "../components/Layout";
+import AdminLayout from "../components/AdminLayout";
 import axios from "axios";
 import { useRouter } from "next/router";
 
@@ -33,7 +33,7 @@ function BrandWrite() {
   }
 
   return (
-    <Layout>
+    <AdminLayout>
       <h1 className="text-2xl font-bold mb-4">Add New Brand</h1>
       <form onSubmit={handleSubmit}>
         <div className="relative overflow-x-auto">
@@ -79,7 +79,7 @@ function BrandWrite() {
           </button>
         </div>
       </form>
-    </Layout>
+    </AdminLayout>
   );
 }
 

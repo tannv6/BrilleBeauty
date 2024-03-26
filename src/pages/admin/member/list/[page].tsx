@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Layout from "../../components/Layout";
+import AdminLayout from "../../components/AdminLayout";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
 import axios from "axios";
@@ -51,7 +51,7 @@ function MemberList({ response, initPage, total, totalPage }: any) {
     }
   };
   return (
-    <Layout>
+    <AdminLayout>
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold mb-4">Customers List</h1>
         <Link
@@ -111,7 +111,7 @@ function MemberList({ response, initPage, total, totalPage }: any) {
         per={10}
         onChange={handleChangePage}
       />
-    </Layout>
+    </AdminLayout>
   );
 }
 

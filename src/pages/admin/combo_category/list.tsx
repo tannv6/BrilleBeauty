@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Layout from "../components/Layout";
+import AdminLayout from "../components/AdminLayout";
 import Table from "../components/Table";
 import Thead from "../components/Thead";
 import Th from "../components/Th";
@@ -75,7 +75,7 @@ function List({ list }: any) {
     ? URL.createObjectURL(detail.ImageUpload)
     : `${CDN_URL}/${detail.ThumbImage}`;
   return (
-    <Layout>
+    <AdminLayout>
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold mb-4">Combo Category List</h1>
         <Button onClick={() => handleOpenWrite(null)} color="blue">
@@ -166,7 +166,7 @@ function List({ list }: any) {
           </button>
         </form>
       </Modal>
-    </Layout>
+    </AdminLayout>
   );
 }
 

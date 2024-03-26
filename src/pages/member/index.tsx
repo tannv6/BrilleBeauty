@@ -3,7 +3,6 @@ import axios from 'axios';
 import Link from 'next/link'
 import { useRouter } from 'next/router';
 import { FormEvent, use, useState } from 'react';
-import jwt from 'jsonwebtoken';
 import { signIn } from 'next-auth/react';
 
 export default function Login() {

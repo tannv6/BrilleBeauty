@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import Layout from "../../components/Layout";
+import React, { useEffect, useState } from "react";
+import AdminLayout from "../../components/AdminLayout";
 import { GetServerSideProps } from "next";
 import Link from "next/link";
 import Image from "next/image";
@@ -14,29 +14,33 @@ import Td from "../../components/Td";
 import moment from "moment";
 import { SRLWrapper } from "simple-react-lightbox";
 import { pageSize } from "@/lib/constants";
+import { bannerCategories } from "@/utils/constants";
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 export const getServerSideProps = (async (context: any) => {
-  const { params } = context;
+  const { params, query } = context;
   const { page } = params;
+  const { cate } = query;
+
   const response = await axios.get("http://localhost:3000/api/banners/list", {
-    params: { page, pageSize },
+    params: { page, pageSize, cate },
   });
   return {
     props: {
       response: response.data.data,
-      initPage: page,
+      initPage: Number(page),
       ...response.data,
+      cate,
     },
   };
 }) satisfies GetServerSideProps<{ response: any }>;
-function BannerList({ response, initPage, total, totalPage }: any) {
+function BannerList({ response, initPage, total, totalPage, cate }: any) {
   const router = useRouter();
   const [page, setPage] = useState(Number(initPage) || 1);
 
   const [list, setList] = useState(response || []);
   const getData = async (page: number) => {
     const response = await axios.get("/api/banners/list", {
-      params: { page, pageSize },
+      params: { page, pageSize, cate },
     });
     setList(response.data.data);
   };
@@ -53,8 +57,14 @@ function BannerList({ response, initPage, total, totalPage }: any) {
       window.location.reload();
     }
   };
+
+  useEffect(() => {
+    setList(response);
+    setPage(initPage);
+  }, [response, initPage]);
+
   return (
-    <Layout>
+    <AdminLayout>
       <SRLWrapper
         options={{
           thumbnails: {
@@ -63,7 +73,21 @@ function BannerList({ response, initPage, total, totalPage }: any) {
         }}
       >
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold mb-4">Banners List</h1>
+          <h1 className="text-2xl font-bold break-keep">Banners List</h1>
+          <div className="flex gap-[2px] flex-wrap">
+            {Object.values(bannerCategories).map((e, i) => {
+              return (
+                <Link
+                className={`inline-flex justify-center items-center ${e.id == cate ? "bg-blue-600" : "bg-gray-600"} text-white py-0 px-2 rounded h-[35px]`}
+                  key={i}
+                  href={`/admin/banner/list/1?cate=${e.id}`}
+                  prefetch
+                >
+                  {e.name}
+                </Link>
+              );
+            })}
+          </div>
           <Link
             href={"/admin/banner/write"}
             className="flex justify-center items-center bg-blue-600 text-white py-2 px-3 rounded h-[40px]"
@@ -127,7 +151,7 @@ function BannerList({ response, initPage, total, totalPage }: any) {
           onChange={handleChangePage}
         />
       </SRLWrapper>
-    </Layout>
+    </AdminLayout>
   );
 }
 

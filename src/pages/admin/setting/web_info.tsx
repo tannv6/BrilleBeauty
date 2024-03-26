@@ -1,5 +1,5 @@
 import React, { FormEvent, useState } from "react";
-import Layout from "../components/Layout";
+import AdminLayout from "../components/AdminLayout";
 import connectDB from "@/app/db";
 import { useRouter } from "next/router";
 import axios from "axios";
@@ -244,7 +244,7 @@ function WebInfo({ data }: any) {
     }
   }
   return (
-    <Layout>
+    <AdminLayout>
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold mb-4">Setting Web Infomation</h1>
       </div>
@@ -430,7 +430,7 @@ function WebInfo({ data }: any) {
           </button>
         </div>
       </form>
-    </Layout>
+    </AdminLayout>
   );
 }
 

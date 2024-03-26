@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import Dropdown from "@/components/Dropdown";
 import Layout from "@/components/Layout";
 import Image from "next/image";
