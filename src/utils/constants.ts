@@ -8,6 +8,20 @@ export const bannerCategories = {
   sub_category: { id: "sub_category", name: "Sub Category" },
 };
 
+export const interactionTypes = {
+  like: {
+    id: "like",
+    name: "like",
+  },
+};
+
+export const objectTypes = {
+  product: {
+    id: "product",
+    name: "product",
+  },
+};
+
 export const listMenu = [
   {
     id: 1,
