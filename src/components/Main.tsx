@@ -108,20 +108,7 @@ export default function Main({
         </div>
         <div className="grid grid-cols-4 gap-x-5 gap-y-[30px] mt-10">
           {bestPrd.list?.map((elm: any, idx: number) => {
-            return (
-              <ProductItem
-                key={idx}
-                id={elm.ProductID}
-                image={"/product_img01.png"}
-                name="Damage Care Perfect Serum Original (New) - 80ml"
-                oriPrice={"A$19.65"}
-                salePrice={"A$16.25"}
-                discount={"10%"}
-                star={"4.7"}
-                starCount={150}
-                heartCount={69}
-              />
-            );
+            return <ProductItem key={idx} info={elm} />;
           })}
         </div>
         {bestPrd.currentPage < bestPrd.totalPage && (
@@ -142,20 +129,7 @@ export default function Main({
         </div>
         <div className="grid grid-cols-4 gap-x-5 gap-y-[30px] mt-10">
           {newPrd.list?.map((elm: any, idx: number) => {
-            return (
-              <ProductItem
-                key={idx}
-                id={elm.ProductID}
-                image={"/product_img01.png"}
-                name="Damage Care Perfect Serum Original (New) - 80ml"
-                oriPrice={"A$19.65"}
-                salePrice={"A$16.25"}
-                discount={"10%"}
-                star={"4.7"}
-                starCount={150}
-                heartCount={69}
-              />
-            );
+            return <ProductItem key={idx} info={elm} />;
           })}
         </div>
         {newPrd.currentPage < newPrd.totalPage && (
@@ -185,20 +159,7 @@ export default function Main({
         </div>
         <div className="grid grid-cols-4 gap-x-5 gap-y-[30px] mt-10">
           {salePrd.list?.map((elm: any, idx: number) => {
-            return (
-              <ProductItem
-                key={idx}
-                id={elm.ProductID}
-                image={"/product_img01.png"}
-                name="Damage Care Perfect Serum Original (New) - 80ml"
-                oriPrice={"A$19.65"}
-                salePrice={"A$16.25"}
-                discount={"10%"}
-                star={"4.7"}
-                starCount={150}
-                heartCount={69}
-              />
-            );
+            return <ProductItem key={idx} info={elm} />;
           })}
         </div>
         {salePrd.currentPage < salePrd.totalPage && (

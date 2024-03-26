@@ -115,7 +115,7 @@ export default function Header({
         </div>
         <div className="header_right flex items-center">
           {session ? (
-            <button className="p-0 m-0 bg-[none]" onClick={() => signOut()}>
+            <button className="p-0 m-0 bg-[none]" onClick={() => signOut({ callbackUrl: '/', redirect:true })}>
               <div className="txt flex items-center">
                 <p className=" text-18 tracking-wide text-gray-700">
                   {status !== "loading" && "Logout"}

@@ -2,8 +2,24 @@ import Layout from "@/components/Layout";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
+import { GetServerSideProps } from "next";
+export const getServerSideProps = (async (context: any) => {
+  const session = await getSession(context);
 
+  if (session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+}) satisfies GetServerSideProps<{}>;
 export default function Login() {
   const [error, setError] = useState("");
   const router = useRouter();

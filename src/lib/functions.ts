@@ -62,3 +62,7 @@ export async function getWebSetting(cookies: any) {
     popup: result1.data.data,
   };
 }
+
+export const getDiscount = (init: number = 0, sell: number = 0) => {
+  return Math.round(((init - sell) / init) * 100);
+};

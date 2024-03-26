@@ -2,6 +2,7 @@ import connectDB from "@/app/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../auth/[...nextauth]";
+import { objectTypes } from "@/utils/constants";
 
 export const getInteractions = async (params: any) => {
   const {
@@ -14,13 +15,20 @@ export const getInteractions = async (params: any) => {
   } = params;
 
   const connect = await connectDB();
-  const totalQuery = `select * from interactions where
+
+  let joinQuery = "";
+
+  if (ObjectType === objectTypes.product.id) {
+    joinQuery = " inner join products t2 on t1.ObjectID = t2.ProductID "
+  }
+
+  const totalQuery = `select * from interactions t1 ${joinQuery} where
   InteractionType = ${
     InteractionType ? `'${InteractionType}'` : "InteractionType"
   }
   and ObjectType = ${ObjectType ? `'${ObjectType}'` : "ObjectType"}
   and ObjectID = ${ObjectID ? `'${ObjectID}'` : "ObjectID"}
-  and CustomerID = '${user?.id}'`;
+  and CustomerID = '${user?.id}' and t1.DeletedAt is null group by t1.ObjectID`;
 
   const [resultTotal]: any = await connect.execute(totalQuery);
 
@@ -32,13 +40,15 @@ export const getInteractions = async (params: any) => {
 
   const [result] = await connect.execute(query);
   connect.end();
-  return {
-    data: result,
-    total,
-    currentPage: page,
-    pageSize,
-    totalPage: Math.ceil(total / Number(pageSize)),
-  };
+  return JSON.parse(
+    JSON.stringify({
+      data: result,
+      total,
+      currentPage: page,
+      pageSize,
+      totalPage: Math.ceil(total / Number(pageSize)),
+    })
+  );
 };
 
 export default async function handle(

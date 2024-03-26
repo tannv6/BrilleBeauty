@@ -3,11 +3,20 @@ import Layout from "@/components/Layout";
 import ProductItem from "@/components/ProductItem";
 import Pagination from "@/components/Pagi";
 import ComboItem from "@/components/ComboItem";
-
-export default function ComboSearch() {
+import { parse } from "cookie";
+import { getWebSetting } from "@/lib/functions";
+export async function getServerSideProps({ params, query, req }: any) {
+  const cookies = parse(req.headers.cookie || "");
+  return {
+    props: {
+      ...(await getWebSetting(cookies)),
+    },
+  };
+}
+export default function ComboSearch({ ...props }) {
   return (
     <>
-      <Layout>
+      <Layout {...props}>
         <div id="main">
           <div className="w-full h-[340px] bg-[url('/sub_face/main_visual.png')]">
             <div className="flex justify-center flex-col gap-5 h-full pl-[415px]">
@@ -21,7 +30,9 @@ export default function ComboSearch() {
           </div>
           <div className="inner-container mt-[50px]">
             <div className="w-full flex justify-between mb-[60px]">
-              <p className="w-full text-[30px] text-[#ef426f] text-center font-bold">SALE COMBO</p>
+              <p className="w-full text-[30px] text-[#ef426f] text-center font-bold">
+                SALE COMBO
+              </p>
             </div>
             <div className="grid grid-cols-3 gap-x-5 gap-y-[30px]">
               <ComboItem

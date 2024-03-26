@@ -2,13 +2,16 @@ import Dropdown from "@/components/Dropdown";
 import Layout from "@/components/Layout";
 import MypageNav from "@/components/MypageNav";
 import SubNav from "@/components/SubNav";
+import { getWebSetting } from "@/lib/functions";
 import axios from "axios";
+import { parse } from "cookie";
 import { GetServerSideProps } from "next";
 import { getSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 export const getServerSideProps = (async (context: any) => {
+  const cookies = parse(context.req.headers.cookie || "");
   const session = await getSession(context);
   if (!session) {
     return {
@@ -22,10 +25,11 @@ export const getServerSideProps = (async (context: any) => {
   return {
     props: {
       countryList: result1.data.data,
+      ...(await getWebSetting(cookies)),
     },
   };
 }) satisfies GetServerSideProps<{ countryList: any }>;
-export default function MyAddresses({ countryList, isNew }: any) {
+export default function MyAddresses({ countryList, isNew, ...props }: any) {
   const router = useRouter();
   const [provinceList, setProvinceList] = useState([]);
   const [districtList, setDistrictList] = useState([]);
@@ -105,7 +109,7 @@ export default function MyAddresses({ countryList, isNew }: any) {
   }
   return (
     <>
-      <Layout>
+      <Layout {...props}>
         <div id="main">
           <SubNav title1="My Account" title2="My Addresses" />
           <div className="inner-container mt-[75px] mb-[135px]">
@@ -277,7 +281,10 @@ export default function MyAddresses({ countryList, isNew }: any) {
                   </tbody>
                 </table>
                 <div className="flex justify-end mt-[50px] gap-[10px]">
-                  <Link href={'/account/myaddresses'} className="w-[220px] h-[60px] rounded bg-[#cccccc] text-lg">
+                  <Link
+                    href={"/account/myaddresses"}
+                    className="w-[220px] h-[60px] rounded bg-[#cccccc] text-lg"
+                  >
                     Cancel
                   </Link>
                   <button
