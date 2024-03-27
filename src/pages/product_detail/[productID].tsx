@@ -138,6 +138,9 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
     )
   ));
 
+  const renderHTML = (htmlString :any) => {
+    return {__html: htmlString};
+  };
 
   return (
     <>
@@ -201,7 +204,8 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                 <div className="py-5">
                   <p className="flex">
                     <span className="text-lg min-w-[190px]">Product Highlight</span>
-                    <span className="text-lg text-[#757575]">{product.Description}</span>
+                    {/* <span className="text-lg text-[#757575]">{product.Description}</span> */}
+                    <span className="text-lg text-[#757575]"></span>
                   </p>
                 </div>
                 <hr />
@@ -253,9 +257,7 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
             <div id="product_in4" className="mt-[175px] mb-[60px]">
               <ProductDetailNav tab="1"></ProductDetailNav>
             </div>
-            <div className="flex justify-center">
-              <Image src="/product_detail/description_content_img.png" alt="" width={860} height={860} />
-            </div>
+            <div className="flex justify-center" dangerouslySetInnerHTML={renderHTML(product.Description)} />
             <div id="product_rvw" className="mt-[120px] mb-[60px]">
               <ProductDetailNav tab="2"></ProductDetailNav>
             </div>
