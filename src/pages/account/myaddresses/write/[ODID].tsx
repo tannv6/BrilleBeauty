@@ -67,7 +67,7 @@ export default function MyAddresses({ countryList, isNew, ...props }: any) {
   }
   const handleGetProvince = async (CountryID: number) => {
     const result1 = await axios.get(
-      `http://localhost:3000/api/adress/province`,
+      `/api/adress/province`,
       { params: { CountryID } }
     );
     setProvinceList(result1.data.data);
@@ -75,7 +75,7 @@ export default function MyAddresses({ countryList, isNew, ...props }: any) {
 
   const handleGetDistrict = async (ProvinceID: number) => {
     const result1 = await axios.get(
-      `http://localhost:3000/api/adress/district`,
+      `/api/adress/district`,
       { params: { ProvinceID } }
     );
     setDistrictList(result1.data.data);
@@ -83,7 +83,7 @@ export default function MyAddresses({ countryList, isNew, ...props }: any) {
 
   const handleGetCommune = async (DistrictID: number) => {
     const result1 = await axios.get(
-      `http://localhost:3000/api/adress/commune`,
+      `/api/adress/commune`,
       { params: { DistrictID } }
     );
     setCommuneList(result1.data.data);
