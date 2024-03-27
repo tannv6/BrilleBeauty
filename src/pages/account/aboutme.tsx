@@ -78,7 +78,6 @@ export default function AboutMe({ userInfo = {}, ...props }: any) {
     }
   }
   return (
-    <>
       <Layout {...props}>
         <div id="main">
           <SubNav title1="My Account" title2="About Me" />
@@ -235,6 +234,5 @@ export default function AboutMe({ userInfo = {}, ...props }: any) {
           </div>
         </div>
       </Layout>
-    </>
   );
 }

@@ -47,7 +47,6 @@ export default function MyAddresses({
   ...props
 }: any) {
   return (
-    <>
       <Layout {...props}>
         <div id="main">
           <SubNav title1="My Account" title2="My Addresses" />
@@ -101,7 +100,7 @@ export default function MyAddresses({
                             {e.IsDefault ? "Yes" : "No"}
                           </td>
                           <td className="py-3 px-4 text-left">
-                            {moment(e.CreatedAt).format("yyyy-MM-dd")}
+                            {moment(e.CreatedAt).format("yyyy-MM-DD")}
                           </td>
                         </tr>
                       );
@@ -119,6 +118,5 @@ export default function MyAddresses({
           </div>
         </div>
       </Layout>
-    </>
   );
 }

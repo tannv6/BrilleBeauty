@@ -13,9 +13,12 @@ import Pagi from "@/components/Pagi";
 import ProductRelated from "@/components/ProductRelated";
 import Link from "next/link";
 import axios from "axios";
+import { parse } from "cookie";
+import { getWebSetting } from "@/lib/functions";
 
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
-export const getServerSideProps = async (context: { params: any, query: any }) => {
+export const getServerSideProps = async (context: { params: any, query: any, req: any }) => {
+  const cookies = parse(context.req.headers.cookie || "");
   const { params, query } = context;
   const { productID } = params;
   const productDetail = await axios.get(
@@ -44,11 +47,12 @@ export const getServerSideProps = async (context: { params: any, query: any }) =
       product: productDetail.data,
       productRelate: response.data,
       ...response.data,
+      ...(await getWebSetting(cookies)),
     },
   };
 };
 
-export default function Face({ product, optionTypes, optionTypes2, productRelate }: any) {
+export default function Face({ product, optionTypes, optionTypes2, productRelate,...props }: any) {
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   // const [NumProduct, setNumProduct] = useState(1);
   const [isHeart, setIsHeart] = useState<boolean>(true);
@@ -140,8 +144,7 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
 
 
   return (
-    <>
-      <Layout>
+      <Layout {...props}>
         <div id="main">
           <SubNav title1={product.ProductName}/>
           <div className="inner-container mt-[70px] mb-[60px]">
@@ -342,6 +345,5 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
           </div>
         </div>
       </Layout>
-    </>
   );
 }

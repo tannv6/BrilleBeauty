@@ -15,7 +15,6 @@ export async function getServerSideProps({ params, query, req }: any) {
 }
 export default function ComboSearch({ ...props }) {
   return (
-    <>
       <Layout {...props}>
         <div id="main">
           <div className="w-full h-[340px] bg-[url('/sub_face/main_visual.png')]">
@@ -100,6 +99,5 @@ export default function ComboSearch({ ...props }) {
           </div>
         </div>
       </Layout>
-    </>
   );
 }

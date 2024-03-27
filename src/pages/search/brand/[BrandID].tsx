@@ -51,7 +51,6 @@ export default function BrandSearch({ brand, products, ...props }: any) {
   };
 
   return (
-    <>
       <Layout {...props}>
         <div id="main">
           <div className="w-full h-[340px] bg-[url('/sub_face/main_visual.png')]">
@@ -100,6 +99,5 @@ export default function BrandSearch({ brand, products, ...props }: any) {
           </div>
         </div>
       </Layout>
-    </>
   );
 }

@@ -6,7 +6,6 @@ import SubNav from "@/components/SubNav";
 
 export default function Search() {
   return (
-    <>
       <Layout>
         <div id="main">
           <SubNav title1="Product_search"></SubNav>
@@ -28,6 +27,5 @@ export default function Search() {
           </div>
         </div>
       </Layout>
-    </>
   );
 }

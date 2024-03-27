@@ -17,7 +17,6 @@ export async function getServerSideProps({ params, query, req }: any) {
 }
 export default function ReviewList({ ...props }) {
   return (
-    <>
       <Layout {...props}>
         <div id="main">
           <SubNav title1="Review Board"></SubNav>
@@ -48,6 +47,5 @@ export default function ReviewList({ ...props }) {
           </div>
         </div>
       </Layout>
-    </>
   );
 }

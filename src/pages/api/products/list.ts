@@ -33,7 +33,7 @@ export default async function handle(
       cate_condtion = ` and s1.CategoryID = '${cate_id}'`;
     }
     const totalQuery = `SELECT s1.*, s2.CategoryName FROM products s1 
-      inner join categories s2 on s1.CategoryID = s2.CategoryID
+      left join categories s2 on s1.CategoryID = s2.CategoryID
       ${br_join}
       WHERE s1.DeletedAt IS NULL ${br_condtion} ${cate_condtion} ${order}`;
 

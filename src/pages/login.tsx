@@ -4,7 +4,10 @@ import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 import { getSession, signIn } from "next-auth/react";
 import { GetServerSideProps } from "next";
+import { parse } from "cookie";
+import { getWebSetting } from "@/lib/functions";
 export const getServerSideProps = (async (context: any) => {
+  const cookies = parse(context.req.headers.cookie || "");
   const session = await getSession(context);
 
   if (session) {
@@ -17,10 +20,10 @@ export const getServerSideProps = (async (context: any) => {
   }
 
   return {
-    props: {},
+    props: { ...(await getWebSetting(cookies)) },
   };
 }) satisfies GetServerSideProps<{}>;
-export default function Login() {
+export default function Login({ ...props }) {
   const [error, setError] = useState("");
   const router = useRouter();
 
@@ -59,8 +62,7 @@ export default function Login() {
   }
 
   return (
-    <>
-      <Layout>
+      <Layout {...props}>
         <div className="inner-530 mt-[95px] mb-[375px]">
           <div className="flex mb-[35px]">
             <button
@@ -151,6 +153,5 @@ export default function Login() {
           </form>
         </div>
       </Layout>
-    </>
   );
 }

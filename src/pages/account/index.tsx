@@ -28,7 +28,6 @@ export const getServerSideProps = (async (context: any) => {
 }) satisfies GetServerSideProps<{}>;
 export default function Account({ ...props }) {
   return (
-    <>
       <Layout {...props}>
         <div id="main">
           <SubNav title1="My Account" />
@@ -89,6 +88,5 @@ export default function Account({ ...props }) {
           </div>
         </div>
       </Layout>
-    </>
   );
 }

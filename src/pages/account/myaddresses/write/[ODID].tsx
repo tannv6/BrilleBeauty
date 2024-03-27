@@ -108,7 +108,6 @@ export default function MyAddresses({ countryList, isNew, ...props }: any) {
     }
   }
   return (
-    <>
       <Layout {...props}>
         <div id="main">
           <SubNav title1="My Account" title2="My Addresses" />
@@ -299,6 +298,5 @@ export default function MyAddresses({ countryList, isNew, ...props }: any) {
           </div>
         </div>
       </Layout>
-    </>
   );
 }

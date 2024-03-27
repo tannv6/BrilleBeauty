@@ -18,7 +18,6 @@ export async function getServerSideProps({ params, query, req }: any) {
 }
 export default function ReviewDetail({ ...props }) {
   return (
-    <>
       <Layout {...props}>
         <div id="main">
           <SubNav title1="Product Review"></SubNav>
@@ -118,6 +117,5 @@ export default function ReviewDetail({ ...props }) {
           </div>
         </div>
       </Layout>
-    </>
   );
 }

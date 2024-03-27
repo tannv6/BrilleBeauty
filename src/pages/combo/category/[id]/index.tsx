@@ -33,7 +33,6 @@ export default function ComboSearch({ combo, cateName, page, total, totalPage }:
     router.push(router, undefined, { scroll: false });
   };
   return (
-    <>
       <Layout>
         <div id="main">
           <div className="w-full h-[340px] bg-[url('/sub_face/main_visual.png')]">
@@ -79,6 +78,5 @@ export default function ComboSearch({ combo, cateName, page, total, totalPage }:
           </div>
         </div>
       </Layout>
-    </>
   );
 }

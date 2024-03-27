@@ -3,7 +3,6 @@ import Dropdown from "@/components/Dropdown";
 import axios from "axios";
 import { useRouter } from "next/router";
 import DatePicker from "react-datepicker";
-import he from "he";
 import "react-datepicker/dist/react-datepicker.css";
 import AdminLayout from "../../components/AdminLayout";
 import Checkbox from "../../components/Checkbox";
@@ -11,8 +10,8 @@ import Link from "next/link";
 import Input from "../../components/Input";
 import moment from "moment";
 import Image from "next/image";
-import { SRLWrapper } from "simple-react-lightbox";
 import dynamic from "next/dynamic";
+import he from "he";
 
 const CustomEditor = dynamic(
   () => {
@@ -86,14 +85,16 @@ function ProductWrite({
     InitPrice: productDetail?.InitPrice || "",
     SellPrice: productDetail?.SellPrice || "",
     Description: productDetail?.Description || "",
-    SaleDate: moment(productDetail?.SaleDate).format("yyyy-MM-DD HH:mm:ss"),
-    SaleEndDate: moment(productDetail?.SaleEndDate).format(
-      "yyyy-MM-DD HH:mm:ss"
-    ),
+    SaleDate: productDetail?.SaleDate
+      ? moment(productDetail?.SaleDate).format("yyyy-MM-DD HH:mm:ss")
+      : "",
+    SaleEndDate: productDetail?.SaleEndDate
+      ? moment(productDetail?.SaleEndDate).format("yyyy-MM-DD HH:mm:ss")
+      : "",
     PriceOnSaleDate: productDetail?.PriceOnSaleDate || "",
-    IsBest: productDetail?.IsBest,
-    IsBigSale: productDetail?.IsBigSale,
-    IsNew: productDetail?.IsNew,
+    IsBest: productDetail?.IsBest || 0,
+    IsBigSale: productDetail?.IsBigSale || 0,
+    IsNew: productDetail?.IsNew || 0,
     ProductImage: productDetail?.ProductImage || "",
     CategoryID: productDetail?.CategoryID,
     CategoryLevel: productDetail?.CategoryLevel,
@@ -114,8 +115,8 @@ function ProductWrite({
     CategoryID3:
       productDetail?.CategoryLevel === 3 ? productDetail?.CategoryID : "0",
     Options: productDetail?.Options || [],
-    PotID: productDetail?.PotID || "0",
-    BrandID: productDetail?.BrandID || "0",
+    PotID: productDetail?.PotID || null,
+    BrandID: productDetail?.BrandID || null,
     DelImage: "",
     DetailImages: productDetail?.Images || [],
   });
@@ -123,7 +124,8 @@ function ProductWrite({
   const [detailImage, setDetailImage] = useState<any[]>([]);
 
   const handleChangeImage = (e: any) => {
-    setDetailImage([...detailImage, e.target.files[0]]);
+    e.target.files?.length > 0 &&
+      setDetailImage([...detailImage, ...e.target.files]);
     e.target.value = "";
   };
 
@@ -169,7 +171,7 @@ function ProductWrite({
       if (key === "Options") {
         formData.append(key, JSON.stringify(value));
       } else {
-        formData.append(key, value);
+        value && formData.append(key, value);
       }
     }
     detailImage.forEach((e) => {
@@ -331,45 +333,55 @@ function ProductWrite({
                   </th>
                   <td className="px-6 py-2" colSpan={3}>
                     <div className="flex items-center gap-1 flex-wrap">
-                      <DatePicker
-                        showIcon
-                        dateFormat={"yyyy-MM-dd HH:mm:ss"}
-                        className="inline-flex items-center border h-[35px] px-2 w-[180px] ouline-0"
-                        calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
-                        selected={
-                          product.SaleDate
-                            ? new Date(product.SaleDate)
-                            : new Date()
-                        }
-                        onChange={(date) =>
-                          handleChange({
-                            target: {
-                              name: "SaleDate",
-                              value: moment(date).format("yyyy-MM-DD HH:mm:ss"),
-                            },
-                          })
-                        }
-                      />
+                      <div>
+                        <DatePicker
+                          showIcon
+                          icon={<i className="far fa-calendar-alt"></i>}
+                          toggleCalendarOnIconClick
+                          dateFormat={"yyyy-MM-dd HH:mm:ss"}
+                          className="outline-0 inline-flex items-center border h-[35px] px-2 w-[180px] ouline-0"
+                          calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
+                          selected={
+                            product.SaleDate ? new Date(product.SaleDate) : null
+                          }
+                          onChange={(date) =>
+                            handleChange({
+                              target: {
+                                name: "SaleDate",
+                                value: moment(date).format(
+                                  "yyyy-MM-DD HH:mm:ss"
+                                ),
+                              },
+                            })
+                          }
+                        />
+                      </div>
                       ~
-                      <DatePicker
-                        showIcon
-                        dateFormat={"yyyy-MM-dd HH:mm:ss"}
-                        className="inline-flex border h-[35px] px-2 w-[180px]"
-                        calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
-                        selected={
-                          product.SaleEndDate
-                            ? new Date(product.SaleEndDate)
-                            : new Date()
-                        }
-                        onChange={(date) =>
-                          handleChange({
-                            target: {
-                              name: "SaleEndDate",
-                              value: moment(date).format("yyyy-MM-DD HH:mm:ss"),
-                            },
-                          })
-                        }
-                      />
+                      <div>
+                        <DatePicker
+                          showIcon
+                          icon={<i className="far fa-calendar-alt"></i>}
+                          toggleCalendarOnIconClick
+                          dateFormat={"yyyy-MM-dd HH:mm:ss"}
+                          className="outline-0 inline-flex border h-[35px] px-2 w-[180px]"
+                          calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
+                          selected={
+                            product.SaleEndDate
+                              ? new Date(product.SaleEndDate)
+                              : null
+                          }
+                          onChange={(date) =>
+                            handleChange({
+                              target: {
+                                name: "SaleEndDate",
+                                value: moment(date).format(
+                                  "yyyy-MM-DD HH:mm:ss"
+                                ),
+                              },
+                            })
+                          }
+                        />
+                      </div>
                       <div className="flex items-center gap-1">
                         Price
                         <input
@@ -590,6 +602,7 @@ function ProductWrite({
                     <input
                       id="file1"
                       type="file"
+                      multiple
                       hidden
                       onChange={handleChangeImage}
                     />
@@ -597,7 +610,7 @@ function ProductWrite({
                       className="inline-block cursor-pointer border border-gray-400 rounded p-2"
                       htmlFor="file1"
                     >
-                      Choose File
+                      Choose Files
                     </label>
                     <div className="flex flex-wrap gap-3 mt-3">
                       {detailImage.map((e: File, i) => {
@@ -658,6 +671,7 @@ function ProductWrite({
                     Description
                   </th>
                   <td className="px-6 py-2" colSpan={3}>
+                    {he.decode(productDetail?.Description || "")}
                     <CustomEditor
                       name="Description"
                       value={he.decode(productDetail?.Description || "")}

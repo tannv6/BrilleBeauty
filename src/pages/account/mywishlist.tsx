@@ -47,7 +47,6 @@ export default function MyWishList({ wishList, ...props }: any) {
     router.replace(router.asPath);
   };
   return (
-    <>
       <Layout {...props}>
         <div id="main">
           <SubNav title1="My Account" title2="My Wish List" />
@@ -121,6 +120,5 @@ export default function MyWishList({ wishList, ...props }: any) {
           </div>
         </div>
       </Layout>
-    </>
   );
 }

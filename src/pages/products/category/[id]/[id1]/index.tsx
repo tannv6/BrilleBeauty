@@ -61,7 +61,6 @@ export default function Category({
     router.push(router, undefined, { scroll: false });
   };
   return (
-    <>
       <Layout {...props}>
         <div id="main">
           <SubVisual
@@ -132,6 +131,5 @@ export default function Category({
           </div>
         </div>
       </Layout>
-    </>
   );
 }

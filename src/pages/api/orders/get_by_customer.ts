@@ -6,8 +6,10 @@ export const getOrderByCustomer = async (params: any) => {
   const { page = 1, pageSize = 1000, user } = params;
 
   const connect = await connectDB();
-  const totalQuery = `select * from orders where DeletedAt is null
-                        and CustomerID = '${user?.id}' order by OrderID desc`;
+  const totalQuery = `select t1.*, sum(t2.Subtotal) as totalPrice from orders t1
+                      left join orderdetails t2 on t1.OrderID = t2.OrderID
+                      where t1.DeletedAt is null
+                      and t1.CustomerID = '${user?.id}' order by t1.OrderID desc`;
 
   const [resultTotal]: any = await connect.execute(totalQuery);
 
@@ -18,10 +20,25 @@ export const getOrderByCustomer = async (params: any) => {
     ` limit ${(Number(page) - 1) * Number(pageSize)}, ${Number(pageSize)};`;
 
   const [result] = await connect.execute(query);
+
+  const orders = [];
+
+  if (Array.isArray(result)) {
+    for (let index = 0; index < result.length; index++) {
+      const element: any = result[index];
+      const queryProduct = `select t1.*, t2.ProductName, t2.ProductImage, t3.PoName, t3.PoID from orderdetails t1 
+      left join products t2 on t1.ProductID = t2.ProductID
+      left join product_options t3 on t1.OptionID = t3.PoID;`;
+      const [result1] = await connect.execute(queryProduct);
+      element["products"] = result1;
+      orders.push(element);
+    }
+  }
+
   connect.end();
   return JSON.parse(
     JSON.stringify({
-      data: result,
+      data: orders,
       total,
       currentPage: page,
       pageSize,

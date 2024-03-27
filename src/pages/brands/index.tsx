@@ -6,7 +6,6 @@ import Pagination from "@/components/Pagi";
 
 export default function Brands() {
   return (
-    <>
       <Layout>
         <div id="main">
           <SubVisual title1="Brands" title2="Sunscreen"></SubVisual>
@@ -66,6 +65,5 @@ export default function Brands() {
           </div>
         </div>
       </Layout>
-    </>
   );
 }

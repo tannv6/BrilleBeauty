@@ -43,7 +43,7 @@ function Dropdown({
         </span>
       </button>
       <ul
-        className={`dropdown-menu absolute text-gray-700 pt-1 min-w-full ${
+        className={`max-h-[200px] overflow-auto dropdown-menu absolute text-gray-700 pt-1 min-w-full ${
           isOpen ? "" : "hidden"
         }`}
       >

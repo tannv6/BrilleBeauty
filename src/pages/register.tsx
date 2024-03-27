@@ -3,8 +3,20 @@ import axios from "axios";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, use, useState } from "react";
+import { getWebSetting } from "@/lib/functions";
+import { parse } from "cookie";
+import { GetServerSideProps } from "next";
+import ReactDatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import moment from "moment";
+export const getServerSideProps = (async (context: any) => {
+  const cookies = parse(context.req.headers.cookie || "");
 
-export default function Register() {
+  return {
+    props: { ...(await getWebSetting(cookies)) },
+  };
+}) satisfies GetServerSideProps<{}>;
+export default function Register({ ...props }) {
   const [error, setError] = useState("");
   const router = useRouter();
 
@@ -81,8 +93,7 @@ export default function Register() {
     }
   }
   return (
-    <>
-      <Layout>
+      <Layout {...props}>
         <div className="inner-530 mt-[95px] mb-[375px]">
           <div className="flex mb-[35px]">
             <Link
@@ -204,13 +215,31 @@ export default function Register() {
                 Date Of Birth
               </label>
               <div className="mt-2">
-                <input
+                {/* <input
                   type="text"
                   name="birth"
                   id="birth"
                   value={account.birth}
                   onChange={handleChangeAccount}
                   className="block w-full rounded-md border outline-none border-gray-200 bg-transparent py-3 pl-2 text-[16px] placeholder:text-[#999] transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-f04b76 date"
+                /> */}
+                <ReactDatePicker
+                  showIcon
+                  wrapperClassName="w-full"
+                  icon={<i className="far fa-calendar-alt"></i>}
+                  toggleCalendarOnIconClick
+                  dateFormat={"yyyy-MM-dd"}
+                  className="block w-full  h-[50px] rounded-md border outline-none border-gray-200 bg-transparent py-3 pl-2 text-[16px] placeholder:text-[#999] transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-f04b76 date"
+                  calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
+                  selected={account.birth ? new Date(account.birth) : null}
+                  onChange={(date) =>
+                    handleChangeAccount({
+                      target: {
+                        name: "birth",
+                        value: moment(date).format("yyyy-MM-DD"),
+                      },
+                    })
+                  }
                 />
               </div>
             </div>
@@ -265,6 +294,5 @@ export default function Register() {
           </form>
         </div>
       </Layout>
-    </>
   );
 }
