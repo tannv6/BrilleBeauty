@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import Layout from "@/components/Layout";
 import SubNav from "@/components/SubNav";
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -13,6 +13,7 @@ import Pagi from "@/components/Pagi";
 import ProductRelated from "@/components/ProductRelated";
 import Link from "next/link";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 export const getServerSideProps = async (context: { params: any, query: any }) => {
@@ -49,13 +50,15 @@ export const getServerSideProps = async (context: { params: any, query: any }) =
 };
 
 export default function Face({ product, optionTypes, optionTypes2, productRelate }: any) {
+
+  const router = useRouter();
+
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   // const [NumProduct, setNumProduct] = useState(1);
   const [isHeart, setIsHeart] = useState<boolean>(true);
   const [NumProduct, setNumProduct] = useState<{ [key: number]: number }>({});
 
   const selectedOptionType = optionTypes.find((optionType: any) => optionType.PotID === product.PotID);
-
 
   const [dropdownState, setDropdownState] = useState({
     activeItem: product.ProductID || (optionTypes2.length > 0 ? optionTypes2[0]?.ProductID : null),
@@ -81,6 +84,8 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
         ...prevNumProducts,
         [id]: 1, 
       }));
+
+      
     }
   };
 
@@ -116,6 +121,39 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
     }
     return total;
   }, 0);
+
+  const addCartOption = Object.keys(selectedOptions).map((optionId) => {
+    if (selectedOptions[parseInt(optionId)]) {
+      const option = optionTypes2.find((option: any) => option.PoID === parseInt(optionId));
+      const optionElement = { 
+        "PoID" : option.PoID,
+        "PoNum" :  NumProduct[option.PoID] || 1
+      };
+      return optionElement;
+    }
+  });
+
+  
+  async function handleAddCart() {
+
+    let formData = new FormData();
+
+    formData.append("option", JSON.stringify(addCartOption));   
+   
+    const dataToSend = {
+      option: JSON.stringify(addCartOption),
+    };
+  
+    axios.post('/cart', dataToSend)
+      .then(response => {
+        console.log('Data sent successfully:', response.data);
+        router.push('/cart');
+      })
+      .catch(error => {
+        console.error('Error sending data:', error);
+      });
+
+  }
 
   const optionElements = optionTypes2.map((option: any) => (
     selectedOptions[option.PoID] && (
@@ -243,8 +281,8 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                       className={`w-14 h-14 shrink-0 rounded ${isHeart ? "bg-[url('/product_detail/product_heart_on_btn.png')]" : "bg-[url('/product_detail/product_heart_btn.png')]"}`}
                       onClick={() => { setIsHeart(!isHeart) }}
                     >
-                    </button>
-                    <button className="basis-full rounded border border-[#252525]">Add To Cart</button>
+                    </button>                 
+                    <button type="button" onClick={() => handleAddCart()} className="basis-full rounded border border-[#252525]">Add To Cart</button>
                     <button className="basis-full rounded bg-[#ef426f] text-[#ffffff]">Buy Now</button>
                   </div>
                 </div>
