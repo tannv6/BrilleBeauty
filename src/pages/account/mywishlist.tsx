@@ -11,6 +11,7 @@ import { Product } from "@/lib/types";
 import { useRouter } from "next/router";
 import { parse } from "cookie";
 import { getWebSetting } from "@/lib/functions";
+import Link from "next/link";
 export const getServerSideProps = (async (context: any) => {
   const cookies = parse(context.req.headers.cookie || "");
   const session = await getSession(context);
@@ -18,7 +19,7 @@ export const getServerSideProps = (async (context: any) => {
   if (!session) {
     return {
       redirect: {
-        destination: "/login",
+        destination: "/member/login",
         permanent: false,
       },
     };
@@ -76,7 +77,7 @@ export default function MyWishList({ wishList, ...props }: any) {
                       return (
                         <tr className="border-b" key={i}>
                           <td className="py-5">
-                            <div className="flex items-center gap-[25px]">
+                            <Link href={`/product_detail/${e.ProductID}`} className="flex items-center gap-[25px]">
                               <Image
                                 className="rounded"
                                 src={`${CDN_URL}${e.ProductImage}`}
@@ -87,7 +88,7 @@ export default function MyWishList({ wishList, ...props }: any) {
                               <div className="flex flex-col pr-8">
                                 <p>{e.ProductName}</p>
                               </div>
-                            </div>
+                            </Link>
                           </td>
                           <td className="py-5 text-center">{e.Quantity}</td>
                           <td className="py-5 text-xl font-bold text-center">

@@ -132,7 +132,7 @@ export default function Header({
               </div>
             </button>
           ) : (
-            <Link href={"/login"}>
+            <Link href={"/member/login"}>
               <div className="txt flex items-center">
                 <p className=" text-18 tracking-wide text-gray-700">
                   {status !== "loading" && "Login"}
@@ -155,22 +155,22 @@ export default function Header({
           <span className="m-0 mx-5">|</span>
           <div className="ico flex items-center custom-gap">
             <div className="ico_des">
-              <Image
-                src="/heart_ic.png"
-                alt=""
-                width={41}
-                height={40}
-                className="w-10 h-10"
-              />
+              <Link href={`/account/mywishlist`} className="w-[41px] h-[40px] block relative">
+                <Image
+                  src="/heart_ic.png"
+                  alt=""
+                  fill
+                  className="object-cover"
+                />
+              </Link>
             </div>
             <div className="ico_des relative">
-              <Link href="/cart">
+              <Link href="/cart" className="w-[41px] h-[40px] block relative">
                 <Image
                   src="/cart_ic.png"
                   alt=""
-                  width={41}
-                  height={40}
-                  className="w-10 h-10"
+                  fill
+                  className="object-cover"
                 />
                 <p className="absolute bottom-[3px] right-[10px] text-[#f15981] text-[13px] font-bold">
                   3

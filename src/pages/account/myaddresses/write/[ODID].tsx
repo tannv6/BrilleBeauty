@@ -16,7 +16,7 @@ export const getServerSideProps = (async (context: any) => {
   if (!session) {
     return {
       redirect: {
-        destination: "/login",
+        destination: "/member/login",
         permanent: false,
       },
     };
@@ -282,7 +282,7 @@ export default function MyAddresses({ countryList, isNew, ...props }: any) {
                 <div className="flex justify-end mt-[50px] gap-[10px]">
                   <Link
                     href={"/account/myaddresses"}
-                    className="w-[220px] h-[60px] rounded bg-[#cccccc] text-lg"
+                    className="w-[220px] h-[60px] rounded bg-[#cccccc] text-lg flex justify-center items-center"
                   >
                     Cancel
                   </Link>

@@ -89,7 +89,7 @@ export default function Register({ ...props }) {
     const response = await axios.post("/api/register/write", formData);
 
     if (response.status === 201) {
-      router.push("/login");
+      router.push("/member/login");
     }
   }
   return (
@@ -97,7 +97,7 @@ export default function Register({ ...props }) {
         <div className="inner-530 mt-[95px] mb-[375px]">
           <div className="flex mb-[35px]">
             <Link
-              href={"/login"}
+              href={"/member/login"}
               className={`w-full h-[54px] border border-[#dbdbdb] flex items-center justify-center text-[18px] text-[#999] border-b-[#252525] font-bold`}
             >
               Login

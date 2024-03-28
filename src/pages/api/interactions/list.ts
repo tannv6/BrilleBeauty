@@ -22,7 +22,7 @@ export const getInteractions = async (params: any) => {
     joinQuery = " inner join products t2 on t1.ObjectID = t2.ProductID "
   }
 
-  const totalQuery = `select * from interactions t1 ${joinQuery} where
+  const totalQuery = `select t2.*, count(t2.ProductID) from interactions t1 ${joinQuery} where
   InteractionType = ${
     InteractionType ? `'${InteractionType}'` : "InteractionType"
   }
