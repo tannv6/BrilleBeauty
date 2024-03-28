@@ -3,7 +3,7 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 export const authOptions: any = {
   pages: {
-    signIn: "/login",
+    signIn: "/member/login",
   },
   session: {
     strategy: "jwt",

@@ -78,26 +78,35 @@ export default function Main({
 
   return (
     <div className="container-main">
-      <div className={`main_visual w-full h-[663px] overflow-hidden relative`}>
+      <Link
+        href={main_visual?.BannerLink ? main_visual?.BannerLink : ""}
+        target={main_visual?.OpenNewTab == 1 ? "_blank" : ""}
+        className={`main_visual w-full h-[663px] overflow-hidden relative block`}
+      >
         <Image
           src={`${CDN_URL}${main_visual?.BannerImg || ""}`}
           alt=""
           className="object-cover"
           fill
         />
-      </div>
+      </Link>
       <div className="inner-container">
         <div className="main_banner flex custom-gap-30 my-6">
           {after_main_visual?.map((e: any, i: number) => {
             return (
-              <div className="banner_img" key={i}>
+              <Link
+                href={e?.BannerLink ? e?.BannerLink : ""}
+                target={e?.OpenNewTab == 1 ? "_blank" : ""}
+                className="banner_img w-[585px] h-[170px] relative block"
+                key={i}
+              >
                 <Image
                   src={`${CDN_URL}${e?.BannerImg || ""}`}
                   alt=""
-                  width={585}
-                  height={170}
+                  fill
+                  className="object-cover"
                 />
-              </div>
+              </Link>
             );
           })}
         </div>
@@ -108,20 +117,7 @@ export default function Main({
         </div>
         <div className="grid grid-cols-4 gap-x-5 gap-y-[30px] mt-10">
           {bestPrd.list?.map((elm: any, idx: number) => {
-            return (
-              <ProductItem
-                key={idx}
-                id={elm.ProductID}
-                image={"/product_img01.png"}
-                name="Damage Care Perfect Serum Original (New) - 80ml"
-                oriPrice={"A$19.65"}
-                salePrice={"A$16.25"}
-                discount={"10%"}
-                star={"4.7"}
-                starCount={150}
-                heartCount={69}
-              />
-            );
+            return <ProductItem key={idx} info={elm} />;
           })}
         </div>
         {bestPrd.currentPage < bestPrd.totalPage && (
@@ -142,20 +138,7 @@ export default function Main({
         </div>
         <div className="grid grid-cols-4 gap-x-5 gap-y-[30px] mt-10">
           {newPrd.list?.map((elm: any, idx: number) => {
-            return (
-              <ProductItem
-                key={idx}
-                id={elm.ProductID}
-                image={"/product_img01.png"}
-                name="Damage Care Perfect Serum Original (New) - 80ml"
-                oriPrice={"A$19.65"}
-                salePrice={"A$16.25"}
-                discount={"10%"}
-                star={"4.7"}
-                starCount={150}
-                heartCount={69}
-              />
-            );
+            return <ProductItem key={idx} info={elm} />;
           })}
         </div>
         {newPrd.currentPage < newPrd.totalPage && (
@@ -169,15 +152,18 @@ export default function Main({
             </button>
           </div>
         )}
-        <div className="my-[80px]">
+        <Link
+          href={main_middle?.BannerLink ? main_middle?.BannerLink : ""}
+          target={main_middle?.OpenNewTab == 1 ? "_blank" : ""}
+          className="my-[80px] w-[1201px] h-[140px] relative block"
+        >
           <Image
             src={`${CDN_URL}${main_middle?.BannerImg || ""}`}
             alt=""
             className="object-cover"
-            width={1201}
-            height={140}
+            fill
           />
-        </div>
+        </Link>
         <div className="main_ttl text-center">
           <p className="text-[22px] tracking-wide leading-8 uppercase text-gray-700 font-bold mb-2.5">
             BIG SALE
@@ -185,20 +171,7 @@ export default function Main({
         </div>
         <div className="grid grid-cols-4 gap-x-5 gap-y-[30px] mt-10">
           {salePrd.list?.map((elm: any, idx: number) => {
-            return (
-              <ProductItem
-                key={idx}
-                id={elm.ProductID}
-                image={"/product_img01.png"}
-                name="Damage Care Perfect Serum Original (New) - 80ml"
-                oriPrice={"A$19.65"}
-                salePrice={"A$16.25"}
-                discount={"10%"}
-                star={"4.7"}
-                starCount={150}
-                heartCount={69}
-              />
-            );
+            return <ProductItem key={idx} info={elm} />;
           })}
         </div>
         {salePrd.currentPage < salePrd.totalPage && (

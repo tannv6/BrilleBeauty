@@ -22,9 +22,9 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       SellPrice,
       Description,
       SaleDate,
-      IsBest = 0,
-      IsBigSale = 0,
-      IsNew = 0,
+      IsBest,
+      IsBigSale,
+      IsNew,
       CategoryID1,
       CategoryID2,
       CategoryID3,
@@ -36,7 +36,12 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       BrandID,
     } = fields;
 
-    const des = he.encode(Description?.[0] || "");
+    const des = he.encode(he.decode(Description?.[0] || ""));
+
+    const CategoryID =
+      Number(CategoryID3?.[0]) ||
+      Number(CategoryID2?.[0]) ||
+      Number(CategoryID1?.[0]);
 
     let ProductImage = "";
 
@@ -45,22 +50,20 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     }
     const connect = await connectDB();
     const query = `UPDATE products SET 
-    ProductName = '${ProductName}', 
-    InitPrice = '${InitPrice}', 
-    SellPrice = '${SellPrice}',
+    ProductName = '${ProductName?.[0] || ""}', 
+    InitPrice = '${InitPrice?.[0] || 0}', 
+    SellPrice = '${SellPrice?.[0] || 0}',
     Description = '${des}', 
-    SaleDate = '${SaleDate}', 
-    SaleEndDate = '${SaleEndDate}',
-    PriceOnSaleDate = '${PriceOnSaleDate || 0}',
-    IsBest = ${IsBest}, 
-    IsBigSale = ${IsBigSale}, 
-    IsNew = ${IsNew},
+    SaleDate = ${SaleDate?.[0] ? `'${SaleDate}'` : "SaleDate"}, 
+    SaleEndDate = ${SaleEndDate?.[0] ? `'${SaleEndDate}'` : "SaleEndDate"},
+    PriceOnSaleDate = '${PriceOnSaleDate?.[0] || 0}',
+    IsBest = ${IsBest?.[0] || 0}, 
+    IsBigSale = ${IsBigSale?.[0] || 0}, 
+    IsNew = ${IsNew?.[0] || 0},
     ProductImage = ${ProductImage ? `'${ProductImage}'` : "ProductImage"},
-    CategoryID = '${
-      Number(CategoryID3) || Number(CategoryID2) || Number(CategoryID1)
-    }',
-    PotID = '${PotID}',
-    BrandID = '${BrandID}',
+    CategoryID = ${CategoryID ? `'${CategoryID}'` : "CategoryID"},
+    PotID = ${PotID?.[0] ? `'${PotID}'` : "PotID"},
+    BrandID = ${BrandID?.[0] ? `'${BrandID}'` : "BrandID"},
     UpdatedAt = now()
     WHERE ProductID = '${ProductID}'`;
 

@@ -127,7 +127,7 @@ function Layout({ children, webSetting, banner_top, popup }: Props) {
         {children}
         <MainPopup popup={popup} />
 
-        <Footer />
+        <Footer webSetting={webSetting} />
       </AuthProvider>
     </>
   );

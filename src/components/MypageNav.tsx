@@ -1,3 +1,4 @@
+import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from 'next/navigation'
 
@@ -23,7 +24,7 @@ function MypageNav({ }: any) {
                   <Link href="/account/mywishlist" className={`${pathname === '/account/mywishlist' ? 'text-[#ef426f]' : ''}`}>My Wish List</Link>
                 </p>
                 <p className="text-xl py-6 pl-5 border-b">
-                  <span className="flex items-center gap-2 cursor-pointer max-w-fit">Sign Out<i className="w-[20px] h-[20px] bg-[url('/account/signout_ico.png')]"></i></span>
+                  <button onClick={()=>signOut({ callbackUrl: '/', redirect:true })} className="flex items-center gap-2 cursor-pointer max-w-fit">Sign Out<i className="w-[20px] h-[20px] bg-[url('/account/signout_ico.png')]"></i></button>
                 </p>
               </div>
         </>

@@ -8,13 +8,17 @@ import Pagination from "@/components/Pagi";
 import { pageSize } from "@/lib/constants";
 import moment from "moment";
 import Link from "next/link";
+import { parse } from "cookie";
+import { getWebSetting } from "@/lib/functions";
 
 export const getServerSideProps = (async (context: any) => {
+  const cookies = parse(context.req.headers.cookie || "");
+
   const session = await getSession(context);
   if (!session) {
     return {
       redirect: {
-        destination: "/login",
+        destination: "/member/login",
         permanent: false,
       },
     };
@@ -31,13 +35,19 @@ export const getServerSideProps = (async (context: any) => {
     props: {
       ...result1.data,
       page,
+      ...(await getWebSetting(cookies)),
     },
   };
 }) satisfies GetServerSideProps<{ data: any }>;
-export default function MyAddresses({ data, page, total, totalPage }: any) {
+export default function MyAddresses({
+  data,
+  page,
+  total,
+  totalPage,
+  ...props
+}: any) {
   return (
-    <>
-      <Layout>
+      <Layout {...props}>
         <div id="main">
           <SubNav title1="My Account" title2="My Addresses" />
           <div className="inner-container mt-[75px] mb-[135px]">
@@ -45,9 +55,7 @@ export default function MyAddresses({ data, page, total, totalPage }: any) {
               <MypageNav></MypageNav>
               <div className="grow mt-[17px]">
                 <div className="flex justify-between pb-4 items-center border-b border-black">
-                  <p className="text-2xl">
-                    My Addresses
-                  </p>
+                  <p className="text-2xl">My Addresses</p>
                   <Link
                     className="flex justify-center items-center bg-blue-600 text-white py-2 px-3 rounded h-[40px]"
                     href="/account/myaddresses/write"
@@ -92,7 +100,7 @@ export default function MyAddresses({ data, page, total, totalPage }: any) {
                             {e.IsDefault ? "Yes" : "No"}
                           </td>
                           <td className="py-3 px-4 text-left">
-                            {moment(e.CreatedAt).format("yyyy-MM-dd")}
+                            {moment(e.CreatedAt).format("yyyy-MM-DD")}
                           </td>
                         </tr>
                       );
@@ -110,6 +118,5 @@ export default function MyAddresses({ data, page, total, totalPage }: any) {
           </div>
         </div>
       </Layout>
-    </>
   );
 }

@@ -13,8 +13,6 @@ export default async function handle(
     
     const sessionObj = JSON.parse(session);
     
-    console.log(sessionObj);
-
     const query = `select * from customers where CustomerID = '${sessionObj?.user?.id}'`;
 
     const connect = await connectDB();

@@ -62,7 +62,7 @@ export default function Header({
     axios.get("/api/combo_category/header").then((response) => {
       setComboCategoryList(response.data.data);
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLinkClick = async (e: any, BrandID: number) => {
@@ -105,17 +105,26 @@ export default function Header({
             />
           </div>
           <div className="img_sale ml-5">
-            <Image
-              src={`${CDN_URL}${banner_top?.BannerImg || ""}`}
-              alt=""
-              width={218}
-              height={64}
-            />
+            <Link
+              href={banner_top?.BannerLink ? banner_top?.BannerLink : ""}
+              target={banner_top?.OpenNewTab == 1 ? "_blank" : ""}
+              className="w-[218px] h-[64px] relative inline-block"
+            >
+              <Image
+                src={`${CDN_URL}${banner_top?.BannerImg || ""}`}
+                alt=""
+                fill
+                className="object-cover"
+              />
+            </Link>
           </div>
         </div>
         <div className="header_right flex items-center">
           {session ? (
-            <button className="p-0 m-0 bg-[none]" onClick={() => signOut()}>
+            <button
+              className="p-0 m-0 bg-[none]"
+              onClick={() => signOut({ callbackUrl: "/", redirect: true })}
+            >
               <div className="txt flex items-center">
                 <p className=" text-18 tracking-wide text-gray-700">
                   {status !== "loading" && "Logout"}
@@ -123,7 +132,7 @@ export default function Header({
               </div>
             </button>
           ) : (
-            <Link href={"/login"}>
+            <Link href={"/member/login"}>
               <div className="txt flex items-center">
                 <p className=" text-18 tracking-wide text-gray-700">
                   {status !== "loading" && "Login"}
@@ -146,22 +155,22 @@ export default function Header({
           <span className="m-0 mx-5">|</span>
           <div className="ico flex items-center custom-gap">
             <div className="ico_des">
-              <Image
-                src="/heart_ic.png"
-                alt=""
-                width={41}
-                height={40}
-                className="w-10 h-10"
-              />
+              <Link href={`/account/mywishlist`} className="w-[41px] h-[40px] block relative">
+                <Image
+                  src="/heart_ic.png"
+                  alt=""
+                  fill
+                  className="object-cover"
+                />
+              </Link>
             </div>
             <div className="ico_des relative">
-              <Link href="/cart">
+              <Link href="/cart" className="w-[41px] h-[40px] block relative">
                 <Image
                   src="/cart_ic.png"
                   alt=""
-                  width={41}
-                  height={40}
-                  className="w-10 h-10"
+                  fill
+                  className="object-cover"
                 />
                 <p className="absolute bottom-[3px] right-[10px] text-[#f15981] text-[13px] font-bold">
                   3

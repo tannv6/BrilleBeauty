@@ -11,7 +11,6 @@ export default function EyesLips() {
 
   console.log('Received data:', data);
   return (
-    <>
       <Layout>
         <div id="main">
           <SubNav title1="MyCart" />
@@ -119,6 +118,5 @@ export default function EyesLips() {
           </div>
         </div>
       </Layout>
-    </>
   );
 }

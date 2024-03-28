@@ -19,7 +19,7 @@ export const getServerSideProps = async (context: { params: any }) => {
       params: { customerID },
     }
   );
-  const result1 = await axios.get(`http://localhost:3000/api/adress/province`);
+  const result1 = await axios.get(`http://localhost:3000/api/adress/countries`);
   const result2 = await axios.get(`http://localhost:3000/api/adress/district`, {
     params: { ProvinceID: customerDetail.data?.Province },
   });
@@ -31,6 +31,7 @@ export const getServerSideProps = async (context: { params: any }) => {
     props: {
       customerDetail: customerDetail.data,
       provinceList: result1.data.data,
+      countryList: result1.data.data,
       districtListInit: result2.data.data,
       communeListInit: result3.data.data,
     },
@@ -39,11 +40,11 @@ export const getServerSideProps = async (context: { params: any }) => {
 function CustomerWrite({
   customerDetail,
   isNew,
-  provinceList,
+  countryList,
   districtListInit,
   communeListInit,
 }: any) {
-
+  const [provinceList, setProvinceList] = useState([]);
   const [districtList, setDistrictList] = useState(districtListInit || []);
   const [communeList, setCommuneList] = useState(communeListInit || []);
 
@@ -58,10 +59,12 @@ function CustomerWrite({
     District: any;
     Village: any;
     Address: any;
+    CountryID: any;
   }>({
     CustomerID: customerDetail?.CustomerID,
     FirstName: customerDetail?.FirstName,
     LastName: customerDetail?.LastName,
+    CountryID: customerDetail?.CountryID,
     Email: customerDetail?.Email,
     CustomerPhone: customerDetail?.CustomerPhone,
     Province: customerDetail?.Province,
@@ -113,20 +116,23 @@ function CustomerWrite({
       router.push("/admin/member/list");
     }
   }
-
+  const handleGetProvince = async (CountryID: number) => {
+    const result1 = await axios.get(`/api/adress/province`, {
+      params: { CountryID },
+    });
+    setProvinceList(result1.data.data);
+  };
   const handleGetDistrict = async (ProvinceID: number) => {
-    const result1 = await axios.get(
-      `http://localhost:3000/api/adress/district`,
-      { params: { ProvinceID } }
-    );
+    const result1 = await axios.get(`/api/adress/district`, {
+      params: { ProvinceID },
+    });
     setDistrictList(result1.data.data);
   };
 
   const handleGetCommune = async (DistrictID: number) => {
-    const result1 = await axios.get(
-      `http://localhost:3000/api/adress/commune`,
-      { params: { DistrictID } }
-    );
+    const result1 = await axios.get(`/api/adress/commune`, {
+      params: { DistrictID },
+    });
     setCommuneList(result1.data.data);
   };
 
@@ -228,7 +234,23 @@ function CustomerWrite({
                 <td className="px-6 py-2">
                   <div className="flex gap-1">
                     <Dropdown
-                      containerClassName="w-[120px]"
+                      containerClassName="w-[140px]"
+                      className="w-full h-[35px] rounded-md"
+                      options={countryList?.map((e: any, i: any) => ({
+                        id: e.CountryID,
+                        name: e.CountryName,
+                      }))}
+                      onChange={(id: number) => {
+                        handleGetProvince(id);
+                        handleChange({
+                          target: { name: "CountryID", value: id },
+                        });
+                      }}
+                      activeItem={Number(customer?.CountryID)}
+                      placeHolder="--Country--"
+                    />
+                    <Dropdown
+                      containerClassName="w-[140px]"
                       className="w-full h-[35px] rounded-md"
                       options={provinceList?.map((e: any, i: any) => ({
                         id: e.ProvinceID,
@@ -244,7 +266,7 @@ function CustomerWrite({
                       placeHolder="--Province--"
                     />
                     <Dropdown
-                      containerClassName="w-[120px]"
+                      containerClassName="w-[140px]"
                       className="w-full h-[35px] rounded-md"
                       options={districtList.map((e: any, i: any) => ({
                         id: e.DistrictID,
@@ -260,7 +282,7 @@ function CustomerWrite({
                       placeHolder="--District--"
                     />
                     <Dropdown
-                      containerClassName="w-[120px]"
+                      containerClassName="w-[140px]"
                       className="w-full h-[35px] rounded-md"
                       options={communeList.map((e: any, i: any) => ({
                         id: e.CommuneID,
