@@ -104,12 +104,13 @@ export default function Header({
               className="absolute right-0 top-1 mt-1 mb-1 mr-5 h-5 w-5"
             />
           </div>
-          <div className="img_sale ml-5">
+          <div className="img_sale ml-5 w-[218px] h-[64px]">
             <Image
               src={`${CDN_URL}${banner_top?.BannerImg || ""}`}
               alt=""
               width={218}
               height={64}
+              className="max-w-[218px] max-h-[64px]"
             />
           </div>
         </div>

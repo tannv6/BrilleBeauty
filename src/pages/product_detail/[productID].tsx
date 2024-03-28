@@ -15,15 +15,25 @@ import Link from "next/link";
 import axios from "axios";
 
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
-export const getServerSideProps = async (context: { params: any, query: any }) => {
-  const { params, query } = context;
-  const { productID } = params;
+export const getServerSideProps = async (context: { params: any, query : any}) => {
+  const { params, query} = context;
+  const { productID, reviewID } = params;
   const productDetail = await axios.get(
     `http://localhost:3000/api/products/detail`,
     {
-      params: { productID },
+      params: { productID, query },
     }
   );
+
+  const reviewDetail = await axios.get (
+    "http://localhost:3000/api/review/details",
+    {
+      params: { reviewID},
+    }
+  );
+
+
+
 
   const response = await axios.get("http://localhost:3000/api/products/category", {
     params: { cate_id: params.id2, depth: 3 },
@@ -41,14 +51,18 @@ export const getServerSideProps = async (context: { params: any, query: any }) =
     props: {
     optionTypes: result1.data.data,
     optionTypes2: result2.data.data,
-      product: productDetail.data,
-      productRelate: response.data,
+    reviewDetail: reviewDetail.data,
+    product: productDetail.data,
+    productRelate: response.data,
       ...response.data,
     },
   };
 };
 
-export default function Face({ product, optionTypes, optionTypes2, productRelate }: any) {
+
+export default function Face({ product, optionTypes, optionTypes2, productRelate, reviewDetail}: any) {
+
+
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   // const [NumProduct, setNumProduct] = useState(1);
   const [isHeart, setIsHeart] = useState<boolean>(true);
@@ -117,7 +131,9 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
     return total;
   }, 0);
 
-  const optionElements = optionTypes2.map((option: any) => (
+  const optionElements = optionTypes2
+  .filter((option: any) => option.ProductID === product.ProductID)
+  .map((option: any) => (
     selectedOptions[option.PoID] && (
       <div className="py-5" key={option.PoID}>
         <div className="flex items-center justify-between">
@@ -138,9 +154,14 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
     )
   ));
 
-  const renderHTML = (htmlString :any) => {
-    return {__html: htmlString};
-  };
+  const processDescription = (description: string) => {
+    return description.replace(/<img[^>]*src="([^"]+)"[^>]*>/g, (match, src) => {
+        return `<div class="image" style="background-image: url(${src})"></div>`;
+    });
+};
+
+
+  const productImages = product.Images;
 
   return (
     <>
@@ -150,6 +171,7 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
           <div className="inner-container mt-[70px] mb-[60px]">
             <div className="flex flex-row justify-between">
               <div className="basis-[556px]">
+              
                 <Swiper
                   className="w-[556px] select-none"
                   loop={true}
@@ -157,26 +179,32 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                   modules={[Thumbs, Autoplay]}
                   thumbs={{ swiper: thumbsSwiper }}
                 >
-                  <SwiperSlide><div><Image src="/product_detail/product_img_01.png" alt="" width={556} height={555} /></div></SwiperSlide>
-                  <SwiperSlide><div><Image src="/product_detail/product_img_01.png" alt="" width={556} height={555} /></div></SwiperSlide>
-                  <SwiperSlide><div><Image src="/product_detail/product_img_01.png" alt="" width={556} height={555} /></div></SwiperSlide>
-                  <SwiperSlide><div><Image src="/product_detail/product_img_01.png" alt="" width={556} height={555} /></div></SwiperSlide>
-                  <SwiperSlide><div><Image src="/product_detail/product_img_01.png" alt="" width={556} height={555} /></div></SwiperSlide>
+                    {productImages.map((image: any, index: number) => (
+                      <SwiperSlide key={index}>
+                        <div>
+                          <Image src={`${CDN_URL}${image.ImageURL}`} alt="" width={556} height={555} />
+                        </div>
+                      </SwiperSlide>
+                    ))}
+
                 </Swiper>
                 <div className="mt-[10px] mx-auto">
                   <Swiper
-                    className="w-[556px] select-none"
+                    className="w-[556px] select-none swiper_two"
                     modules={[Thumbs]}
                     watchSlidesProgress
                     onSwiper={setThumbsSwiper}
                     slidesPerView={5}
-                    spaceBetween={10}
-                  >
-                    <SwiperSlide><div className="rounded cursor-pointer"><Image src="/product_detail/product_img_01.png" alt="" width={104} height={104} /></div></SwiperSlide>
-                    <SwiperSlide><div className="rounded cursor-pointer"><Image src="/product_detail/product_img_01.png" alt="" width={104} height={104} /></div></SwiperSlide>
-                    <SwiperSlide><div className="rounded cursor-pointer"><Image src="/product_detail/product_img_01.png" alt="" width={104} height={104} /></div></SwiperSlide>
-                    <SwiperSlide><div className="rounded cursor-pointer"><Image src="/product_detail/product_img_01.png" alt="" width={104} height={104} /></div></SwiperSlide>
-                    <SwiperSlide><div className="rounded cursor-pointer"><Image src="/product_detail/product_img_01.png" alt="" width={104} height={100} /></div></SwiperSlide>
+                    spaceBetween={10} >
+                    {productImages.map((image: any, index: number) => {     
+                      return (  
+                        <SwiperSlide key={index}>
+                          <div>
+                            <Image src={`${CDN_URL}${image.ImageURL}`} alt="" width={556} height={555} />
+                          </div>
+                        </SwiperSlide>
+                      );
+                    })}
                   </Swiper>
                 </div>
               </div>
@@ -210,23 +238,26 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                 </div>
                 <hr />
                 <div className="py-5">
-                  <div className="flex items-center">
-                    <span className="text-lg min-w-[190px]"> {selectedOptionType && (
-                        <span>{selectedOptionType.PotName}</span>
-                      )}</span>
-                        <Dropdown
-                          className="w-[397px] text-[#757575]"
-                          options={optionTypes2.map((e: any, i: any) => {
-                            return {
-                              id: e.PoID,
-                              name: e.PoName,
-                            };
-                          })}
-                          onChange={(id: number) => handleChange(id)}
-                          activeItem={dropdownState.activeItem}
-                        />
+                    <div className="flex items-center">
+                      <span className="text-lg min-w-[190px]">
+                        {selectedOptionType && (
+                          <span>{selectedOptionType.PotName}</span>
+                        )}
+                      </span>
+                      <Dropdown
+                        className="w-[397px] text-[#757575]"
+                        options={optionTypes2
+                          .filter((option: any) => option.ProductID === product.ProductID)
+                          .map((option: any) => ({
+                            id: option.PoID,
+                            name: option.PoName,
+                          }))
+                        }
+                        onChange={(id: number) => handleChange(id)}
+                        activeItem={dropdownState.activeItem}
+                      />
+                    </div>
                   </div>
-                </div>
                 <hr />
                 <>
                 {optionElements}
@@ -257,7 +288,7 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
             <div id="product_in4" className="mt-[175px] mb-[60px]">
               <ProductDetailNav tab="1"></ProductDetailNav>
             </div>
-            <div className="flex justify-center" dangerouslySetInnerHTML={renderHTML(product.Description)} />
+            <div className="flex justify-center" dangerouslySetInnerHTML={{ __html: processDescription(product.Description) }} />
             <div id="product_rvw" className="mt-[120px] mb-[60px]">
               <ProductDetailNav tab="2"></ProductDetailNav>
             </div>
@@ -274,7 +305,9 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
               <hr />
 
               <div className="">
-                <div className="py-5 flex flex-row">
+                
+              {/* {reviewDetail.map((e: any) => {    
+                <div className="py-5 flex flex-row" key={e.reviewID}>
                   <div className="flex flex-col basis-[80%] ml-5 gap-y-3">
                     <div className="flex gap-0.5">
                       <i className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_on.png')]"></i>
@@ -283,15 +316,20 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                       <i className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_on.png')]"></i>
                       <i className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_off.png')]"></i>
                     </div>
-                    <p className="text-xl font-medium">CONTOUR POWDER</p>
-                    <p className="text-[#999999]">Ive been absolutely obsessed with this lip stain lately. 16 Baked...
+                    <p className="text-xl font-medium">{e.Title}</p>
+                    <p className="text-[#999999]">
+                      {e.ReviewDes}
                     </p>
                     <p>
                       <span className="font-medium text-[17px]">uwa***</span>
-                      <span className="text-[15px] text-[#999999] pl-3">2022.11.15</span>
+                      <span className="text-[15px] text-[#999999] pl-3">
+                        {e.CreatedAt}
+                        </span>
                     </p>
                     <div className="flex gap-[10px]">
-                      <div className="w-[110px] h-[110px] bg-[#eeeeee] rounded-[5px]"></div>
+                      <div className="w-[110px] h-[110px] bg-[#eeeeee] rounded-[5px]">
+                        {e.Img1}
+                        </div>
                       <div className="w-[110px] h-[110px] bg-[#eeeeee] rounded-[5px]"></div>
                     </div>
                     <div className="flex gap-[10px]">
@@ -304,6 +342,7 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                     <button className="w-[100px] h-7 text-[15px] text-[#999999] border rounded">DELETE</button>
                   </div>
                 </div>
+              })} */}
                 <hr />
                 <div className="flex items-center justify-center h-[123px] bg-[#f9f9f9] border-b">
                   <div className="flex w-[1131px] h-[82px]">
