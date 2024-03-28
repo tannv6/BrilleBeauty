@@ -4,7 +4,8 @@ import Link from "next/link";
 import "@/app/globals.css";
 import { listMenu } from "@/utils/constants";
 import { usePathname } from "next/navigation";
-import SimpleReactLightbox from 'simple-react-lightbox';
+import SimpleReactLightbox from "simple-react-lightbox";
+import { signOut } from "next-auth/react";
 function AdminLayout({ children }: any) {
   const pathname = usePathname();
 
@@ -37,7 +38,7 @@ function AdminLayout({ children }: any) {
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
         rel="stylesheet"
       />
-      <nav className="bg-blue-500 p-4 flex items-center justify-between">
+      <nav className="bg-blue-500 p-4 flex items-center justify-between h-[60px]">
         <div>
           <h1 className="text-white text-xl font-semibold">Brille Beauty</h1>
         </div>
@@ -46,8 +47,8 @@ function AdminLayout({ children }: any) {
           <i className="fas fa-user-circle text-white text-2xl" />
         </div>
       </nav>
-      <div className="flex overflow-x-auto">
-        <aside className="bg-gray-800 text-white w-64 min-h-screen py-4">
+      <div className="flex overflow-x-auto h-[calc(100vh-60px)]">
+        <aside className="bg-gray-800 text-white w-64 h-full  overflow-y-auto py-4 flex flex-col items-start justify-between">
           <nav>
             <ul className="space-y-2">
               {listMenu.map((e, i) => {
@@ -91,11 +92,18 @@ function AdminLayout({ children }: any) {
               })}
             </ul>
           </nav>
+          <button
+            className="text-white py-2 px-4"
+            onClick={() => signOut({ callbackUrl: "/admin", redirect: true })}
+          >
+            <i className="fas fa-sign-out-alt"></i>
+            Sign out
+          </button>
         </aside>
-        <main className="w-full mx-auto p-4">{children}</main>
+        <main className="w-full mx-auto p-4 h-full overflow-auto">{children}</main>
       </div>
     </SimpleReactLightbox>
   );
 }
-
+AdminLayout.auth = true;
 export default AdminLayout;

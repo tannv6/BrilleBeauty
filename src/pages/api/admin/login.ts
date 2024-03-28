@@ -10,8 +10,8 @@ export default async function handle(
 
     const connect = await connectDB();
 
-    const query = `select * from customers where DeletedAt is null 
-    and ( UserName = '${UserNameOrEmail}' or Email = '${UserNameOrEmail}')`;
+    const query = `select * from admin where DeletedAt is null 
+    and ( AdminUName = '${UserNameOrEmail}' or AdminEmail = '${UserNameOrEmail}')`;
 
     const [result] = await connect.execute(query);
     connect.end();
