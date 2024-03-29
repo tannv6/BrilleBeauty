@@ -6,9 +6,11 @@ import { getSession, signIn } from "next-auth/react";
 import { GetServerSideProps } from "next";
 import { parse } from "cookie";
 import { getWebSetting } from "@/lib/functions";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]";
 export const getServerSideProps = (async (context: any) => {
   const cookies = parse(context.req.headers.cookie || "");
-  const session = await getSession(context);
+  const session = await getServerSession(context.req, context.res, authOptions);
 
   if (session) {
     return {

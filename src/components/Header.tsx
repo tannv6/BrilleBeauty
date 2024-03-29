@@ -4,10 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { WebSetting } from "./Layout";
 import { CDN_URL } from "@/utils/constants";
 import { getSession, signOut, useSession } from "next-auth/react";
+import { MyContext } from "@/pages/_app";
 type Props = {
   webSetting?: WebSetting;
   brandListRecommended?: any[];
@@ -21,10 +22,10 @@ export default function Header({
   const pathname = usePathname();
   const router = useRouter();
   const { data: session, status }: any = useSession();
-
+  const value:any = useContext(MyContext);
+  const categoryList = JSON.parse(value?.category)?.data  || [];
+  const comboCategoryList = JSON.parse(value?.combo_category)?.data||[];
   const [brandList, setBrandList] = useState(brandListRecommended || []);
-  const [categoryList, setCategoryList] = useState([]);
-  const [comboCategoryList, setComboCategoryList] = useState([]);
 
   function handleKeyPress(e: any) {
     if (e.keyCode === 13) {
@@ -56,12 +57,12 @@ export default function Header({
       });
     }
 
-    axios.get("/api/category/header").then((response) => {
-      setCategoryList(response.data.data);
-    });
-    axios.get("/api/combo_category/header").then((response) => {
-      setComboCategoryList(response.data.data);
-    });
+    // axios.get("/api/category/header").then((response) => {
+    //   setCategoryList(response.data.data);
+    // });
+    // axios.get("/api/combo_category/header").then((response) => {
+    //   setComboCategoryList(response.data.data);
+    // });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
