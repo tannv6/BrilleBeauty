@@ -9,7 +9,7 @@ export const getOrderByCustomer = async (params: any) => {
   const totalQuery = `select t1.*, sum(t2.Subtotal) as totalPrice from orders t1
                       left join orderdetails t2 on t1.OrderID = t2.OrderID
                       where t1.DeletedAt is null
-                      and t1.CustomerID = '${user?.id}' order by t1.OrderID desc`;
+                      and t1.CustomerID = '${user?.id}' group by t1.OrderID order by t1.OrderID desc`;
 
   const [resultTotal]: any = await connect.execute(totalQuery);
 

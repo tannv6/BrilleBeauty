@@ -1,11 +1,14 @@
 import axios from "axios";
-import { SessionProvider } from "next-auth/react";
+import { getServerSession } from "next-auth";
+import { SessionProvider, getSession } from "next-auth/react";
 import App, { AppContext, AppProps } from "next/app";
 import { createContext, useState } from "react";
+import { authOptions } from "./api/auth/[...nextauth]";
 type TProps = Pick<AppProps, "Component" | "pageProps"> & {
   session: any;
   category: any;
   combo_category: any;
+  isLogin: boolean;
 };
 export const MyContext = createContext({});
 const MyCustomApp = ({
@@ -14,11 +17,12 @@ const MyCustomApp = ({
   pageProps,
   category,
   combo_category,
+  isLogin,
 }: TProps) => {
   return (
     <>
       <SessionProvider session={session} refetchInterval={5 * 60}>
-        <MyContext.Provider value={{ category, combo_category }}>
+        <MyContext.Provider value={{ category, combo_category, isLogin }}>
           <Component {...pageProps} />
         </MyContext.Provider>
       </SessionProvider>
@@ -26,8 +30,8 @@ const MyCustomApp = ({
   );
 };
 
-MyCustomApp.getInitialProps = async (context: AppContext) => {
-  const ctx = await App.getInitialProps(context);
+MyCustomApp.getInitialProps = async (context: any) => {
+  const session = await getSession(context);
   const category = await axios.get("http://localhost:3000/api/category/header");
   const combo_category = await axios.get(
     "http://localhost:3000/api/combo_category/header"
@@ -35,6 +39,7 @@ MyCustomApp.getInitialProps = async (context: AppContext) => {
   return {
     category: JSON.stringify(category.data),
     combo_category: JSON.stringify(combo_category.data),
+    isLogin: !!session,
   };
 };
 

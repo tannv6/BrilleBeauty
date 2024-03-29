@@ -4,10 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
-import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { ChangeEvent, Fragment, useContext, useEffect, useState } from "react";
 import { WebSetting } from "./Layout";
 import { CDN_URL } from "@/utils/constants";
-import { getSession, signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { MyContext } from "@/pages/_app";
 type Props = {
   webSetting?: WebSetting;
@@ -21,10 +21,12 @@ export default function Header({
 }: Props) {
   const pathname = usePathname();
   const router = useRouter();
-  const { data: session, status }: any = useSession();
-  const value:any = useContext(MyContext);
-  const categoryList = JSON.parse(value?.category)?.data  || [];
-  const comboCategoryList = JSON.parse(value?.combo_category)?.data||[];
+  const value: any = useContext(MyContext);
+  const categoryList = JSON.parse(value?.category)?.data || [];
+  const comboCategoryList = JSON.parse(value?.combo_category)?.data || [];
+  const isLogin = value.isLogin;
+  console.log(isLogin);
+  
   const [brandList, setBrandList] = useState(brandListRecommended || []);
 
   function handleKeyPress(e: any) {
@@ -121,14 +123,14 @@ export default function Header({
           </div>
         </div>
         <div className="header_right flex items-center">
-          {session ? (
+          {isLogin ? (
             <button
               className="p-0 m-0 bg-[none]"
               onClick={() => signOut({ callbackUrl: "/", redirect: true })}
             >
               <div className="txt flex items-center">
                 <p className=" text-18 tracking-wide text-gray-700">
-                  {status !== "loading" && "Logout"}
+                  {"Logout"}
                 </p>
               </div>
             </button>
@@ -136,27 +138,26 @@ export default function Header({
             <Link href={"/member/login"}>
               <div className="txt flex items-center">
                 <p className=" text-18 tracking-wide text-gray-700">
-                  {status !== "loading" && "Login"}
+                  {"Login"}
                 </p>
               </div>
             </Link>
           )}
           <span className="m-0 mx-5">|</span>
-          <Link href={session ? "/account/aboutme" : "/register"}>
+          <Link href={isLogin ? "/account/aboutme" : "/member/register"}>
             <div className="txt flex items-center">
               <p className=" text-18 tracking-wide text-gray-700">
-                {status !== "loading"
-                  ? session
-                    ? "My Account"
-                    : "Register"
-                  : ""}
+                {isLogin ? "My Account" : "Register"}
               </p>
             </div>
           </Link>
           <span className="m-0 mx-5">|</span>
           <div className="ico flex items-center custom-gap">
             <div className="ico_des">
-              <Link href={`/account/mywishlist`} className="w-[41px] h-[40px] block relative">
+              <Link
+                href={`/account/mywishlist`}
+                className="w-[41px] h-[40px] block relative"
+              >
                 <Image
                   src="/heart_ic.png"
                   alt=""
@@ -230,7 +231,7 @@ export default function Header({
 
           {categoryList?.map((e: any, i: any) => {
             return (
-              <>
+              <Fragment key={i}>
                 <li key={i} className="group">
                   <Link
                     className={`${
@@ -275,7 +276,7 @@ export default function Header({
                     </div>
                   </div>
                 </li>
-              </>
+              </Fragment>
             );
           })}
 
@@ -292,7 +293,7 @@ export default function Header({
               <div className="inner-container flex gap-[70px] mt-[55px] justify-center">
                 {comboCategoryList?.map((e: any, i: any) => {
                   return (
-                    <>
+                    <Fragment key={i}>
                       <div>
                         <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">
                           {e.CategoryName}
@@ -306,7 +307,7 @@ export default function Header({
                           />
                         </Link>
                       </div>
-                    </>
+                    </Fragment>
                   );
                 })}
                 {/* <div>
