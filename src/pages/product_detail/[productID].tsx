@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Layout from "@/components/Layout";
 import SubNav from "@/components/SubNav";
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -10,15 +10,20 @@ import Dropdown from "@/components/Dropdown";
 import ProductDetailNav from "@/components/ProductDetailNav";
 import Image from "next/image";
 import Pagi from "@/components/Pagi";
-import ProductRelated from "@/components/ProductRelated";
 import Link from "next/link";
 import axios from "axios";
 import { parse } from "cookie";
 import { getWebSetting } from "@/lib/functions";
+import { getSession } from "next-auth/react";
 import { log } from "console";
+import he from "he";
+import { Swiper as SwiperCore } from 'swiper/types';
+import ReviewDetail from "../review_detail";
 
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 export const getServerSideProps = async (context: { params: any, query : any, req: any}) => {
+
+  
   const cookies = parse(context.req.headers.cookie || "");
   const { params, query} = context;
   const { productID, reviewID } = params;
@@ -67,6 +72,7 @@ export const getServerSideProps = async (context: { params: any, query : any, re
 
 export default function Face({ product, optionTypes, optionTypes2, productRelate, review, ...props}: any) {
 
+  const swiperRef = useRef<SwiperCore>();
 
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   const [isHeart, setIsHeart] = useState<boolean>(true);
@@ -158,15 +164,6 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
     )
   ));
 
-  const processDescription = (description: string) => {
-    return description.replace(/<img[^>]*src="([^"]+)"[^>]*>/g, (match, src) => {
-        return `<div class="image" style="background-image: url(${src})"></div>`;
-    });
-  };
-
-  
-
-
   const productImages = product.Images;
   
 
@@ -238,7 +235,6 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                 <div className="py-5">
                   <p className="flex">
                     <span className="text-lg min-w-[190px]">Product Highlight</span>
-                    {/* <span className="text-lg text-[#757575]">{product.Description}</span> */}
                     <span className="text-lg text-[#757575]"></span>
                   </p>
                 </div>
@@ -294,7 +290,7 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
             <div id="product_in4" className="mt-[175px] mb-[60px]">
               <ProductDetailNav tab="1"></ProductDetailNav>
             </div>
-            <div className="flex justify-center" dangerouslySetInnerHTML={{ __html: processDescription(product.Description) }} />
+            <div className="justify-center" dangerouslySetInnerHTML={{ __html: he.decode(product.Description) }} />
             <div id="product_rvw" className="mt-[120px] mb-[60px]">
               <ProductDetailNav tab="2"></ProductDetailNav>
             </div>
@@ -304,49 +300,48 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                   <span className="font-bold">PRODUCT REVIEWS</span>
                   <span className="text-[#757575]">(12)</span>
                 </p>
-                <Link href="/write_review">
+                <Link href={`/write_review?ProductID=${product.ProductID}`}>
                   <button className="w-[130px] h-[35px] border border-[#ef426f] rounded text-[#ef426f] font-medium">Write review</button>
                 </Link>
               </div>
               <hr />
 
               <div className="">
-                  
-                <div className="py-5 flex flex-row">
-                  <div className="flex flex-col basis-[80%] ml-5 gap-y-3">
-                    <div className="flex gap-0.5">
-                      <i className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_on.png')]"></i>
-                      <i className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_on.png')]"></i>
-                      <i className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_on.png')]"></i>
-                      <i className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_on.png')]"></i>
-                      <i className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_off.png')]"></i>
-                    </div>
-                    <p className="text-xl font-medium"></p>
-                    <p className="text-[#999999]">
-                      CONTOUR POWDER
-                    </p>
-                    <p>
-                      <span className="font-medium text-[17px]">uwa***</span>
-                      <span className="text-[15px] text-[#999999] pl-3">
-                      Ive been absolutely obsessed with this lip stain lately. 16 Baked...
-                        </span>
-                    </p>
-                    <div className="flex gap-[10px]">
-                      <div className="w-[110px] h-[110px] bg-[#eeeeee] rounded-[5px]">
-                       
+                      <div className="py-5 flex flex-row">
+                        <div className="flex flex-col basis-[80%] ml-5 gap-y-3">
+                          <div className="flex gap-0.5">
+                            <i className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_on.png')]"></i>
+                            <i className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_on.png')]"></i>
+                            <i className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_on.png')]"></i>
+                            <i className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_on.png')]"></i>
+                            <i className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_off.png')]"></i>
+                          </div>
+                          <p className="text-xl font-medium"></p>
+                          <p className="text-[#999999]">
+                            CONTOUR POWDER
+                          </p>
+                          <p>
+                            <span className="font-medium text-[17px]">uwa***</span>
+                            <span className="text-[15px] text-[#999999] pl-3">
+                            Ive been absolutely obsessed with this lip stain lately. 16 Baked...
+                              </span>
+                          </p>
+                          <div className="flex gap-[10px]">
+                            <div className="w-[110px] h-[110px] bg-[#eeeeee] rounded-[5px]">
+                            
+                              </div>
+                            <div className="w-[110px] h-[110px] bg-[#eeeeee] rounded-[5px]"></div>
+                          </div>
+                          <div className="flex gap-[10px]">
+                            <button className="w-[140px] h-[36px] bg-[url('/product_detail/comment_show_btn.png')] rounded-[5px] text-[15px] text-[#757575] pl-3 pt-0.5">COMMENT</button>
+                            <button className="w-[140px] h-[36px] rounded-[5px] text-[15px] text-[#757575] border">WRITE COMMENT</button>
+                          </div>
                         </div>
-                      <div className="w-[110px] h-[110px] bg-[#eeeeee] rounded-[5px]"></div>
-                    </div>
-                    <div className="flex gap-[10px]">
-                      <button className="w-[140px] h-[36px] bg-[url('/product_detail/comment_show_btn.png')] rounded-[5px] text-[15px] text-[#757575] pl-3 pt-0.5">COMMENT</button>
-                      <button className="w-[140px] h-[36px] rounded-[5px] text-[15px] text-[#757575] border">WRITE COMMENT</button>
-                    </div>
-                  </div>
-                  <div className="flex basis-[20%] items-start justify-end gap-[10px]">
-                    <button className="w-[100px] h-7 text-[15px] text-[#999999] border rounded">EDIT</button>
-                    <button className="w-[100px] h-7 text-[15px] text-[#999999] border rounded">DELETE</button>
-                  </div>
-                </div>
+                        <div className="flex basis-[20%] items-start justify-end gap-[10px]">
+                          <button className="w-[100px] h-7 text-[15px] text-[#999999] border rounded">EDIT</button>
+                          <button className="w-[100px] h-7 text-[15px] text-[#999999] border rounded">DELETE</button>
+                        </div>
+                      </div>
                 <hr />
                 <div className="flex items-center justify-center h-[123px] bg-[#f9f9f9] border-b">
                   <div className="flex w-[1131px] h-[82px]">
@@ -363,27 +358,52 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
               <ProductDetailNav tab="3"></ProductDetailNav>
             </div>
             <p className="text-xl mb-[30px] font-bold">RELATED PRODUCTS</p>
-            {productRelate.data.map((e: any, i: any) => {
-                                return (
-                                    <>
-                                    <ProductRelated
-                                      key = {i}
-                                      image={"/product_img02.png"}
-                                      name={<Link href={`/product_detail/${e.ProductID}`}
-                                      className="font-bold text-[18px]">{e.ProductName}
-                                      </Link>}
-                                      oriPrice={`A$${e.InitPrice}`}
-                                      salePrice={`A$${e.SellPrice}`}
-                                      discount={"10%"}
-                                      star={"4.7"}
-                                      starCount={150}
-                                      heartCount={69}
-                                    />
-                                    </>
-                                );
-                            })}
-
-            {/* <ProductRelated></ProductRelated> */}
+            <div className="relative">
+                <Swiper className="select-none"
+                    modules={[Autoplay]}
+                    slidesPerView={5}
+                    spaceBetween={20}
+                    loop={true}
+                    onBeforeInit={(swiper) => {
+                        swiperRef.current = swiper;
+                    }}
+                    autoplay={{
+                        delay: 2500,
+                        disableOnInteraction: true,
+                    }}
+                >
+                  {productRelate.data.map((e: any, i: any) => {
+                                      return (
+                                          <>
+                                          <SwiperSlide key={i}>
+                                              <div className="flex flex-col">
+                                                  <Image src={`${CDN_URL}${e.ProductImage || ""}`} width={224} height={225} alt="1"></Image>
+                                                  <p className="font-bold pt-4">{e.ProductName}</p>
+                                                  <p className="pt-1">
+                                                      <span className="line-through text-[15px] text-[#bbbbbb]">{e.InitPrice}</span>
+                                                      <span className="pl-2 text-lg">{e.SellPrice}</span>
+                                                      <span className="pl-4 text-xl text-[#fe3a40]"></span>
+                                                  </p>
+                                                  <div className="flex items-center gap-[26px] pt-1.5">
+                                                      <div className="flex items-center gap-1">
+                                                          <Image className="pb-1" src="/product_rlt_star_ico.png" width={16} height={16} alt=""></Image>
+                                                          <span className="text-[14px] font-bold"></span>
+                                                          <span className="text-[14px] text-[#999999]"></span>
+                                                      </div>
+                                                      <div className="flex items-center gap-1.5">
+                                                          <Image src="/product_rlt_heart_ico.png" width={15} height={12} alt=""></Image>
+                                                          <span className="text-[14px] text-[#555555]"></span>
+                                                      </div>
+                                                  </div>
+                                              </div>
+                                          </SwiperSlide>
+                                          </>
+                                      );
+                                  })}
+                    </Swiper>
+                <button className="absolute top-1/4 left-[-56px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_prev.png')]" onClick={() => swiperRef.current?.slidePrev()}></button>
+                <button className="absolute top-1/4 right-[-56px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_next.png')]" onClick={() => swiperRef.current?.slideNext()}></button>
+            </div>
           </div>
         </div>
       </Layout>

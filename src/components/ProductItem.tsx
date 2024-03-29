@@ -45,7 +45,7 @@ function ProductItem({ info }: Props) {
           <div className="absolute hidden top-0 w-full h-full bg-gray-400/50 z-9 rounded-t-2xl items-center justify-center gap-x-5 group-hover:flex"></div>
         </div>
         <div className="p-5 pb-10 border border-t-0 border-[#dbdbdb]">
-          <span className="font-bold text-[18px]">{info?.ProductName}</span>
+          <span className="font-bold text-[18px] truncate overflow-hidden whitespace-pre-wrap line-clamp-2 min-h-[54px]">{info?.ProductName}</span>
           <p className="pt-2">
             <span className="line-through text-[#bbbbbb]">
               A${info?.InitPrice}

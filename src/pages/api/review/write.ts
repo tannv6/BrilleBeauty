@@ -21,34 +21,38 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       Title,
       ReviewDes,
       Start,
+      Post,
     } = fields;
 
     const connect = await connectDB();
-    // let Img1 = "";
-    // let Img2 = "";
-    // let Img3 = "";
-    // let Img4 = "";
-    // let Img5 = "";
+    let Img1 = "";
+    let Img2 = "";
+    let Img3 = "";
+    let Img4 = "";
+    let Img5 = "";
 
-    // if (files.Img1) {
-    //   Img1 = (await saveFile(files.Img1[0], "/review")).ufile;
-    // }
-    // if (files.Img2) {
-    //   Img2 = (await saveFile(files.Img2[0], "/review")).ufile;
-    // }
-    // if (files.Img3) {
-    //   Img3 = (await saveFile(files.Img3[0], "/review")).ufile;
-    // }
-    // if (files.Img4) {
-    //   Img4 = (await saveFile(files.Img4[0], "/review")).ufile;
-    // }
-    // if (files.Img5) {
-    //   Img5 = (await saveFile(files.Img5[0], "/review")).ufile;
-    // }
+    if (files.Img1) {
+      Img1 = (await saveFile(files.Img1[0], "/review")).ufile;
+    }
+    if (files.Img2) {
+      Img2 = (await saveFile(files.Img2[0], "/review")).ufile;
+    }
+    if (files.Img3) {
+      Img3 = (await saveFile(files.Img3[0], "/review")).ufile;
+    }
+    if (files.Img4) {
+      Img4 = (await saveFile(files.Img4[0], "/review")).ufile;
+    }
+    if (files.Img5) {
+      Img5 = (await saveFile(files.Img5[0], "/review")).ufile;
+    }
 
     const query = `INSERT INTO review SET 
       Title='${Title}',
       ReviewDes='${ReviewDes}',
+      Start = '${Start}',
+      ProductID = '${ProductID}',
+      Post = '${Post}',
       CreatedAt=NOW();`;
 
     await connect.execute(query);

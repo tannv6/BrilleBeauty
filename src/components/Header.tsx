@@ -241,7 +241,7 @@ export default function Header({
                   >
                     {e.CategoryName}
                   </Link>
-                  <div className="absolute hidden top-[49px] left-1/2 transform -translate-x-1/2 bg-white w-full xl:w-[100vw] h-[400px] group-hover:block z-[100] border-b boder-gray-200 border-t">
+                  <div className="absolute hidden top-[49px] left-1/2 transform -translate-x-1/2 bg-white w-full xl:w-[100vw] pb-[30px] group-hover:block z-[100] border-b boder-gray-200 border-t">
                     <div className="inner-container flex justify-center gap-[80px] mt-[55px] whitespace-nowrap">
                       {e.child?.map((e1: any, i1: any) => {
                         return (
@@ -287,7 +287,7 @@ export default function Header({
             >
               Combo
             </Link>
-            <div className="absolute hidden top-[49px] left-1/2 transform -translate-x-1/2 bg-white w-full xl:w-[100vw] h-[420px] group-hover:block z-[100] border-b boder-gray-200 border-t">
+            <div className="absolute hidden top-[49px] left-1/2 transform -translate-x-1/2 bg-white w-full xl:w-[100vw] pb-[30px] group-hover:block z-[100] border-b boder-gray-200 border-t">
               <div className="inner-container flex gap-[70px] mt-[55px] justify-center">
                 {comboCategoryList?.map((e: any, i: any) => {
                   return (

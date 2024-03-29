@@ -16,6 +16,7 @@ const CustomEditor = dynamic(
     { ssr: false }
   );
 
+
   export const getServerSideProps = async (context: { params: any }) => {
     const { params } = context;
     const { reviewID } = params;
@@ -35,8 +36,26 @@ const CustomEditor = dynamic(
   };
 
 function ReviewWrites({reviewDetail} : any) {
-
+    
     const router = useRouter();
+    const { ProductID } = router.query;
+
+    const [selectedStar, setSelectedStar] = useState(0);
+    const [hoveredStar, setHoveredStar] = useState(0);
+
+    const handleMouseEnter = (num: number) => {
+        setHoveredStar(num);
+    };
+
+    const handleMouseLeave = () => {
+        setHoveredStar(0);
+    };
+
+    const handleClick = (num: number) => {
+        setSelectedStar(num);
+        console.log("Số sao được chọn:", num);
+    };
+
     const [review, setReview] = useState<{
         ReviewID: any;
         UserName: any;
@@ -50,6 +69,7 @@ function ReviewWrites({reviewDetail} : any) {
         Img3: any;
         Img4: any;
         Img5: any;
+        Post: any;
     }>({
         ReviewID: reviewDetail?.ReviewID,
         UserName: reviewDetail?.UserName,
@@ -57,13 +77,22 @@ function ReviewWrites({reviewDetail} : any) {
         ProductID: reviewDetail?.ProductID,
         Title: reviewDetail?.Title,
         ReviewDes: reviewDetail?.ReviewDes,
-        Start: reviewDetail?.Start,
+        Start: selectedStar,
         Img1: reviewDetail?.Img1,
         Img2: reviewDetail?.Img2,
         Img3: reviewDetail?.Img3,
         Img4: reviewDetail?.Img4,
         Img5: reviewDetail?.Img5,
+        Post: "Y",
     });
+
+    const handleDisSelect = () => {
+        setReview({ ...review, Post: 'Y' });
+      };
+    
+      const handlePotsSelect = () => {
+        setReview({ ...review, Post: 'N' });
+      };
 
         function handleChange(e: any) {
         if (e.target.files) {
@@ -75,17 +104,20 @@ function ReviewWrites({reviewDetail} : any) {
 
       async function handleSubmit(event: FormEvent<HTMLFormElement>){
         event.preventDefault();
+
+        const updatedReview = { ...review, Start: selectedStar, ProductID: ProductID };
     
         let formData = new FormData();
     
-        for (let [key, value] of Object.entries(review)) {
+        for (let [key, value] of Object.entries(updatedReview)) {
           formData.append(key, value);
         }
         let response;
           response = await axios.post("/api/review/write", formData);
-        // if (response.status === 201) {
-        //     router.push("/product_detail");
-        //   }
+        if (response.status === 201) {
+            alert("Review Sucess!");
+            window.history.back();
+          }
     }
 
 
@@ -96,15 +128,6 @@ function ReviewWrites({reviewDetail} : any) {
         <div className='inner-container mt-[70px] mb-[170px]'>
             <h2 className='text-[36px] text-[#252525] font-bold mb-[35px]'>Contact Us</h2>
             <form onSubmit={handleSubmit}>
-                <input type="hidden" name="UserName" />
-                <input type="hidden" name="UserID" />
-                <input type="hidden" name="ProductID" />
-                <input type="hidden" name="Img1" />
-                <input type="hidden" name="Img2" />
-                <input type="hidden" name="Img3" />
-                <input type="hidden" name="Img4" />
-                <input type="hidden" name="Img5" />
-                <input type="hidden" name="Start" />
                 <table className='mb-[55px] border-t border-[#252525]'>
                     <tbody>
                         <tr className='border-b border-[#dbdbdb]'>
@@ -121,17 +144,19 @@ function ReviewWrites({reviewDetail} : any) {
                         <tr className='border-b border-[#dbdbdb]'>
                             <td className='flex justify-center items-center h-[64px] w-[190px] bg-[#fafafa] text-[18px] text-[#252525] border-r border-[#dbdbdb]'>Score</td>
                             <td className='w-full px-[15px] py-[10px]'>
-                                {/* <div className='flex'>
-                                    <input id="ratingValue" type="number" name="rating" value="" className='hidden'/>
-                                    <i className="h-[18px] w-[18px] bg-[url('/product_star_ico.png')] mr-2"></i>
-                                    <i className="h-[18px] w-[18px] bg-[url('/product_star_ico.png')] mr-2"></i>
-                                    <i className="h-[18px] w-[18px] bg-[url('/product_star_ico.png')] mr-2"></i>
-                                    <i className="h-[18px] w-[18px] bg-[url('/product_star_ico.png')] mr-2"></i>
-                                    <i className="h-[18px] w-[18px] bg-[url('/product_star_ico.png')] mr-2"></i>
-                                </div> */}
                                 <div>
-
-                                <Start />
+                                    <div className="star-container flex gap-[3px]">
+                                        {[1, 2, 3, 4, 5].map((index) => (
+                                            <div
+                                                key={index}
+                                                className={selectedStar !== 0 && index <= selectedStar ? 'img_star' : 'img_star_none'}
+                                                onMouseEnter={() => handleMouseEnter(index)}
+                                                onMouseLeave={handleMouseLeave}
+                                                onClick={() => handleClick(index)}
+                                                data-start={index}
+                                            />
+                                        ))}
+                                    </div>
                                 </div>
                             </td>
                         </tr>
@@ -146,7 +171,7 @@ function ReviewWrites({reviewDetail} : any) {
                             <td className='flex justify-center items-center h-[64px] w-[190px] bg-[#fafafa] text-[18px] text-[#252525] border-r border-[#dbdbdb]'>File Attachment 1</td>
                             <td className='w-full px-[15px] py-[10px]'>
                                 <input type="text" 
-                                        id=""
+                                        name="Image1"
                                         className='w-full h-10 rounded-md bg-white border border-gray-300 p-[12px] hidden'
                                         placeholder='Please enter the subject'/>
                                 <Upload />
@@ -156,6 +181,7 @@ function ReviewWrites({reviewDetail} : any) {
                             <td className='flex justify-center items-center h-[64px] w-[190px] bg-[#fafafa] text-[18px] text-[#252525] border-r border-[#dbdbdb]'>File Attachment 2</td>
                             <td className='w-full px-[15px] py-[10px]'>
                                 <input type="text" 
+                                        name="Image2"
                                         className='w-full h-10 rounded-md bg-white border border-gray-300 p-[12px] hidden'
                                         placeholder='Please enter the subject'/>
                                 <Upload />
@@ -165,6 +191,7 @@ function ReviewWrites({reviewDetail} : any) {
                             <td className='flex justify-center items-center h-[64px] w-[190px] bg-[#fafafa] text-[18px] text-[#252525] border-r border-[#dbdbdb]'>File Attachment 3</td>
                             <td className='w-full px-[15px] py-[10px]'>
                                 <input type="text" 
+                                        name="Image3"
                                         className='w-full h-10 rounded-md bg-white border border-gray-300 p-[12px] hidden'
                                         placeholder='Please enter the subject'/>
                                 <Upload />
@@ -174,6 +201,7 @@ function ReviewWrites({reviewDetail} : any) {
                             <td className='flex justify-center items-center h-[64px] w-[190px] bg-[#fafafa] text-[18px] text-[#252525] border-r border-[#dbdbdb]'>File Attachment 4</td>
                             <td className='w-full px-[15px] py-[10px]'>
                                 <input type="text" 
+                                        name="Image4"
                                         className='w-full h-10 rounded-md bg-white border border-gray-300 p-[12px] hidden'
                                         placeholder='Please enter the subject'/>
                                 <Upload />
@@ -183,6 +211,7 @@ function ReviewWrites({reviewDetail} : any) {
                             <td className='flex justify-center items-center h-[64px] w-[190px] bg-[#fafafa] text-[18px] text-[#252525] border-r border-[#dbdbdb]'>File Attachment 5</td>
                             <td className='w-full px-[15px] py-[10px]'>
                                 <input type="text" 
+                                        name="Image5"
                                         className='w-full h-10 rounded-md bg-white border border-gray-300 p-[12px] hidden'
                                         placeholder='Please enter the subject'/>
                                 <Upload />
@@ -193,11 +222,23 @@ function ReviewWrites({reviewDetail} : any) {
                             <td className='w-full px-[15px] py-[10px]'>
                                     <div className="flex gap-[35px]">
                                         <div className='flex gap-2 items-center'>
-                                                <input className="w-[18px] h-[18px] rounded-full  appearance-none border checked:bg-[url('/checkbox_red.png')] checked:border-0 cursor-pointer" type="radio" id="dis" name="" />
+                                                <input 
+                                                    className="w-[18px] h-[18px] rounded-full  appearance-none border checked:bg-[url('/checkbox_red.png')] checked:border-0 cursor-pointer" 
+                                                    type="radio" 
+                                                    id="dis" 
+                                                    name="postType"
+                                                    checked={review.Post === 'Y'} 
+                                                        onChange={handleDisSelect}  />
                                                 <label htmlFor="dis" className='text-[16px] font-medium text-[#252525]'>Disclosure</label>
                                         </div>
                                         <div className='flex gap-2 items-center'>
-                                                <input className="w-[18px] h-[18px] rounded-full  appearance-none border checked:bg-[url('/checkbox_red.png')] checked:border-0 cursor-pointer" type="radio" id="pots" name="" />
+                                                <input className="w-[18px] h-[18px] rounded-full  appearance-none border checked:bg-[url('/checkbox_red.png')] checked:border-0 cursor-pointer" 
+                                                type="radio" 
+                                                id="pots" 
+                                                name="postType" 
+                                                checked={review.Post === 'N'}
+                                                onChange={handlePotsSelect}
+                                                />
                                                 <label htmlFor="pots" className='text-[16px] font-medium text-[#252525]'>Secret Posts</label>
                                         </div>
                                     </div>
