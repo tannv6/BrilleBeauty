@@ -1,9 +1,72 @@
 import Layout from "@/components/Layout";
 import ProductRelated from "@/components/ProductRelated";
 import SubNav from "@/components/SubNav";
+import axios from "axios";
+import { getSession } from "next-auth/react";
 import Image from "next/image";
+import { CDN_URL } from "@/utils/constants";
+import { useRouter } from "next/router";
+import { useState } from "react";
 
-export default function EyesLips() {
+export const getServerSideProps = async(context : any) => {
+  const session : any = await getSession(context);
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/member/login",
+        permanent: false,
+      },
+    };
+  }
+
+  const customerID = session?.user?.id;
+  const carts = await axios.get(
+    `http://localhost:3000/api/cart/list`,
+    {
+      params: { customerID: customerID },
+    }
+  );
+  return {
+    props: {
+      carts: carts.data,
+    },
+  };
+}
+
+export default function EyesLips({ carts } : any) {
+
+  console.log(carts);
+  
+
+  const [NumProduct, setNumProduct] = useState<{ [key: number]: number }>({});
+
+  // console.log(initNumberArr);
+  
+
+  const cartElement = carts.map((cart : any) => (
+    <tr className="border-b" key={cart.CartID}>
+      <td className="py-5 px-5"><input className="w-5 h-5 rounded appearance-none border checked:bg-[url('/checkbox_custome.png')]" type="checkbox" /></td>
+      <td className="py-5">
+        <div className="flex items-center gap-[25px]">
+          <Image className="rounded" src={`${CDN_URL}${cart.ProductImage || ""}`} width={100} height={100} alt=""></Image>
+          <div className="flex flex-col pr-8">
+            <p>{cart.ProductName}</p>
+            <p className="text-[15px] text-[#999999]">- [Required selection]</p>
+          </div>
+        </div>
+      </td>
+      <td className="text-center py-5 text-[#757575]">{cart.PoName}</td>
+      <td className="py-5">
+        <div className="flex flex-row justify-center">
+          <button className="rounded-l w-[33px] h-[33px] bg-[url('/product_detail/product_number_desc_btn.png')]"></button>
+          <input type="number" value={ 1} className="pt-1 border border-x-0 text-center min-w-[46px] max-w-[46px] h-[33px] outline-0" />
+          <button className="rounded-r w-[33px] h-[33px] bg-[url('/product_detail/product_number_asc_btn.png')]"></button>
+        </div>
+      </td>
+      <td className="py-5 text-xl font-bold text-center">A${cart.PoSellPrice}</td>
+      <td className="py-5 text-right"><button className="w-[33px] h-[33px] rounded bg-[url('/cart/product_delete_btn.png')]"></button></td>
+    </tr>
+  ));
   return (
       <Layout>
         <div id="main">
@@ -28,72 +91,7 @@ export default function EyesLips() {
                 </tr>
               </thead>
               <tbody>
-                <tr className="border-b">
-                  <td className="py-5 px-5"><input className="w-5 h-5 rounded appearance-none border checked:bg-[url('/checkbox_custome.png')]" type="checkbox" /></td>
-                  <td className="py-5">
-                    <div className="flex items-center gap-[25px]">
-                      <Image className="rounded" src="/cart/product_img.png" width={100} height={100} alt=""></Image>
-                      <div className="flex flex-col pr-8">
-                        <p>Damage Care Perfect Serum Original (New) - 80ml</p>
-                        <p className="text-[15px] text-[#999999]">- [Required selection]</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="text-center py-5 text-[#757575]">80ml</td>
-                  <td className="py-5">
-                    <div className="flex flex-row justify-center">
-                      <button className="rounded-l w-[33px] h-[33px] bg-[url('/product_detail/product_number_desc_btn.png')]"></button>
-                      <input type="number" value={"1"} className="pt-1 border border-x-0 text-center min-w-[46px] max-w-[46px] h-[33px] outline-0" />
-                      <button className="rounded-r w-[33px] h-[33px] bg-[url('/product_detail/product_number_asc_btn.png')]"></button>
-                    </div>
-                  </td>
-                  <td className="py-5 text-xl font-bold text-center">A$16.25</td>
-                  <td className="py-5 text-right"><button className="w-[33px] h-[33px] rounded bg-[url('/cart/product_delete_btn.png')]"></button></td>
-                </tr>
-                <tr className="border-b">
-                  <td className="py-5 px-5"><input className="w-5 h-5 rounded appearance-none border checked:bg-[url('/checkbox_custome.png')]" type="checkbox" /></td>
-                  <td className="py-5">
-                    <div className="flex items-center gap-[25px]">
-                      <Image className="rounded" src="/cart/product_img.png" width={100} height={100} alt=""></Image>
-                      <div className="flex flex-col pr-8">
-                        <p>Damage Care Perfect Serum Original (New) - 80ml</p>
-                        <p className="text-[15px] text-[#999999]">- [Required selection]</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="text-center py-5 text-[#757575]">80ml</td>
-                  <td className="py-5">
-                    <div className="flex flex-row justify-center">
-                      <button className="rounded-l w-[33px] h-[33px] bg-[url('/product_detail/product_number_desc_btn.png')]"></button>
-                      <input type="number" value={"1"} className="pt-1 border border-x-0 text-center min-w-[46px] max-w-[46px] h-[33px] outline-0" />
-                      <button className="rounded-r w-[33px] h-[33px] bg-[url('/product_detail/product_number_asc_btn.png')]"></button>
-                    </div>
-                  </td>
-                  <td className="py-5 text-xl font-bold text-center">A$16.25</td>
-                  <td className="py-5 text-right"><button className="w-[33px] h-[33px] rounded bg-[url('/cart/product_delete_btn.png')]"></button></td>
-                </tr>
-                <tr className="border-b">
-                  <td className="py-5 px-5"><input className="w-5 h-5 rounded appearance-none border checked:bg-[url('/checkbox_custome.png')]" type="checkbox" /></td>
-                  <td className="py-5">
-                    <div className="flex items-center gap-[25px]">
-                      <Image className="rounded" src="/cart/product_img.png" width={100} height={100} alt=""></Image>
-                      <div className="flex flex-col pr-8">
-                        <p>Damage Care Perfect Serum Original (New) - 80ml</p>
-                        <p className="text-[15px] text-[#999999]">- [Required selection]</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="text-center py-5 text-[#757575]">80ml</td>
-                  <td className="py-5">
-                    <div className="flex flex-row justify-center">
-                      <button className="rounded-l w-[33px] h-[33px] bg-[url('/product_detail/product_number_desc_btn.png')]"></button>
-                      <input type="number" value={"1"} className="pt-1 border border-x-0 text-center min-w-[46px] max-w-[46px] h-[33px] outline-0" />
-                      <button className="rounded-r w-[33px] h-[33px] bg-[url('/product_detail/product_number_asc_btn.png')]"></button>
-                    </div>
-                  </td>
-                  <td className="py-5 text-xl font-bold text-center">A$16.25</td>
-                  <td className="py-5 text-right"><button className="w-[33px] h-[33px] rounded bg-[url('/cart/product_delete_btn.png')]"></button></td>
-                </tr>
+                {cartElement}
               </tbody>
             </table>
             <div className="mt-[50px] flex flex-col items-end">

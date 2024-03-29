@@ -65,21 +65,27 @@ export const getServerSideProps = async (context: { params: any, query : any, re
     productRelate: response.data,
       ...response.data,
       ...(await getWebSetting(cookies)),
+    productID : productID,
+    ...response.data,
+    ...(await getWebSetting(cookies)),
     },
   };
 };
 
-
-export default function Face({ product, optionTypes, optionTypes2, productRelate, review, ...props}: any) {
-
+export default function Face({ product, optionTypes, optionTypes2, productRelate, productID, review, ...props }: any) {
   const swiperRef = useRef<SwiperCore>();
+
+  async function getUser() {
+    const session = await getSession();
+  
+    return session;   
+  }  
 
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   const [isHeart, setIsHeart] = useState<boolean>(true);
   const [NumProduct, setNumProduct] = useState<{ [key: number]: number }>({});
 
   const selectedOptionType = optionTypes.find((optionType: any) => optionType.PotID === product.PotID);
-
 
   const [dropdownState, setDropdownState] = useState({
     activeItem: product.ProductID || (optionTypes2.length > 0 ? optionTypes2[0]?.ProductID : null),
@@ -105,6 +111,8 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
         ...prevNumProducts,
         [id]: 1, 
       }));
+
+      
     }
   };
 
@@ -140,6 +148,45 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
     }
     return total;
   }, 0);
+
+  const addCartOption = Object.keys(selectedOptions).map((optionId) => {
+    if (selectedOptions[parseInt(optionId)]) {
+      const option = optionTypes2.find((option: any) => option.PoID === parseInt(optionId));
+      const optionElement = { 
+        "PoID" : option.PoID,
+        "PoNum" :  NumProduct[option.PoID] || 1
+      };
+      return optionElement;
+    }
+  });
+
+  
+  async function handleAddCart() {
+
+    let options = JSON.stringify(addCartOption);
+   
+    if(!getUser()){
+      alert("Please login!");
+    }
+
+    if(addCartOption.length <= 0 ){
+      alert("Please choose option!");
+      return;
+    }
+
+    const response = await axios.get("http://localhost:3000/api/cart/write", {
+      params: { options: options, productID: productID },
+    });
+
+    if (response.status === 201) {
+      alert("Add to cart successfully!");
+      setSelectedOptions([]);
+    }else{
+      alert("Add to cart failed");
+      return;
+    }
+
+  }
 
   const optionElements = optionTypes2
   .filter((option: any) => option.ProductID === product.ProductID)
@@ -235,7 +282,7 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                 <div className="py-5">
                   <p className="flex">
                     <span className="text-lg min-w-[190px]">Product Highlight</span>
-                    <span className="text-lg text-[#757575]"></span>
+                    {/* <span className="text-lg text-[#757575]">{product.Description}</span> */}
                   </p>
                 </div>
                 <hr />
@@ -280,8 +327,8 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                       className={`w-14 h-14 shrink-0 rounded ${isHeart ? "bg-[url('/product_detail/product_heart_on_btn.png')]" : "bg-[url('/product_detail/product_heart_btn.png')]"}`}
                       onClick={() => { setIsHeart(!isHeart) }}
                     >
-                    </button>
-                    <button className="basis-full rounded border border-[#252525]">Add To Cart</button>
+                    </button>                 
+                    <button type="button" onClick={() => handleAddCart()} className="basis-full rounded border border-[#252525]">Add To Cart</button>
                     <button className="basis-full rounded bg-[#ef426f] text-[#ffffff]">Buy Now</button>
                   </div>
                 </div>
