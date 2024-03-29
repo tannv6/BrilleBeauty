@@ -15,6 +15,7 @@ import Link from "next/link";
 import axios from "axios";
 import { parse } from "cookie";
 import { getWebSetting } from "@/lib/functions";
+import { getSession } from "next-auth/react";
 
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 export const getServerSideProps = async (context: { params: any, query: any, req: any }) => {
@@ -44,15 +45,23 @@ export const getServerSideProps = async (context: { params: any, query: any, req
     props: {
     optionTypes: result1.data.data,
     optionTypes2: result2.data.data,
-      product: productDetail.data,
-      productRelate: response.data,
-      ...response.data,
-      ...(await getWebSetting(cookies)),
+    product: productDetail.data,
+    productRelate: response.data,
+    productID : productID,
+    ...response.data,
+    ...(await getWebSetting(cookies)),
     },
   };
 };
 
-export default function Face({ product, optionTypes, optionTypes2, productRelate,...props }: any) {
+export default function Face({ product, optionTypes, optionTypes2, productRelate, productID, ...props }: any) {
+
+  async function getUser() {
+    const session = await getSession();
+  
+    return session;   
+  }  
+
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   // const [NumProduct, setNumProduct] = useState(1);
   const [isHeart, setIsHeart] = useState<boolean>(true);
@@ -136,11 +145,28 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
   
   async function handleAddCart() {
 
-    let formData = new FormData();
-
-    formData.append("option", JSON.stringify(addCartOption));   
+    let options = JSON.stringify(addCartOption);
    
-    
+    if(!getUser()){
+      alert("Please login!");
+    }
+
+    if(addCartOption.length <= 0 ){
+      alert("Please choose option!");
+      return;
+    }
+
+    const response = await axios.get("http://localhost:3000/api/cart/write", {
+      params: { options: options, productID: productID },
+    });
+
+    if (response.status === 201) {
+      alert("Add to cart successfully!");
+      setSelectedOptions([]);
+    }else{
+      alert("Add to cart failed");
+      return;
+    }
 
   }
 
@@ -227,7 +253,7 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                 <div className="py-5">
                   <p className="flex">
                     <span className="text-lg min-w-[190px]">Product Highlight</span>
-                    <span className="text-lg text-[#757575]">{product.Description}</span>
+                    {/* <span className="text-lg text-[#757575]">{product.Description}</span> */}
                   </p>
                 </div>
                 <hr />
