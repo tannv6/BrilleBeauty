@@ -36,10 +36,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
         return res.status(401).json({ result: "OK" });
       }
 
-      const user = results1[0];
-
-      console.log(user);
-      
+      const user: any = results1[0];
 
       const isRightPass = compareSync(
         CurrentPassword?.toString() || "",

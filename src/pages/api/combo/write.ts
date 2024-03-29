@@ -2,6 +2,7 @@ import connectDB from "@/app/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import formidable from "formidable";
 import { saveFile } from "@/utils/function";
+import he from "he";
 export const config = {
   api: {
     bodyParser: false,
@@ -20,14 +21,16 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       SellPrice,
       Description,
       SaleDate,
-      IsBest = 0,
-      IsBigSale = 0,
-      IsNew = 0,
+      IsBest,
+      IsBigSale,
+      IsNew,
       SaleEndDate,
       CategoryID,
       SeasonID,
     } = fields;
 
+    const des = he.encode(he.decode(Description?.[0] || ""));
+    
     let ComboImage = "";
 
     if (image) {
@@ -35,18 +38,18 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     }
     const connect = await connectDB();
     const query = `INSERT INTO combo SET 
-    ComboName = '${ComboName}', 
-    InitPrice = '${InitPrice}', 
-    SellPrice = '${SellPrice}',
-    Description = '${Description}', 
-    SaleDate = '${SaleDate}', 
+    ComboName = ${ComboName?.[0] ? `'${ComboName}'` : "ComboName"}, 
+    InitPrice = ${InitPrice?.[0] ? `'${InitPrice}'` : "InitPrice"}, 
+    SellPrice = ${SellPrice?.[0] ? `'${SellPrice}'` : "SellPrice"},
+    Description = '${des}', 
+    SaleDate = ${SaleDate?.[0] ? `'${SaleDate}'` : "SaleDate"}, 
     SaleEndDate = '${SaleEndDate}',
-    SeasonID = ${SeasonID ? `'${SeasonID}'` : "SeasonID"},
-    CategoryID = '${CategoryID}',
-    IsBest = ${IsBest}, 
-    IsBigSale = ${IsBigSale}, 
-    IsNew = ${IsNew},
-    ComboImage = '${ComboImage}'`;
+    SeasonID = ${SeasonID?.[0] ? `'${SeasonID}'` : "SeasonID"},
+    CategoryID = ${CategoryID?.[0] ? `'${CategoryID}'` : "CategoryID"},
+    IsBest = ${IsBest?.[0] ? `'${IsBest}'` : "IsBest"}, 
+    IsBigSale = ${IsBigSale?.[0] ? `'${IsBigSale}'` : "IsBigSale"}, 
+    IsNew = ${IsNew?.[0] ? `'${IsNew}'` : "IsNew"},
+    ComboImage = ${ComboImage ? `'${ComboImage}'` : "ComboImage"}`;
 
     const [results] = await connect.execute(query);
     const lastInsertedId = (results as any).insertId;

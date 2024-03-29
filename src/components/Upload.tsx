@@ -5,7 +5,6 @@ function Upload() {
     const [file, setFile] = useState<string | undefined>();
     function handleChange(e: ChangeEvent<HTMLInputElement>) {
         if (e.target.files && e.target.files[0]) {
-            console.log(e.target.files);
             setFile(URL.createObjectURL(e.target.files[0]));
         }
     }

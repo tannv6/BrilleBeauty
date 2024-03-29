@@ -32,7 +32,6 @@ function CustomEditor({ name, value, onChange }: Props) {
               value: data,
             },
           });
-        console.log({ event, editor, data });
       }}
     />
   );

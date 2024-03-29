@@ -82,8 +82,8 @@ function ProductWrite({
   const [product, setProduct] = useState<{ [key: string]: any }>({
     ProductID: productDetail?.ProductID || "",
     ProductName: productDetail?.ProductName || "",
-    InitPrice: productDetail?.InitPrice || "",
-    SellPrice: productDetail?.SellPrice || "",
+    InitPrice: productDetail?.InitPrice || 0,
+    SellPrice: productDetail?.SellPrice || 0,
     Description: productDetail?.Description || "",
     SaleDate: productDetail?.SaleDate
       ? moment(productDetail?.SaleDate).format("yyyy-MM-DD HH:mm:ss")

@@ -40,7 +40,6 @@ export const getServerSideProps = (async (context: any) => {
 export default function AboutMe({ userInfo = {}, ...props }: any) {
   const router = useRouter();
   const value = useContext(MyContext);
-  console.log(value);
 
   const [info, setInfo] = useState<{ [key: string]: any }>({
     ...userInfo,
