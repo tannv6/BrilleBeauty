@@ -35,12 +35,6 @@ const CustomEditor = dynamic(
   };
 
 function ReviewWrites({reviewDetail} : any) {
-    // const [addData, setVal] = useState("");
-    // const [addedData, showData] = useState(0);
-    // const handleChange = (e: any,editor: { getData: () => any; }) => {
-    //   const data = editor.getData();
-    //   setVal(data);
-    // }
 
     const router = useRouter();
     const [review, setReview] = useState<{
@@ -88,10 +82,10 @@ function ReviewWrites({reviewDetail} : any) {
           formData.append(key, value);
         }
         let response;
-          response = await axios.post("http://localhost:3000/api/review/write", formData);
-        if (response.status === 201) {
-            router.push("/product_detail");
-          }
+          response = await axios.post("/api/review/write", formData);
+        // if (response.status === 201) {
+        //     router.push("/product_detail");
+        //   }
     }
 
 

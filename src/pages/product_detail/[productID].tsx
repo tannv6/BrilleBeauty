@@ -15,9 +15,11 @@ import Link from "next/link";
 import axios from "axios";
 import { parse } from "cookie";
 import { getWebSetting } from "@/lib/functions";
+import { log } from "console";
 
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
-export const getServerSideProps = async (context: { params: any, query : any}) => {
+export const getServerSideProps = async (context: { params: any, query : any, req: any}) => {
+  const cookies = parse(context.req.headers.cookie || "");
   const { params, query} = context;
   const { productID, reviewID } = params;
   const productDetail = await axios.get(
@@ -27,10 +29,10 @@ export const getServerSideProps = async (context: { params: any, query : any}) =
     }
   );
 
-  const reviewDetail = await axios.get (
-    "http://localhost:3000/api/review/details",
+  const reviewDetail = await axios.get(
+    `http://localhost:3000/api/review/details`,
     {
-      params: { reviewID},
+      params: { reviewID },
     }
   );
 
@@ -53,7 +55,7 @@ export const getServerSideProps = async (context: { params: any, query : any}) =
     props: {
     optionTypes: result1.data.data,
     optionTypes2: result2.data.data,
-    reviewDetail: reviewDetail.data,
+    review: reviewDetail.data,
     product: productDetail.data,
     productRelate: response.data,
       ...response.data,
@@ -63,11 +65,10 @@ export const getServerSideProps = async (context: { params: any, query : any}) =
 };
 
 
-export default function Face({ product, optionTypes, optionTypes2, productRelate, reviewDetail}: any) {
+export default function Face({ product, optionTypes, optionTypes2, productRelate, review, ...props}: any) {
 
 
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
-  // const [NumProduct, setNumProduct] = useState(1);
   const [isHeart, setIsHeart] = useState<boolean>(true);
   const [NumProduct, setNumProduct] = useState<{ [key: number]: number }>({});
 
@@ -161,10 +162,13 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
     return description.replace(/<img[^>]*src="([^"]+)"[^>]*>/g, (match, src) => {
         return `<div class="image" style="background-image: url(${src})"></div>`;
     });
-};
+  };
+
+  
 
 
   const productImages = product.Images;
+  
 
   return (
       <Layout {...props}>
@@ -307,9 +311,8 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
               <hr />
 
               <div className="">
-                
-              {/* {reviewDetail.map((e: any) => {    
-                <div className="py-5 flex flex-row" key={e.reviewID}>
+                  
+                <div className="py-5 flex flex-row">
                   <div className="flex flex-col basis-[80%] ml-5 gap-y-3">
                     <div className="flex gap-0.5">
                       <i className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_on.png')]"></i>
@@ -318,19 +321,19 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                       <i className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_on.png')]"></i>
                       <i className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_off.png')]"></i>
                     </div>
-                    <p className="text-xl font-medium">{e.Title}</p>
+                    <p className="text-xl font-medium"></p>
                     <p className="text-[#999999]">
-                      {e.ReviewDes}
+                      CONTOUR POWDER
                     </p>
                     <p>
                       <span className="font-medium text-[17px]">uwa***</span>
                       <span className="text-[15px] text-[#999999] pl-3">
-                        {e.CreatedAt}
+                      Ive been absolutely obsessed with this lip stain lately. 16 Baked...
                         </span>
                     </p>
                     <div className="flex gap-[10px]">
                       <div className="w-[110px] h-[110px] bg-[#eeeeee] rounded-[5px]">
-                        {e.Img1}
+                       
                         </div>
                       <div className="w-[110px] h-[110px] bg-[#eeeeee] rounded-[5px]"></div>
                     </div>
@@ -344,7 +347,6 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                     <button className="w-[100px] h-7 text-[15px] text-[#999999] border rounded">DELETE</button>
                   </div>
                 </div>
-              })} */}
                 <hr />
                 <div className="flex items-center justify-center h-[123px] bg-[#f9f9f9] border-b">
                   <div className="flex w-[1131px] h-[82px]">
@@ -361,7 +363,7 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
               <ProductDetailNav tab="3"></ProductDetailNav>
             </div>
             <p className="text-xl mb-[30px] font-bold">RELATED PRODUCTS</p>
-            {productRelate.data?.map((e: any, i: any) => {
+            {productRelate.data.map((e: any, i: any) => {
                                 return (
                                     <>
                                     <ProductRelated
