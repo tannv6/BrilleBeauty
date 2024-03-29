@@ -128,23 +128,25 @@ export default function AboutMe({ userInfo = {}, ...props }: any) {
                             Date of Birth
                             <span className="text-[#ef426f]">*</span>
                           </p>
-                          <DatePicker
-                            showIcon
-                            dateFormat={"yyyy-MM-dd"}
-                            className="px-[10px] w-[450px] h-[50px] border rounded-[2px]"
-                            calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
-                            selected={
-                              DateOfBirth ? new Date(DateOfBirth) : new Date()
-                            }
-                            onChange={(date) =>
-                              handleChange({
-                                target: {
-                                  name: "DateOfBirth",
-                                  value: moment(date).format("yyyy-MM-DD"),
-                                },
-                              })
-                            }
-                          />
+                          <div>
+                            <DatePicker
+                              showIcon
+                              dateFormat={"yyyy-MM-dd"}
+                              className="px-[10px] w-[450px] h-[50px] border rounded-[2px]"
+                              calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
+                              selected={
+                                DateOfBirth ? new Date(DateOfBirth) : new Date()
+                              }
+                              onChange={(date) =>
+                                handleChange({
+                                  target: {
+                                    name: "DateOfBirth",
+                                    value: moment(date).format("yyyy-MM-DD"),
+                                  },
+                                })
+                              }
+                            />
+                          </div>
                           {/* <input
                               type="datetime-local"
                               className="px-[10px] w-[450px] h-[50px] border rounded-[2px]"

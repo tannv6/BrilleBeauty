@@ -36,8 +36,8 @@ export const authOptions: any = {
                 : user.data?.CustomerID,
             name:
               credentials?.mode == "admin"
-                ? user.data?.full_name
-                : user.data?.LastName,
+                ? user.data?.AdminUName
+                : user.data?.UserName,
           });
         } else {
           return Promise.resolve(null);
@@ -47,20 +47,24 @@ export const authOptions: any = {
     }),
   ],
   callbacks: {
-    jwt: async ({ token, user }: any) => {
+    async jwt({ token, user }: any) {
       if (user) {
         token.id = user.id;
         token.name = user.name;
       }
       return token;
     },
-    session({ session, token }: any) {
+    async session({ session, token }: any) {
       if (token && session.user) {
         session.user.name = token.name;
         session.user.id = token.id;
       }
-
       return session;
+    },
+    async redirect({ url, baseUrl }: any) {
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
     },
   },
 };

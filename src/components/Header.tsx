@@ -5,28 +5,22 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/router";
 import { ChangeEvent, Fragment, useContext, useEffect, useState } from "react";
-import { WebSetting } from "./Layout";
 import { CDN_URL } from "@/utils/constants";
 import { signOut } from "next-auth/react";
 import { MyContext } from "@/pages/_app";
 type Props = {
-  webSetting?: WebSetting;
   brandListRecommended?: any[];
-  banner_top?: any;
 };
-export default function Header({
-  brandListRecommended,
-  webSetting,
-  banner_top,
-}: Props) {
+export default function Header({ brandListRecommended }: Props) {
   const pathname = usePathname();
   const router = useRouter();
   const value: any = useContext(MyContext);
   const categoryList = JSON.parse(value?.category)?.data || [];
   const comboCategoryList = JSON.parse(value?.combo_category)?.data || [];
   const isLogin = value.isLogin;
-  console.log(isLogin);
-  
+  const webSetting = JSON.parse(value?.webSetting || "{}") || {};
+  const banner_top = JSON.parse(value?.banner_top || "{}") || {};
+
   const [brandList, setBrandList] = useState(brandListRecommended || []);
 
   function handleKeyPress(e: any) {

@@ -1,12 +1,11 @@
 import Link from "next/link";
-import React from "react";
+import React, { useContext } from "react";
 import Image from "next/image";
-import { WebSetting } from "./Layout";
 import { CDN_URL } from "@/utils/constants";
-type Props = {
-  webSetting?: WebSetting;
-};
-function Footer({ webSetting }: Props) {
+import { MyContext } from "@/pages/_app";
+function Footer() {
+  const value: any = useContext(MyContext);
+  const webSetting = JSON.parse(value?.webSetting || "{}") || {};
   return (
     <div>
       <div className="footer_top py-5 bg-[#f6f6f6] border-[#dbdbdb] border-[1px] border-l-0 border-r-0">

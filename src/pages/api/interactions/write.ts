@@ -2,13 +2,17 @@ import connectDB from "@/app/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { getToken } from "next-auth/jwt";
+const secret = process.env.NEXTAUTH_SECRET;
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   try {
+      const token = await getToken({ req, secret });
+      console.log(token);
+      
     const session: any = await getServerSession(req, res, authOptions);
     if (session?.user?.id) {
       const { ObjectType, ObjectID, InteractionType } = req.body;
       const connect = await connectDB();
-
       const searchQuery = `select * from interactions where 
         CustomerID = '${session?.user?.id}'
         and ObjectType = '${ObjectType}'

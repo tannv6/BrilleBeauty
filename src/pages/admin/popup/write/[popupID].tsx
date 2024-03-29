@@ -68,7 +68,11 @@ function PopupWrite({ popupDetail, isNew }: any) {
   function handleChange(e: any) {
     if (e.target.files) {
       setPopup({ ...popup, [e.target.name]: e.target.files[0] });
-    } else if (["IsShow", "IsFull", "IsCentered", "IsUsePosition"].includes(e.target.name)) {
+    } else if (
+      ["IsShow", "IsFull", "IsCentered", "IsUsePosition"].includes(
+        e.target.name
+      )
+    ) {
       setPopup({ ...popup, [e.target.name]: e.target.checked ? 1 : 0 });
     } else {
       setPopup({ ...popup, [e.target.name]: e.target.value });
@@ -155,43 +159,49 @@ function PopupWrite({ popupDetail, isNew }: any) {
                 </th>
                 <td className="px-6 py-2">
                   <div className="flex items-center gap-1 flex-wrap">
-                    <DatePicker
-                      showTimeInput
-                      showIcon
-                      dateFormat={"yyyy-MM-dd HH:mm:ss"}
-                      className="inline-flex items-center border h-[35px] px-2 w-[180px] ouline-0"
-                      calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
-                      selected={
-                        popup.StartDate ? new Date(popup.StartDate) : new Date()
-                      }
-                      onChange={(date) =>
-                        handleChange({
-                          target: {
-                            name: "StartDate",
-                            value: moment(date).format("yyyy-MM-DD HH:mm:ss"),
-                          },
-                        })
-                      }
-                    />
+                    <div>
+                      <DatePicker
+                        showTimeInput
+                        showIcon
+                        dateFormat={"yyyy-MM-dd HH:mm:ss"}
+                        className="inline-flex items-center border h-[35px] px-2 w-[180px] ouline-0"
+                        calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
+                        selected={
+                          popup.StartDate
+                            ? new Date(popup.StartDate)
+                            : new Date()
+                        }
+                        onChange={(date) =>
+                          handleChange({
+                            target: {
+                              name: "StartDate",
+                              value: moment(date).format("yyyy-MM-DD HH:mm:ss"),
+                            },
+                          })
+                        }
+                      />
+                    </div>
                     ~
-                    <DatePicker
-                      showTimeInput
-                      showIcon
-                      dateFormat={"yyyy-MM-dd HH:mm:ss"}
-                      className="inline-flex border h-[35px] px-2 w-[180px]"
-                      calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
-                      selected={
-                        popup.EndDate ? new Date(popup.EndDate) : new Date()
-                      }
-                      onChange={(date) =>
-                        handleChange({
-                          target: {
-                            name: ".EndDate",
-                            value: moment(date).format("yyyy-MM-DD HH:mm:ss"),
-                          },
-                        })
-                      }
-                    />
+                    <div>
+                      <DatePicker
+                        showTimeInput
+                        showIcon
+                        dateFormat={"yyyy-MM-dd HH:mm:ss"}
+                        className="inline-flex border h-[35px] px-2 w-[180px]"
+                        calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
+                        selected={
+                          popup.EndDate ? new Date(popup.EndDate) : new Date()
+                        }
+                        onChange={(date) =>
+                          handleChange({
+                            target: {
+                              name: ".EndDate",
+                              value: moment(date).format("yyyy-MM-DD HH:mm:ss"),
+                            },
+                          })
+                        }
+                      />
+                    </div>
                   </div>
                 </td>
                 <th

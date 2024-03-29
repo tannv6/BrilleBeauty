@@ -1,9 +1,10 @@
 import Head from "next/head";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { AuthProvider } from "./Providers";
 import "@/app/globals.css";
 import MainPopup from "./MainPopup";
+import { useContext } from "react";
+import { MyContext } from "@/pages/_app";
 
 export type WebSetting = {
   idx: any;
@@ -69,12 +70,11 @@ export type WebSetting = {
 
 type Props = {
   children?: any;
-  webSetting?: WebSetting;
-  banner_top?: any;
-  popup?: any[];
 };
 
-function Layout({ children, webSetting, banner_top, popup }: Props) {
+function Layout({ children }: Props) {
+  const value: any = useContext(MyContext);
+  const webSetting: WebSetting = JSON.parse(value?.webSetting || "{}") || {};
   return (
     <>
       <Head>
@@ -121,12 +121,12 @@ function Layout({ children, webSetting, banner_top, popup }: Props) {
         <link rel="canonical" href={webSetting?.domain_url} />
       </Head>
 
-        <Header webSetting={webSetting} banner_top={banner_top} />
+      <Header />
 
-        {children}
-        <MainPopup popup={popup} />
+      {children}
+      <MainPopup />
 
-        <Footer webSetting={webSetting} />
+      <Footer />
     </>
   );
 }
