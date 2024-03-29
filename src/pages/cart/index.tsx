@@ -7,8 +7,13 @@ import Image from "next/image";
 import { CDN_URL } from "@/utils/constants";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { getWebSetting } from "@/lib/functions";
+import { parse } from "cookie";
 
 export const getServerSideProps = async(context : any) => {
+
+  const cookies = parse(context.req.headers.cookie || "");
+
   const session : any = await getSession(context);
   if (!session) {
     return {
@@ -29,19 +34,27 @@ export const getServerSideProps = async(context : any) => {
   return {
     props: {
       carts: carts.data,
+      ...(await getWebSetting(cookies)),
     },
   };
 }
 
-export default function EyesLips({ carts } : any) {
-
-  console.log(carts);
+export default function EyesLips({ carts, ...props } : any) {
   
+  let obj : any = {};
+  carts.forEach((cart : any) => {
+    obj[cart.CartID] = cart.Quantity;
+  });
 
-  const [NumProduct, setNumProduct] = useState<{ [key: number]: number }>({});
-
-  // console.log(initNumberArr);
   
+  const [NumProduct, setNumProduct] = useState<{ [key: number]: number }>(obj); 
+  
+  const updateNumProduct = (id: number, value: number) => {
+    setNumProduct((prevNumProducts) => ({
+      ...prevNumProducts,
+      [id]: value,
+    }));
+  };
 
   const cartElement = carts.map((cart : any) => (
     <tr className="border-b" key={cart.CartID}>
@@ -51,24 +64,24 @@ export default function EyesLips({ carts } : any) {
           <Image className="rounded" src={`${CDN_URL}${cart.ProductImage || ""}`} width={100} height={100} alt=""></Image>
           <div className="flex flex-col pr-8">
             <p>{cart.ProductName}</p>
-            <p className="text-[15px] text-[#999999]">- [Required selection]</p>
+            <p className="text-[15px] text-[#999999]">- [{cart.PotName}]</p>
           </div>
         </div>
       </td>
       <td className="text-center py-5 text-[#757575]">{cart.PoName}</td>
       <td className="py-5">
         <div className="flex flex-row justify-center">
-          <button className="rounded-l w-[33px] h-[33px] bg-[url('/product_detail/product_number_desc_btn.png')]"></button>
-          <input type="number" value={ 1} className="pt-1 border border-x-0 text-center min-w-[46px] max-w-[46px] h-[33px] outline-0" />
-          <button className="rounded-r w-[33px] h-[33px] bg-[url('/product_detail/product_number_asc_btn.png')]"></button>
+          <button onClick={() => { updateNumProduct(cart.CartID, Math.max((NumProduct[cart.CartID] || 1) - 1, 1)) }} className="rounded-l w-[33px] h-[33px] bg-[url('/product_detail/product_number_desc_btn.png')]"></button>
+          <input type="number" value={NumProduct[cart.CartID] || 1} onChange={(e) => { updateNumProduct(cart.CartID, Number(e.target.value)) }} className="pt-1 border border-x-0 text-center min-w-[46px] max-w-[46px] h-[33px] outline-0" />
+          <button onClick={() => { updateNumProduct(cart.CartID, (NumProduct[cart.CartID] || 1) + 1) }} className="rounded-r w-[33px] h-[33px] bg-[url('/product_detail/product_number_asc_btn.png')]"></button>
         </div>
       </td>
-      <td className="py-5 text-xl font-bold text-center">A${cart.PoSellPrice}</td>
+      <td className="py-5 text-xl font-bold text-center">A${cart.PoSellPrice * NumProduct[cart.CartID]}</td>
       <td className="py-5 text-right"><button className="w-[33px] h-[33px] rounded bg-[url('/cart/product_delete_btn.png')]"></button></td>
     </tr>
   ));
   return (
-      <Layout>
+      <Layout {...props}>
         <div id="main">
           <SubNav title1="MyCart" />
           <div className="inner-container mt-[75px] mb-[155px]">
