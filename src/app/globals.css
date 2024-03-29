@@ -200,6 +200,11 @@ input[type="radio"]:checked + label {
   background-repeat: no-repeat;
 }
 
+.swiper_two .swiper-wrapper {
+  display: flex !important;
+  justify-content: center !important;
+}
+
 /* .container-main {
   max-width: 1920px;
 } */

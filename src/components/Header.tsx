@@ -189,7 +189,7 @@ export default function Header({
             >
               Brands
             </p>
-            <div className="absolute hidden top-[49px] left-1/2 transform -translate-x-1/2 bg-white w-full xl:w-[100vw] h-[322px] group-hover:block z-[100] border-b boder-gray-200 border-t">
+            <div className="absolute hidden top-[49px] left-1/2 transform -translate-x-1/2 bg-white w-full xl:w-[100vw] pb-[30px] group-hover:block z-[100] border-b boder-gray-200 border-t">
               <div className="inner-container">
                 <div className="flex items-center justify-center mt-10">
                   <div className="flex items-center w-[783px] border-b border-black">
@@ -206,15 +206,15 @@ export default function Header({
                   </div>
                 </div>
                 <div className="flex items-center justify-center mt-[55px]">
-                  <div className="w-[783px]">
+                  <div className="w-full">
                     {/* <p className="text-[22px] text-[#252525] font-bold">Recommended search words</p> */}
-                    <ul className="flex gap-[10px] mt-5">
+                    <ul className="flex flex-wrap gap-[10px] mt-5">
                       {brandList?.map((e: any, i: any) => {
                         return (
                           <Link
                             onClick={(evt) => handleLinkClick(evt, e.BrandID)}
                             key={i}
-                            className="w-[120px] h-[46px] bg-[#f4f5f7] rounded-[23px] flex items-center justify-center text-[16px] text-[#545454]"
+                            className="p-[10px] h-[46px] bg-[#f4f5f7] rounded-[23px] flex items-center justify-center text-[16px] text-[#545454]"
                             href={`/search/brand/${e.BrandID}`}
                           >
                             #{e.BrandName}
@@ -242,7 +242,7 @@ export default function Header({
                   >
                     {e.CategoryName}
                   </Link>
-                  <div className="absolute hidden top-[49px] left-1/2 transform -translate-x-1/2 bg-white w-full xl:w-[100vw] h-[400px] group-hover:block z-[100] border-b boder-gray-200 border-t">
+                  <div className="absolute hidden top-[49px] left-1/2 transform -translate-x-1/2 bg-white w-full xl:w-[100vw] pb-[30px] group-hover:block z-[100] border-b boder-gray-200 border-t">
                     <div className="inner-container flex justify-center gap-[80px] mt-[55px] whitespace-nowrap">
                       {e.child?.map((e1: any, i1: any) => {
                         return (
@@ -288,7 +288,7 @@ export default function Header({
             >
               Combo
             </Link>
-            <div className="absolute hidden top-[49px] left-1/2 transform -translate-x-1/2 bg-white w-full xl:w-[100vw] h-[420px] group-hover:block z-[100] border-b boder-gray-200 border-t">
+            <div className="absolute hidden top-[49px] left-1/2 transform -translate-x-1/2 bg-white w-full xl:w-[100vw] pb-[30px] group-hover:block z-[100] border-b boder-gray-200 border-t">
               <div className="inner-container flex gap-[70px] mt-[55px] justify-center">
                 {comboCategoryList?.map((e: any, i: any) => {
                   return (
