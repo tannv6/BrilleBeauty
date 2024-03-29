@@ -86,5 +86,5 @@ function list({ response }: any) {
     </AdminLayout>
   );
 }
-
+list.auth=false;
 export default list;

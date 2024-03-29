@@ -671,7 +671,6 @@ function ProductWrite({
                     Description
                   </th>
                   <td className="px-6 py-2" colSpan={3}>
-                    {he.decode(productDetail?.Description || "")}
                     <CustomEditor
                       name="Description"
                       value={he.decode(productDetail?.Description || "")}

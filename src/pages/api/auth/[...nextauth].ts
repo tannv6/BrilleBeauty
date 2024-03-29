@@ -1,4 +1,5 @@
 import axios from "axios";
+import { compareSync } from "bcrypt";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 export const authOptions: any = {
@@ -12,18 +13,31 @@ export const authOptions: any = {
     CredentialsProvider({
       async authorize(credentials: any) {
         const user = await axios.get(
-          "http://localhost:3000/api/customers/login",
+          `http://localhost:3000/api/${
+            credentials?.mode == "admin" ? "admin" : "customers"
+          }/login`,
           {
             params: {
               UserNameOrEmail: credentials?.username,
-              Password: credentials?.password,
             },
           }
         );
-        if (user.data) {
+        const isRightPass = compareSync(
+          credentials?.password || "",
+          credentials?.mode == "admin"
+            ? user?.data?.AdminPW
+            : user?.data?.Password
+        );
+        if (isRightPass) {
           return Promise.resolve({
-            id: user.data?.CustomerID,
-            name: user.data?.LastName,
+            id:
+              credentials?.mode == "admin"
+                ? user.data?.AdminID
+                : user.data?.CustomerID,
+            name:
+              credentials?.mode == "admin"
+                ? user.data?.full_name
+                : user.data?.LastName,
           });
         } else {
           return Promise.resolve(null);

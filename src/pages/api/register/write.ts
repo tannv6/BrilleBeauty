@@ -1,7 +1,7 @@
 import connectDB from "@/app/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import formidable from "formidable";
-import { hash } from "bcrypt";
+import { hash, hashSync } from "bcrypt";
 
 export const config = {
   api: {
@@ -16,18 +16,19 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
 
     const { user_email2, password2, first_name, last_name, birth } = fields;
 
-    hash(password2?.toString() || "", 10, async function (err: any, hash: any) {
-      const connect = await connectDB();
-      const query = `INSERT INTO customers SET 
-                                Email = '${user_email2}'
-                                , Password = '${hash}'
-                                , FirstName = '${first_name}'
-                                , LastName = '${last_name}'
-                                , BirthDay = '${birth}'
-                                , CreatedAt = now() `;
+    const hash = hashSync(password2?.toString() || "", 10);
 
-      const [results] = await connect.execute(query);
-    });
+    const connect = await connectDB();
+
+    const query = `INSERT INTO customers SET 
+                              Email = '${user_email2}'
+                              , Password = '${hash}'
+                              , FirstName = '${first_name}'
+                              , LastName = '${last_name}'
+                              , BirthDay = '${birth}'
+                              , CreatedAt = now() `;
+
+    const [results] = await connect.execute(query);
 
     return res.status(201).json({ result: "OK" });
   } catch (err) {
