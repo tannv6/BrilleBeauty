@@ -8,14 +8,34 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     if (session?.user?.id) {
       const { ObjectType, ObjectID, InteractionType } = req.body;
       const connect = await connectDB();
-      const query = `insert into interactions set 
+
+      const searchQuery = `select * from interactions where 
+        CustomerID = '${session?.user?.id}'
+        and ObjectType = '${ObjectType}'
+        and ObjectID = '${ObjectID}'
+        and InteractionType = '${InteractionType}'
+        and DeletedAt is null`;
+
+      const [result] = await connect.execute(searchQuery);
+
+      if (Array.isArray(result) && result.length > 0) {
+        const delQuery = `update interactions set DeletedAt = now() where
+        CustomerID = '${session?.user?.id}'
+        and ObjectType = '${ObjectType}'
+        and ObjectID = '${ObjectID}'
+        and InteractionType = '${InteractionType}'
+        and DeletedAt is null;`;
+        await connect.execute(delQuery);
+      } else {
+        const query = `insert into interactions set 
         CustomerID = '${session?.user?.id}',
         ObjectType = '${ObjectType}',
         ObjectID = '${ObjectID}',
         InteractionType = '${InteractionType}',
         CreatedAt = now()
         `;
-      await connect.execute(query);
+        await connect.execute(query);
+      }
       connect.end();
       return res.status(201).json({ result: "OK" });
     } else {

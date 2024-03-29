@@ -6,10 +6,18 @@ import axios from "axios";
 import { pageSize } from "@/lib/constants";
 import { useRouter } from "next/router";
 import { usePathname, useSearchParams } from "next/navigation";
-import { objectToSearchParams, searchParamsToObject } from "@/lib/functions";
+import {
+  getWebSetting,
+  objectToSearchParams,
+  searchParamsToObject,
+} from "@/lib/functions";
+import { parse } from "cookie";
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
-export async function getServerSideProps({ query: { BrandID, sort } }: any) {
-
+export async function getServerSideProps({
+  query: { BrandID, sort },
+  req,
+}: any) {
+  const cookies = parse(req.headers.cookie || "");
   const brandDetail = await axios.get(
     `http://localhost:3000/api/brand/detail`,
     {
@@ -23,11 +31,12 @@ export async function getServerSideProps({ query: { BrandID, sort } }: any) {
     props: {
       brand: brandDetail.data,
       products: response.data,
+      ...(await getWebSetting(cookies)),
     },
   };
 }
 
-export default function BrandSearch({ brand, products }: any) {
+export default function BrandSearch({ brand, products, ...props }: any) {
   const router = useRouter();
   const path = usePathname();
   const params = searchParamsToObject(useSearchParams());
@@ -42,8 +51,7 @@ export default function BrandSearch({ brand, products }: any) {
   };
 
   return (
-    <>
-      <Layout>
+      <Layout {...props}>
         <div id="main">
           <div className="w-full h-[340px] bg-[url('/sub_face/main_visual.png')]">
             <div className="flex justify-center flex-col gap-5 h-full pl-[415px]">
@@ -79,19 +87,7 @@ export default function BrandSearch({ brand, products }: any) {
             </div>
             <div className="grid grid-cols-4 gap-x-5 gap-y-[30px]">
               {products.data?.map((e: any, i: any) => {
-                return (
-                  <ProductItem
-                    key={i}
-                    image={`${CDN_URL}/${e.ProductImage}`}
-                    name={e.ProductName}
-                    oriPrice={e.InitPrice}
-                    salePrice={e.SellPrice}
-                    discount={e.discount}
-                    star={"4.7"}
-                    starCount={150}
-                    heartCount={69}
-                  />
-                );
+                return <ProductItem key={i} info={e} />;
               })}
             </div>
             <Pagination
@@ -103,6 +99,5 @@ export default function BrandSearch({ brand, products }: any) {
           </div>
         </div>
       </Layout>
-    </>
   );
 }

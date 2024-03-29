@@ -1,22 +1,26 @@
 import Layout from "@/components/Layout";
 import MypageNav from "@/components/MypageNav";
 import SubNav from "@/components/SubNav";
+import { getWebSetting } from "@/lib/functions";
 import axios from "axios";
+import { parse } from "cookie";
 import moment from "moment";
 import { GetServerSideProps } from "next";
 import { getToken } from "next-auth/jwt";
 import { getSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { FormEvent, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
 export const getServerSideProps = (async (context: any) => {
+  const cookies = parse(context.req.headers.cookie || "");
   const session = await getSession(context);
-  
+
   if (!session) {
     return {
       redirect: {
-        destination: "/login",
+        destination: "/member/login",
         permanent: false,
       },
     };
@@ -28,12 +32,14 @@ export const getServerSideProps = (async (context: any) => {
   return {
     props: {
       userInfo: response.data,
+      ...(await getWebSetting(cookies)),
     },
   };
 }) satisfies GetServerSideProps<{ userInfo: any }>;
 
-export default function AboutMe({ userInfo = {} }: any) {
-  const [info, setInfo] = useState({
+export default function AboutMe({ userInfo = {}, ...props }: any) {
+  const router = useRouter();
+  const [info, setInfo] = useState<{ [key: string]: any }>({
     ...userInfo,
     CurrentPassword: "",
     NewPassword: "",
@@ -54,9 +60,25 @@ export default function AboutMe({ userInfo = {} }: any) {
       [name]: value,
     });
   };
+  async function handleSubmit(type: "update" | "change_pass") {
+    let formData = new FormData();
+
+    for (let [key, value] of Object.entries(info)) {
+      formData.append(key, value);
+    }
+    let response;
+    if (type === "update") {
+      response = await axios.post("/api/account/update", formData);
+    } else if (type === "change_pass") {
+      response = await axios.post("/api/account/change_pass", formData);
+    }
+
+    if (response?.status === 200) {
+      router.reload();
+    }
+  }
   return (
-    <>
-      <Layout>
+      <Layout {...props}>
         <div id="main">
           <SubNav title1="My Account" title2="About Me" />
           <div className="inner-container mt-[75px] mb-[135px]">
@@ -132,7 +154,19 @@ export default function AboutMe({ userInfo = {} }: any) {
                         </div>
                       </td>
                     </tr>
-                    <tr className="border-b border-[#757575]">
+                    <tr>
+                      <td colSpan={2}>
+                        <div className="flex justify-end mt-[30px] mb-[40px]">
+                          <button
+                            onClick={() => handleSubmit("update")}
+                            className="w-[220px] h-[60px] rounded bg-[#f04b76] text-lg text-[#fff]"
+                          >
+                            Update
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr className="border-b border-t border-[#757575]">
                       <th scope="row" className="text-lg bg-[#fefafa]">
                         Change Password
                       </th>
@@ -165,9 +199,9 @@ export default function AboutMe({ userInfo = {} }: any) {
                                 onChange={handleChange}
                               ></input>
                             </div>
-                            <p className="pl-[162px] pt-1">
+                            {/* <p className="pl-[162px] pt-1">
                               Password Strength: No Password
-                            </p>
+                            </p> */}
                           </div>
                           <div className="py-5 pl-5 flex items-center justify-between border-b">
                             <p>
@@ -188,8 +222,11 @@ export default function AboutMe({ userInfo = {} }: any) {
                   </tbody>
                 </table>
                 <div className="flex justify-end mt-[50px]">
-                  <button className="w-[220px] h-[60px] rounded bg-[#f04b76] text-lg text-[#fff]">
-                    Update
+                  <button
+                    onClick={() => handleSubmit("change_pass")}
+                    className="w-[220px] h-[60px] rounded bg-[#f04b76] text-lg text-[#fff]"
+                  >
+                    Change Password
                   </button>
                 </div>
               </div>
@@ -197,6 +234,5 @@ export default function AboutMe({ userInfo = {} }: any) {
           </div>
         </div>
       </Layout>
-    </>
   );
 }

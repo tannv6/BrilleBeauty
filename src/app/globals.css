@@ -1,13 +1,13 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
 :root {
   --max-width: 1100px;
   --border-radius: 12px;
-  --font-mono: ui-monospace, Menlo, Monaco, 'Cascadia Mono', 'Segoe UI Mono',
-    'Roboto Mono', 'Oxygen Mono', 'Ubuntu Monospace', 'Source Code Pro',
-    'Fira Mono', 'Droid Sans Mono', 'Courier New', monospace;
+  --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
+    "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
+    "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
 
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -77,7 +77,6 @@
   }
 }
 
-
 @layer base {
   html {
     @apply font-Arial;
@@ -118,11 +117,9 @@ body {
   gap: 30px;
 }
 
-
 .gnb_active {
   color: #f1547c;
 }
-
 
 .inner-container {
   position: relative;
@@ -148,7 +145,6 @@ body {
   margin: 60px 0;
 }
 
-
 .color-25 {
   color: #252525;
 }
@@ -157,26 +153,23 @@ body {
   color: #bbb;
 }
 
-
-
 /* input[type="radio"] + label span:hover,
 input[type="radio"] + label:hover span{
 transform: scale(1.2);
 }  */
 
-
 input[type="radio"]:checked + label span {
-background-color: #252525;
-box-shadow: 0px 0px 0px 8px white inset;
+  background-color: #252525;
+  box-shadow: 0px 0px 0px 8px white inset;
 }
 
-input[type="radio"] + label{
+input[type="radio"] + label {
   display: flex;
   align-items: center;
   text-wrap: nowrap;
 }
 
-input[type="radio"]:checked + label{
+input[type="radio"]:checked + label {
   color: #252525;
   display: flex;
   align-items: center;
@@ -191,18 +184,18 @@ input[type="radio"]:checked + label{
 }
 
 .img_star {
-  width: 18px; 
+  width: 18px;
   height: 18px;
-  background-image: url('/start_ic.png');
+  background-image: url("/start_ic.png");
   background-size: cover;
   background-repeat: no-repeat;
   cursor: pointer;
 }
 
 .img_star_none {
-  width: 18px; 
+  width: 18px;
   height: 18px;
-  background-image: url('/start_g_ic.png'); 
+  background-image: url("/start_g_ic.png");
   background-size: cover;
   background-repeat: no-repeat;
 }
@@ -222,4 +215,25 @@ input[type="radio"]:checked + label{
   html {
     color-scheme: white;
   }
+}
+
+@layer utilities {
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: unset;
 }

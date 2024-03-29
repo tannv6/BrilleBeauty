@@ -121,14 +121,12 @@ function Layout({ children, webSetting, banner_top, popup }: Props) {
         <link rel="canonical" href={webSetting?.domain_url} />
       </Head>
 
-      <AuthProvider>
         <Header webSetting={webSetting} banner_top={banner_top} />
 
         {children}
         <MainPopup popup={popup} />
 
-        <Footer />
-      </AuthProvider>
+        <Footer webSetting={webSetting} />
     </>
   );
 }

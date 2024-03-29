@@ -5,7 +5,6 @@ import Image from "next/image";
 
 export default function EyesLips() {
   return (
-    <>
       <Layout>
         <div id="main">
           <SubNav title1="MyCart" />
@@ -113,6 +112,5 @@ export default function EyesLips() {
           </div>
         </div>
       </Layout>
-    </>
   );
 }
