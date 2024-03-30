@@ -32,6 +32,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       PotID,
       Options,
       BrandID,
+      Quantity
     } = fields;
 
     const des = he.encode(he.decode(Description?.[0] || ""));
@@ -51,6 +52,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     ProductName = '${ProductName?.[0] || ""}', 
     InitPrice = '${InitPrice?.[0] || 0}', 
     SellPrice = '${SellPrice?.[0] || 0}',
+    Quantity = '${Quantity?.[0] || 0}',
     Description = '${des}', 
     SaleDate = ${SaleDate?.[0] ? `'${SaleDate}'` : "SaleDate"}, 
     SaleEndDate = ${SaleEndDate?.[0] ? `'${SaleEndDate}'` : "SaleEndDate"},

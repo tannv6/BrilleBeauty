@@ -66,6 +66,13 @@ export const authOptions: any = {
       else if (new URL(url).origin === baseUrl) return url;
       return baseUrl;
     },
+    async authorized({ request, auth }: any) {
+      const { pathname } = request.nextUrl;
+      console.log(pathname);
+      
+      if (pathname === "/middleware-example") return !!auth;
+      return true;
+    },
   },
 };
 export default NextAuth(authOptions);

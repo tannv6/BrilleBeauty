@@ -9,21 +9,9 @@ import Image from "next/image";
 import { getInteractions } from "../api/interactions/list";
 import { Product } from "@/lib/types";
 import { useRouter } from "next/router";
-import { parse } from "cookie";
-import { getWebSetting } from "@/lib/functions";
 import Link from "next/link";
 export const getServerSideProps = (async (context: any) => {
-  const cookies = parse(context.req.headers.cookie || "");
   const session = await getSession(context);
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/member/login",
-        permanent: false,
-      },
-    };
-  }
   const response = await getInteractions({
     InteractionType: interactionTypes.like.id,
     ObjectType: objectTypes.product.id,
@@ -33,11 +21,10 @@ export const getServerSideProps = (async (context: any) => {
   return {
     props: {
       wishList: response,
-    ...(await getWebSetting(cookies)),
     },
   };
 }) satisfies GetServerSideProps<{ wishList: any }>;
-export default function MyWishList({ wishList, ...props }: any) {
+export default function MyWishList({ wishList}: any) {
   const router = useRouter();
   const handleDelFavorite = async (ProductID: number) => {
     await axios.post("/api/interactions/write", {
@@ -48,7 +35,7 @@ export default function MyWishList({ wishList, ...props }: any) {
     router.replace(router.asPath);
   };
   return (
-      <Layout {...props}>
+      <Layout>
         <div id="main">
           <SubNav title1="My Account" title2="My Wish List" />
           <div className="inner-container mt-[75px] mb-[135px]">

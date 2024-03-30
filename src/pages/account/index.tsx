@@ -1,34 +1,10 @@
 import Layout from "@/components/Layout";
 import MypageNav from "@/components/MypageNav";
 import SubNav from "@/components/SubNav";
-import { getWebSetting } from "@/lib/functions";
-import { parse } from "cookie";
-import { GetServerSideProps } from "next";
-import { getSession } from "next-auth/react";
 import Link from "next/link";
-
-export const getServerSideProps = (async (context: any) => {
-  const cookies = parse(context.req.headers.cookie || "");
-  const session = await getSession(context);
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/member/login",
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: {
-      ...(await getWebSetting(cookies)),
-    },
-  };
-}) satisfies GetServerSideProps<{}>;
-export default function Account({ ...props }) {
+export default function Account() {
   return (
-      <Layout {...props}>
+      <Layout>
         <div id="main">
           <SubNav title1="My Account" />
           <div className="inner-container mt-[75px] mb-[200px]">
