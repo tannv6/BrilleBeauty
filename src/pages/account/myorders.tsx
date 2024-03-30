@@ -31,8 +31,6 @@ export const getServerSideProps = (async (context: any) => {
   };
 }) satisfies GetServerSideProps<{ response: any }>;
 export default function MyOrders({ response, ...props }: any) {
-  console.log(response);
-
   return (
       <Layout {...props}>
         <div id="main">

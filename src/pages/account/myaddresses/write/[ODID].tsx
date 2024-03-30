@@ -6,21 +6,11 @@ import { getWebSetting } from "@/lib/functions";
 import axios from "axios";
 import { parse } from "cookie";
 import { GetServerSideProps } from "next";
-import { getSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 export const getServerSideProps = (async (context: any) => {
   const cookies = parse(context.req.headers.cookie || "");
-  const session = await getSession(context);
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/member/login",
-        permanent: false,
-      },
-    };
-  }
   const result1 = await axios.get(`http://localhost:3000/api/adress/countries`);
   return {
     props: {

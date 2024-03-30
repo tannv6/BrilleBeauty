@@ -248,45 +248,51 @@ function BannerWrite({ bannerDetail, isNew, catObject }: any) {
                 </th>
                 <td className="px-6 py-2">
                   <div className="flex items-center gap-1">
-                    <DatePicker
-                      showTimeInput
-                      showIcon
-                      dateFormat={"yyyy-MM-dd HH:mm:ss"}
-                      className="inline-flex items-center border h-[35px] px-2 w-[180px] ouline-0"
-                      calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
-                      selected={
-                        banner.ShowDate ? new Date(banner.ShowDate) : new Date()
-                      }
-                      onChange={(date) =>
-                        handleChange({
-                          target: {
-                            name: "ShowDate",
-                            value: moment(date).format("yyyy-MM-DD HH:mm:ss"),
-                          },
-                        })
-                      }
-                    />
+                    <div>
+                      <DatePicker
+                        showTimeInput
+                        showIcon
+                        dateFormat={"yyyy-MM-dd HH:mm:ss"}
+                        className="inline-flex items-center border h-[35px] px-2 w-[180px] ouline-0"
+                        calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
+                        selected={
+                          banner.ShowDate
+                            ? new Date(banner.ShowDate)
+                            : new Date()
+                        }
+                        onChange={(date) =>
+                          handleChange({
+                            target: {
+                              name: "ShowDate",
+                              value: moment(date).format("yyyy-MM-DD HH:mm:ss"),
+                            },
+                          })
+                        }
+                      />
+                    </div>
                     ~
-                    <DatePicker
-                      showTimeInput
-                      showIcon
-                      dateFormat={"yyyy-MM-dd HH:mm:ss"}
-                      className="inline-flex border h-[35px] px-2 w-[180px]"
-                      calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
-                      selected={
-                        banner.ShowEndDate
-                          ? new Date(banner.ShowEndDate)
-                          : new Date()
-                      }
-                      onChange={(date) =>
-                        handleChange({
-                          target: {
-                            name: "ShowEndDate",
-                            value: moment(date).format("yyyy-MM-DD HH:mm:ss"),
-                          },
-                        })
-                      }
-                    />
+                    <div>
+                      <DatePicker
+                        showTimeInput
+                        showIcon
+                        dateFormat={"yyyy-MM-dd HH:mm:ss"}
+                        className="inline-flex border h-[35px] px-2 w-[180px]"
+                        calendarIconClassname="top-[50%] translate-y-[-50%] right-0"
+                        selected={
+                          banner.ShowEndDate
+                            ? new Date(banner.ShowEndDate)
+                            : new Date()
+                        }
+                        onChange={(date) =>
+                          handleChange({
+                            target: {
+                              name: "ShowEndDate",
+                              value: moment(date).format("yyyy-MM-DD HH:mm:ss"),
+                            },
+                          })
+                        }
+                      />
+                    </div>
                   </div>
                 </td>
               </tr>

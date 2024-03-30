@@ -1,7 +1,8 @@
+import { MyContext } from "@/pages/_app";
 import { CDN_URL } from "@/utils/constants";
 import { setCookieClient } from "@/utils/cookie";
 import Image from "next/image";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 type Props = {
   popup?: {
     PopupID: any;
@@ -23,7 +24,9 @@ type Props = {
     IsUsePosition: any;
   }[];
 };
-function MainPopup({ popup }: Props) {
+function MainPopup() {
+  const value: any = useContext(MyContext);
+  const popup: Props["popup"] = JSON.parse(value?.popup || "{}") || {};
   const [scrollEnabled, setScrollEnabled] = useState(Number(popup?.length) > 0);
   const [popupList, setPopupList] = useState(popup || []);
   const hanldeClosePop = (id: number) => {
@@ -54,7 +57,7 @@ function MainPopup({ popup }: Props) {
 
   useEffect(() => {
     toggleScroll();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scrollEnabled]);
 
   return (

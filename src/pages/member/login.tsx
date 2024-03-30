@@ -74,7 +74,7 @@ export default function Login({ ...props }) {
               Login
             </button>
             <Link
-              href={"/register"}
+              href={"/member/register"}
               className={`w-full h-[54px] border border-[#dbdbdb] flex items-center justify-center text-[18px] text-[#999] border-b-[#252525] font-bold`}
             >
               Register

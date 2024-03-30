@@ -12,7 +12,6 @@ export default async function handle(
 
     const connect = await connectDB();
     const totalQuery = `select * from province where CountryID = '${CountryID}' and DeletedAt is null`;
-console.log(totalQuery);
 
     const [resultTotal]: any = await connect.execute(totalQuery);
 

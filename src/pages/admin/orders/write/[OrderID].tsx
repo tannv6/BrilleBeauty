@@ -2,14 +2,10 @@ import React, { FormEvent, useState } from "react";
 import Dropdown from "@/components/Dropdown";
 import axios from "axios";
 import { useRouter } from "next/router";
-import DatePicker from "react-datepicker";
 
 import "react-datepicker/dist/react-datepicker.css";
 import AdminLayout from "../../components/AdminLayout";
-import Checkbox from "../../components/Checkbox";
 import Link from "next/link";
-import Input from "../../components/Input";
-import moment from "moment";
 import Table from "../../components/Table";
 import Thead from "../../components/Thead";
 import Tr from "../../components/Tr";
