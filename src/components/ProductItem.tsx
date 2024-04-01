@@ -1,17 +1,28 @@
 import "@/app/globals.css";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Product } from "@/lib/types";
 import { CDN_URL } from "@/utils/constants";
 import { getDiscount } from "@/lib/functions";
+import { getSession } from "next-auth/react";
+import { DataDispatchContext } from "@/pages/_app";
 
 type Props = {
   info?: Product;
 };
 
 function ProductItem({ info }: Props) {
+
+  const dispatch:any = useContext(DataDispatchContext);
+
+  async function getUser() {
+    const session = await getSession();
+  
+    return session;   
+  }
+
   const handleFavorite = async () => {
     await axios.post("/api/interactions/write", {
       ObjectType: "product",
@@ -19,6 +30,36 @@ function ProductItem({ info }: Props) {
       InteractionType: "like",
     });
   };
+
+
+
+  const handleAddCart = async () => {
+    let options = JSON.stringify([{
+      "PoID" : 0,
+      "PoNum" : 1
+    }]);
+
+    if(!getUser()){
+      alert("Please login!");
+      return;
+    }
+
+    const response = await axios.get("/api/cart/write", {
+      params: { options: options, productID: info?.ProductID },
+    });
+
+    if (response.status === 201) {
+      alert("Add to cart successfully!");
+      dispatch({
+        type: "UPDATE_CART_COUNT",
+        payload: 1
+      });
+    }else{
+      alert("Add to cart failed");
+      return;
+    }
+  }
+
   return (
     <div className="relative product group">
       <Link
@@ -75,7 +116,7 @@ function ProductItem({ info }: Props) {
           onClick={handleFavorite}
           className="w-[60px] h-[60px] bg-[url('/product_button_heart.png')]"
         ></button>
-        <button className="w-[60px] h-[60px] bg-[url('/product_button_cart.png')]"></button>
+        <button onClick={handleAddCart} className="w-[60px] h-[60px] bg-[url('/product_button_cart.png')]"></button>
       </div>
     </div>
   );

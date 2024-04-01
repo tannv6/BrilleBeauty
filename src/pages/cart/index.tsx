@@ -5,24 +5,12 @@ import axios from "axios";
 import { getSession } from "next-auth/react";
 import Image from "next/image";
 import { CDN_URL } from "@/utils/constants";
-import { useRouter } from "next/router";
 import { useState } from "react";
-import { getWebSetting } from "@/lib/functions";
-import { parse } from "cookie";
+import { useRouter } from "next/router";
 
 export const getServerSideProps = async(context : any) => {
 
-  const cookies = parse(context.req.headers.cookie || "");
-
   const session : any = await getSession(context);
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/member/login",
-        permanent: false,
-      },
-    };
-  }
 
   const customerID = session?.user?.id;
   const carts = await axios.get(
@@ -33,32 +21,115 @@ export const getServerSideProps = async(context : any) => {
   );
   return {
     props: {
-      carts: carts.data,
-      ...(await getWebSetting(cookies)),
+      cartList: carts.data,
     },
   };
 }
 
-export default function EyesLips({ carts, ...props } : any) {
+export default function EyesLips({ cartList } : any) {
   
+  const [carts, setCarts] = useState<[]>(cartList); 
+  
+  const router = useRouter();
+
   let obj : any = {};
   carts.forEach((cart : any) => {
     obj[cart.CartID] = cart.Quantity;
   });
 
-  
   const [NumProduct, setNumProduct] = useState<{ [key: number]: number }>(obj); 
-  
-  const updateNumProduct = (id: number, value: number) => {
-    setNumProduct((prevNumProducts) => ({
+  const [checkboxes, setCheckboxes] = useState<{ [key: number]: boolean }>({});
+  const [totalNumber, setTotalNumber] = useState<number>(0);
+  const [totalPrice, setTotalPrice] = useState<number>(0);
+  const [checkAll, setCheckAll] = useState<boolean>(false);
+
+  const updateNumProduct = (id: number, value: number, isCheck : boolean, action: string, price : number) => {
+    setNumProduct( (prevNumProducts) => ({
+      ...prevNumProducts,
+      [id]: value,
+    }) 
+    );
+ 
+    if(isCheck){
+      if(action == '+'){
+        setTotalNumber( (totalNumber) => (totalNumber + 1) );
+        setTotalPrice( (totalPrice) => (totalPrice + price) );
+      }else if(action == '-' && NumProduct[id] > 1){
+        setTotalNumber( (totalNumber) => (totalNumber - 1) );
+        setTotalPrice( (totalPrice) => (totalPrice - price) );
+      }else if(action == ""){
+        setTotalNumber( (totalNumber) => (totalNumber - NumProduct[id] + value) );
+        setTotalPrice( (totalPrice) => (totalPrice - NumProduct[id] * price + value * price) );
+      }  
+    }
+  };
+
+  const changeCheckboxes = (id: number, value: boolean, price : number) => {
+    setCheckboxes((prevNumProducts) => ({
       ...prevNumProducts,
       [id]: value,
     }));
+    
+    if(value){
+      setTotalNumber( (totalNumber) => (totalNumber + NumProduct[id]) );
+      setTotalPrice( (totalPrice) => (totalPrice + price) );
+    }else{
+      setTotalNumber( (totalNumber) => (Math.max(totalNumber - NumProduct[id], 0)) );
+      setTotalPrice( (totalPrice) => (Math.max(totalPrice - price, 0)) );
+    }
+    
   };
+
+  const selectAllCart = () => {
+    setCheckAll(!checkAll);
+    if(checkAll){
+      setTotalNumber(0);
+      setTotalPrice(0);
+      carts.forEach((cart : any) => {
+        changeCheckboxes(cart.CartID, false, Number(cart.PoSellPrice || cart.SellPrice) * NumProduct[cart.CartID]);
+      });
+    } else {
+      carts.forEach((cart : any) => {
+        changeCheckboxes(cart.CartID, true, Number(cart.PoSellPrice || cart.SellPrice) * NumProduct[cart.CartID]);
+      });
+    }   
+  }
+
+  const paymentProduct = async () => {
+    const selectCartLength = Object.entries(checkboxes).length;
+    
+    if(selectCartLength <= 0 ){
+      alert("Please select at least 1 product!");
+      return;
+    } 
+  }
+
+  const handleDeleteCart = async (id : number, isCheck: boolean, price : number) => {
+    if(confirm("Are you sure you want to remove the product from your cart?") == false){
+      return;
+    }
+    const response = await axios.get("/api/cart/delete", {
+      params: { CartID: id },  
+    });
+
+    if (response.status === 201) {
+      setCarts(response.data);
+      if(isCheck){
+        setTotalNumber( (totalNumber) => (totalNumber - NumProduct[id]) );
+        setTotalPrice( (totalPrice) => (totalPrice - NumProduct[id] * price) );
+      }
+    }else{
+      alert("Product deletion failed!");
+      return;
+    }
+
+  }
 
   const cartElement = carts.map((cart : any) => (
     <tr className="border-b" key={cart.CartID}>
-      <td className="py-5 px-5"><input className="w-5 h-5 rounded appearance-none border checked:bg-[url('/checkbox_custome.png')]" type="checkbox" /></td>
+      <td className="py-5 px-5">
+        <input onChange={()=>{changeCheckboxes(cart.CartID, !checkboxes[cart.CartID], (cart.PoSellPrice || cart.SellPrice) * NumProduct[cart.CartID])}} 
+              checked={checkboxes[cart.CartID]}  className="w-5 h-5 rounded appearance-none border checked:bg-[url('/checkbox_custome.png')]" type="checkbox" /></td>
       <td className="py-5">
         <div className="flex items-center gap-[25px]">
           <Image className="rounded" src={`${CDN_URL}${cart.ProductImage || ""}`} width={100} height={100} alt=""></Image>
@@ -71,17 +142,17 @@ export default function EyesLips({ carts, ...props } : any) {
       <td className="text-center py-5 text-[#757575]">{cart.PoName}</td>
       <td className="py-5">
         <div className="flex flex-row justify-center">
-          <button onClick={() => { updateNumProduct(cart.CartID, Math.max((NumProduct[cart.CartID] || 1) - 1, 1)) }} className="rounded-l w-[33px] h-[33px] bg-[url('/product_detail/product_number_desc_btn.png')]"></button>
-          <input type="number" value={NumProduct[cart.CartID] || 1} onChange={(e) => { updateNumProduct(cart.CartID, Number(e.target.value)) }} className="pt-1 border border-x-0 text-center min-w-[46px] max-w-[46px] h-[33px] outline-0" />
-          <button onClick={() => { updateNumProduct(cart.CartID, (NumProduct[cart.CartID] || 1) + 1) }} className="rounded-r w-[33px] h-[33px] bg-[url('/product_detail/product_number_asc_btn.png')]"></button>
+          <button onClick={() => { updateNumProduct(cart.CartID, Math.max((NumProduct[cart.CartID] || 1) - 1, 1), checkboxes[cart.CartID], "-", Number(cart.PoSellPrice || cart.SellPrice)) }} className="rounded-l w-[33px] h-[33px] bg-[url('/product_detail/product_number_desc_btn.png')]"></button>
+          <input type="number" value={NumProduct[cart.CartID] || 1} onChange={(e) => { updateNumProduct(cart.CartID, Number(e.target.value) || 1, checkboxes[cart.CartID], "", Number(cart.PoSellPrice || cart.SellPrice)) }} className="pt-1 border border-x-0 text-center min-w-[46px] max-w-[46px] h-[33px] outline-0" />
+          <button onClick={() => { updateNumProduct(cart.CartID, (NumProduct[cart.CartID] || 1) + 1, checkboxes[cart.CartID], "+", Number(cart.PoSellPrice || cart.SellPrice)) }} className="rounded-r w-[33px] h-[33px] bg-[url('/product_detail/product_number_asc_btn.png')]"></button>
         </div>
       </td>
-      <td className="py-5 text-xl font-bold text-center">A${cart.PoSellPrice * NumProduct[cart.CartID]}</td>
-      <td className="py-5 text-right"><button className="w-[33px] h-[33px] rounded bg-[url('/cart/product_delete_btn.png')]"></button></td>
+      <td className="py-5 text-xl font-bold text-center">A${(cart.PoSellPrice || cart.SellPrice) * NumProduct[cart.CartID]}</td>
+      <td className="py-5 text-right"><button onClick={ () => { handleDeleteCart(cart.CartID, checkboxes[cart.CartID], Number(cart.PoSellPrice || cart.SellPrice)) } } className="w-[33px] h-[33px] rounded bg-[url('/cart/product_delete_btn.png')]"></button></td>
     </tr>
   ));
   return (
-      <Layout {...props}>
+      <Layout>
         <div id="main">
           <SubNav title1="MyCart" />
           <div className="inner-container mt-[75px] mb-[155px]">
@@ -109,13 +180,13 @@ export default function EyesLips({ carts, ...props } : any) {
             </table>
             <div className="mt-[50px] flex flex-col items-end">
               <div className="flex items-center gap-[115px] w-full">
-                <button className="mr-auto ml-4 text-lg w-[144px] h-[36px] rounded border border-[#dbdbdb]">Select all</button>
-                <p className="text-[18px]">Total Payment <span className="text-base text-[#757575]">(0 Products):</span></p>
-                <p className="text-[30px] text-[#ef426f]">A$16.25</p>
+                <button onClick={ () => { selectAllCart() } } className="mr-auto ml-4 text-lg w-[144px] h-[36px] rounded border border-[#dbdbdb]">{ checkAll ? 'Unselect all' : 'Select all'}</button>
+                <p className="text-[18px]">Total Payment <span className="text-base text-[#757575]">({totalNumber} Products):</span></p>
+                <p className="text-[30px] text-[#ef426f]">A${totalPrice}</p>
               </div>
               <div className="flex mt-[40px] gap-[10px]">
-                <button className="w-[252px] h-[56px] border border-black rounded text-lg">Continue Shopping</button>
-                <button className="w-[252px] h-[56px] rounded bg-[#ef426f] text-[#ffffff] text-lg">Purchase</button>
+                <button onClick={() => { router.push("/products/category/1") }} className="w-[252px] h-[56px] border border-black rounded text-lg">Continue Shopping</button>
+                <button onClick={() => { paymentProduct() }} className="w-[252px] h-[56px] rounded bg-[#ef426f] text-[#ffffff] text-lg">Purchase</button>
               </div>
             </div>
             <p className="text-center mt-[140px] mb-[50px] text-xl font-bold">SHOP MORE TO ENJOY FREE SHIPPING</p>
