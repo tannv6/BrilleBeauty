@@ -11,6 +11,8 @@ import "swiper/swiper-bundle.css";
 import Image from "next/image";
 import { CDN_URL } from "@/utils/constants";
 import axios from "axios";
+import he from "he";
+
 
 export default function Main({
   main_visual,
@@ -19,11 +21,15 @@ export default function Main({
   best_main,
   new_main,
   sale_main,
+  review,
 }: any) {
+  
+
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   const [bestPrd, setBestPrd] = useState(best_main);
   const [newPrd, setNewPrd] = useState(new_main);
   const [salePrd, setSalePrd] = useState(sale_main);
+  const [reviews, setReviews] = useState(review);
 
   const handleLoadMoreBest = async () => {
     const response3 = await axios.get(
@@ -75,6 +81,38 @@ export default function Main({
       list: [...salePrd.list, ...response5.data.list],
     });
   };
+
+  const getReview = async () => {
+    const reviewDetail = await axios.get(
+      "http://localhost:3000/api/review/list",
+    );
+    setReviews({
+      ...reviewDetail.data,
+      data: [...reviews.data, ...reviewDetail.data.data],
+    });
+  };
+
+
+
+  const formatCreatedAt = (createdAt : any) => {
+    const date = new Date(createdAt);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}.${month}.${day}`;
+  };
+
+  const renderTextOnly = (htmlContent: any) => {
+    const decodedHtmlContent = he.decode(htmlContent);
+    const filteredHtmlContent = decodedHtmlContent.replace(/<img[^>]*>/g, '');
+    return (
+        <div
+            className="text-[16px] text-[#999] truncate overflow-hidden whitespace-pre-wrap line-clamp-2 min-h-[52px]"
+            dangerouslySetInnerHTML={{ __html: filteredHtmlContent }}
+        />
+    );
+};
+  
 
   return (
     <div className="container-main">
@@ -206,336 +244,54 @@ export default function Main({
             }}
             spaceBetween={20}
           >
-            <SwiperSlide>
+          {reviews.data?.map((e: any, i: any) => (
+            <SwiperSlide key={i}>
               <Link
-                href="/review_list"
+                href={`/review_detail/${e?.ReviewID}`}
                 className="popular_product_element relative"
               >
                 <div className="thumbnail relative">
-                  <Image
-                    className="thumb_image w-[283px] h-[283px] object-cover"
-                    src="/review_img01.png"
-                    alt=""
-                    width={283}
-                    height={283}
-                  />
+                {e.Img1 ? (
+                    <Image
+                      src={`${CDN_URL}${e.Img1}`}
+                      className="thumb_image w-[283px] h-[283px] object-cover border border-[#dbdbdb] rounded-t-2xl"
+                      alt=""
+                      width={283}
+                      height={283}
+                    />
+                  ) : (
+                    <Image
+                      src="no_img.png"
+                      className="thumb_image w-[283px] h-[283px] object-cover border border-[#dbdbdb] rounded-t-2xl"
+                      alt=""
+                      width={283}
+                      height={283}
+                    />
+                  )}
                 </div>
                 <div className="product_props flex flex-col gap-4 px-5 py-5 border-[#dbdbdb] border-[1px] border-t-0">
                   <div className="flex items-center gap-2">
-                    <Image
-                      className="icon_star"
-                      src="/start_ic.png"
-                      alt=""
-                      width={18}
-                      height={18}
-                    />
-                    <Image
-                      className="icon_star"
-                      src="/start_ic.png"
-                      alt=""
-                      width={18}
-                      height={18}
-                    />
-                    <Image
-                      className="icon_star"
-                      src="/start_ic.png"
-                      alt=""
-                      width={18}
-                      height={18}
-                    />
-                    <Image
-                      className="icon_star"
-                      src="/start_ic.png"
-                      alt=""
-                      width={18}
-                      height={18}
-                    />
-                    <Image
-                      className="icon_star"
-                      src="/start_g_ic.png"
-                      alt=""
-                      width={18}
-                      height={18}
-                    />
+                    {Array.from({ length: Math.min(Math.max(0, e.Start), 5) }).map((_, index) => (
+                      <i key={index} className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_on.png')]"></i>
+                    ))}
+                    {Array.from({ length: Math.max(0, 5 - Math.min(Math.max(0, e.Start), 5)) }).map((_, index) => (
+                      <i key={index + e.Start} className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_off.png')]"></i>
+                    ))}
                   </div>
                   <div className="text-[17px] color-25 font-bold white-space-nowrap overflow-hidden text-ellipsis line-height-21 line-clamp-1">
-                    Contour Powder
+                      {e.Title}
                   </div>
-                  <div className="text-[16px] text-[#999] white-space-nowrap overflow-hidden text-ellipsis line-clamp-2 line-height-36">
-                    Ive been absolutely obsessed with this lip stain lately. 16
-                    Baked
+                  <div className="text-[16px] text-[#999] truncate overflow-hidden whitespace-pre-wrap line-clamp-2 min-h-[52px]">
+                    {renderTextOnly(e.ReviewDes)}
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-[13px] text-[#999]">wls****</span>
-                    <span className="text-[13] text-[#999]">2020.08.11</span>
+                    <span className="text-[15px] text-[#999]">{e.UserName && e.UserName}</span>
+                    <span className="text-[13] text-[#999]">{formatCreatedAt(e.CreatedAt)}</span>
                   </div>
                 </div>
               </Link>
             </SwiperSlide>
-            <SwiperSlide>
-              <Link
-                href="review_list"
-                className="popular_product_element relative w-[283px]"
-              >
-                <div className="thumbnail relative">
-                  <Image
-                    className="thumb_image w-[283px] h-[283px] object-cover"
-                    src="/review_img02.png"
-                    alt=""
-                    width={283}
-                    height={283}
-                  />
-                </div>
-                <div className="product_props flex flex-col gap-4 px-5 py-5 border-[#dbdbdb] border-[1px] border-t-0">
-                  <div className="flex items-center gap-2">
-                    <Image
-                      className="icon_star"
-                      src="/start_ic.png"
-                      alt=""
-                      width={18}
-                      height={18}
-                    />
-                    <Image
-                      className="icon_star"
-                      src="/start_ic.png"
-                      alt=""
-                      width={18}
-                      height={18}
-                    />
-                    <Image
-                      className="icon_star"
-                      src="/start_ic.png"
-                      alt=""
-                      width={18}
-                      height={18}
-                    />
-                    <Image
-                      className="icon_star"
-                      src="/start_ic.png"
-                      alt=""
-                      width={18}
-                      height={18}
-                    />
-                    <Image
-                      className="icon_star"
-                      src="/start_g_ic.png"
-                      alt=""
-                      width={18}
-                      height={18}
-                    />
-                  </div>
-                  <div className="text-[17px] color-25 font-bold white-space-nowrap overflow-hidden text-ellipsis line-height-21 line-clamp-1">
-                    Contour Powder
-                  </div>
-                  <div className="text-[16px] text-[#999] white-space-nowrap overflow-hidden text-ellipsis line-clamp-2 line-height-36">
-                    Ive been absolutely obsessed with this lip stain lately. 16
-                    Baked
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-[13px] text-[#999]">wls****</span>
-                    <span className="text-[13] text-[#999]">2020.08.11</span>
-                  </div>
-                </div>
-              </Link>
-            </SwiperSlide>
-            <SwiperSlide>
-              <Link
-                href="review_list"
-                className="popular_product_element relative w-[283px]"
-              >
-                <div className="thumbnail relative">
-                  <Image
-                    className="thumb_image w-[283px] h-[283px] object-cover"
-                    src="/review_img03.png"
-                    alt=""
-                    width={283}
-                    height={283}
-                  />
-                </div>
-                <div className="product_props flex flex-col gap-4 px-5 py-5 border-[#dbdbdb] border-[1px] border-t-0">
-                  <div className="flex items-center gap-2">
-                    <Image
-                      className="icon_star"
-                      src="/start_ic.png"
-                      alt=""
-                      width={18}
-                      height={18}
-                    />
-                    <Image
-                      className="icon_star"
-                      src="/start_ic.png"
-                      alt=""
-                      width={18}
-                      height={18}
-                    />
-                    <Image
-                      className="icon_star"
-                      src="/start_ic.png"
-                      alt=""
-                      width={18}
-                      height={18}
-                    />
-                    <Image
-                      className="icon_star"
-                      src="/start_ic.png"
-                      alt=""
-                      width={18}
-                      height={18}
-                    />
-                    <Image
-                      className="icon_star"
-                      src="/start_g_ic.png"
-                      alt=""
-                      width={18}
-                      height={18}
-                    />
-                  </div>
-                  <div className="text-[17px] color-25 font-bold white-space-nowrap overflow-hidden text-ellipsis line-height-21 line-clamp-1">
-                    Contour Powder
-                  </div>
-                  <div className="text-[16px] text-[#999] white-space-nowrap overflow-hidden text-ellipsis line-clamp-2 line-height-36">
-                    Ive been absolutely obsessed with this lip stain lately. 16
-                    Baked
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-[13px] text-[#999]">wls****</span>
-                    <span className="text-[13] text-[#999]">2020.08.11</span>
-                  </div>
-                </div>
-              </Link>
-            </SwiperSlide>
-            <SwiperSlide>
-              <Link
-                href="review_list"
-                className="popular_product_element relative w-[283px]"
-              >
-                <div className="thumbnail relative">
-                  <Image
-                    className="thumb_image w-[283px] h-[283px] object-cover"
-                    src="/review_img04.png"
-                    alt=""
-                    width={283}
-                    height={283}
-                  />
-                </div>
-                <div className="product_props flex flex-col gap-4 px-5 py-5 border-[#dbdbdb] border-[1px] border-t-0">
-                  <div className="flex items-center gap-2">
-                    <Image
-                      className="icon_star"
-                      src="/start_ic.png"
-                      alt=""
-                      width={18}
-                      height={18}
-                    />
-                    <Image
-                      className="icon_star"
-                      src="/start_ic.png"
-                      alt=""
-                      width={18}
-                      height={18}
-                    />
-                    <Image
-                      className="icon_star"
-                      src="/start_ic.png"
-                      alt=""
-                      width={18}
-                      height={18}
-                    />
-                    <Image
-                      className="icon_star"
-                      src="/start_ic.png"
-                      alt=""
-                      width={18}
-                      height={18}
-                    />
-                    <Image
-                      className="icon_star"
-                      src="/start_g_ic.png"
-                      alt=""
-                      width={18}
-                      height={18}
-                    />
-                  </div>
-                  <div className="text-[17px] color-25 font-bold white-space-nowrap overflow-hidden text-ellipsis line-height-21 line-clamp-1">
-                    Contour Powder
-                  </div>
-                  <div className="text-[16px] text-[#999] white-space-nowrap overflow-hidden text-ellipsis line-clamp-2 line-height-36">
-                    Ive been absolutely obsessed with this lip stain lately. 16
-                    Baked
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-[13px] text-[#999]">wls****</span>
-                    <span className="text-[13] text-[#999]">2020.08.11</span>
-                  </div>
-                </div>
-              </Link>
-            </SwiperSlide>
-            <SwiperSlide>
-              <Link
-                href="review_list"
-                className="popular_product_element relative w-[283px]"
-              >
-                <div className="thumbnail relative">
-                  <Image
-                    className="thumb_image w-[283px] h-[283px] object-cover"
-                    src="/review_img02.png"
-                    alt=""
-                    width={283}
-                    height={283}
-                  />
-                </div>
-                <div className="product_props flex flex-col gap-4 px-5 py-5 border-[#dbdbdb] border-[1px] border-t-0">
-                  <div className="flex items-center gap-2">
-                    <Image
-                      className="icon_star"
-                      src="/start_ic.png"
-                      alt=""
-                      width={18}
-                      height={18}
-                    />
-                    <Image
-                      className="icon_star"
-                      src="/start_ic.png"
-                      alt=""
-                      width={18}
-                      height={18}
-                    />
-                    <Image
-                      className="icon_star"
-                      src="/start_ic.png"
-                      alt=""
-                      width={18}
-                      height={18}
-                    />
-                    <Image
-                      className="icon_star"
-                      src="/start_ic.png"
-                      alt=""
-                      width={18}
-                      height={18}
-                    />
-                    <Image
-                      className="icon_star"
-                      src="/start_g_ic.png"
-                      alt=""
-                      width={18}
-                      height={18}
-                    />
-                  </div>
-                  <div className="text-[17px] color-25 font-bold white-space-nowrap overflow-hidden text-ellipsis line-height-21 line-clamp-1">
-                    Contour Powder
-                  </div>
-                  <div className="text-[16px] text-[#999] white-space-nowrap overflow-hidden text-ellipsis line-clamp-2 line-height-36">
-                    Ive been absolutely obsessed with this lip stain lately. 16
-                    Baked
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-[13px] text-[#999]">wls****</span>
-                    <span className="text-[13] text-[#999]">2020.08.11</span>
-                  </div>
-                </div>
-              </Link>
-            </SwiperSlide>
+            ))}
           </Swiper>
         </div>
       </div>

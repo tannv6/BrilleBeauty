@@ -50,6 +50,11 @@ export const getServerSideProps: GetServerSideProps<{
       params: { page: 1, pageSize: 8, type: "IsBigSale" },
     }
   );
+
+  const reviewDetail = await axios.get(
+    `http://localhost:3000/api/review/list`,
+  );
+
   return {
     props: {
       main_visual: response.data[0] || null,
@@ -58,6 +63,7 @@ export const getServerSideProps: GetServerSideProps<{
       best_main: response3.data,
       new_main: response4.data,
       sale_main: response5.data,
+      review: reviewDetail.data,
       ...(await getWebSetting(cookies)),
     },
   };
@@ -70,6 +76,7 @@ export default function Page({
   best_main,
   new_main,
   sale_main,
+  review,
   ...props
 }: any) {
   return (
@@ -81,6 +88,7 @@ export default function Page({
         best_main={best_main}
         new_main={new_main}
         sale_main={sale_main}
+        review={review}
       />
     </Layout>
   );

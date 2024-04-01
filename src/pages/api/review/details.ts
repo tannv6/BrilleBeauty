@@ -9,7 +9,10 @@ export default async function handle(
 
     const { reviewID } = req.query;
     const connect = await connectDB();
-    const query = `select * from review where ReviewID = '${reviewID}' AND DeletedAt IS NULL;`;
+    const query = `select s1.*, s2.ProductName, s2.InitPrice, s2.ProductImage 
+    from review s1
+    left join products s2 on s1.ProductID = s2.ProductID
+    where s1.ReviewID = '${reviewID}' AND s1.DeletedAt IS NULL;`;
     const [result] = await connect.execute(query);
     connect.end();
     if (Array.isArray(result) && result.length > 0) {

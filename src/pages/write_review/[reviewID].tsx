@@ -8,6 +8,7 @@ import dynamic from 'next/dynamic';
 import axios from "axios";
 import { useRouter } from "next/router";
 import he from "he";
+import { getSession } from "next-auth/react";
 
 const CustomEditor = dynamic(
     () => {
@@ -17,9 +18,18 @@ const CustomEditor = dynamic(
   );
 
 
-  export const getServerSideProps = async (context: { params: any }) => {
-    const { params } = context;
+  export const getServerSideProps = async (context: { params: any, req : any }) => {
+    const { params, req } = context;
     const { reviewID } = params;
+
+    const session : any = await getSession({ req });
+
+    const UserID = session?.user?.id;
+    const UserName = session?.user?.name;
+
+    
+    
+
     const reviewDetail = await axios.get(
       `http://localhost:3000/api/review/details`,
       {
@@ -36,7 +46,6 @@ const CustomEditor = dynamic(
   };
 
 function ReviewWrites({reviewDetail} : any) {
-    
     const router = useRouter();
     const { ProductID } = router.query;
 
@@ -53,7 +62,6 @@ function ReviewWrites({reviewDetail} : any) {
 
     const handleClick = (num: number) => {
         setSelectedStar(num);
-        console.log("Số sao được chọn:", num);
     };
 
     const [review, setReview] = useState<{
@@ -78,11 +86,11 @@ function ReviewWrites({reviewDetail} : any) {
         Title: reviewDetail?.Title,
         ReviewDes: reviewDetail?.ReviewDes,
         Start: selectedStar,
-        Img1: reviewDetail?.Img1,
-        Img2: reviewDetail?.Img2,
-        Img3: reviewDetail?.Img3,
-        Img4: reviewDetail?.Img4,
-        Img5: reviewDetail?.Img5,
+        Img1: reviewDetail?.Img1 || "",
+        Img2: reviewDetail?.Img2 || "",
+        Img3: reviewDetail?.Img3 || "",
+        Img4: reviewDetail?.Img4 || "",
+        Img5: reviewDetail?.Img5 || "",
         Post: "Y",
     });
 
@@ -135,9 +143,8 @@ function ReviewWrites({reviewDetail} : any) {
                             <td className='w-full px-[15px] py-[10px]'>
                                 <input type="text" 
                                         name="Title"
-                                        id="Title"
                                         onChange={handleChange}
-                                        className='w-full h-10 rounded-md bg-white border border-gray-300 p-[12px]'
+                                        className='w-full h-10 bg-white border border-gray-300 p-[12px]'
                                         placeholder='Please enter the subject'/>
                             </td>
                         </tr>
@@ -170,51 +177,56 @@ function ReviewWrites({reviewDetail} : any) {
                         <tr className='border-b border-[#dbdbdb]'>
                             <td className='flex justify-center items-center h-[64px] w-[190px] bg-[#fafafa] text-[18px] text-[#252525] border-r border-[#dbdbdb]'>File Attachment 1</td>
                             <td className='w-full px-[15px] py-[10px]'>
-                                <input type="text" 
-                                        name="Image1"
-                                        className='w-full h-10 rounded-md bg-white border border-gray-300 p-[12px] hidden'
-                                        placeholder='Please enter the subject'/>
-                                <Upload />
+                                <input type="file" 
+                                        name="Img1"
+                                        className='w-full h-10 bg-white'
+                                        placeholder='Please enter the subject'
+                                        onChange={handleChange}
+                                        />
                             </td>
                         </tr>
                         <tr className='border-b border-[#dbdbdb]'>
                             <td className='flex justify-center items-center h-[64px] w-[190px] bg-[#fafafa] text-[18px] text-[#252525] border-r border-[#dbdbdb]'>File Attachment 2</td>
                             <td className='w-full px-[15px] py-[10px]'>
-                                <input type="text" 
-                                        name="Image2"
-                                        className='w-full h-10 rounded-md bg-white border border-gray-300 p-[12px] hidden'
-                                        placeholder='Please enter the subject'/>
-                                <Upload />
+                                <input type="file" 
+                                        name="Img2"
+                                        className='w-full h-10 bg-white'
+                                        placeholder='Please enter the subject'
+                                        onChange={handleChange}
+                                        />
                             </td>
                         </tr>
                         <tr className='border-b border-[#dbdbdb]'>
                             <td className='flex justify-center items-center h-[64px] w-[190px] bg-[#fafafa] text-[18px] text-[#252525] border-r border-[#dbdbdb]'>File Attachment 3</td>
                             <td className='w-full px-[15px] py-[10px]'>
-                                <input type="text" 
-                                        name="Image3"
-                                        className='w-full h-10 rounded-md bg-white border border-gray-300 p-[12px] hidden'
-                                        placeholder='Please enter the subject'/>
-                                <Upload />
+                                <input type="file" 
+                                        name="Img3"
+                                        className='w-full h-10 bg-white'
+                                        placeholder='Please enter the subject'
+                                        onChange={handleChange}
+                                        />
                             </td>
                         </tr>
                         <tr className='border-b border-[#dbdbdb]'>
                             <td className='flex justify-center items-center h-[64px] w-[190px] bg-[#fafafa] text-[18px] text-[#252525] border-r border-[#dbdbdb]'>File Attachment 4</td>
                             <td className='w-full px-[15px] py-[10px]'>
-                                <input type="text" 
-                                        name="Image4"
-                                        className='w-full h-10 rounded-md bg-white border border-gray-300 p-[12px] hidden'
-                                        placeholder='Please enter the subject'/>
-                                <Upload />
+                                <input  name="Img4"
+                                        className='w-full h-10 bg-white'
+                                        placeholder='Please enter the subject'
+                                        onChange={handleChange}
+                                        type="file"
+                                        />
                             </td>
                         </tr>
                         <tr className='border-b border-[#dbdbdb]'>
                             <td className='flex justify-center items-center h-[64px] w-[190px] bg-[#fafafa] text-[18px] text-[#252525] border-r border-[#dbdbdb]'>File Attachment 5</td>
                             <td className='w-full px-[15px] py-[10px]'>
-                                <input type="text" 
-                                        name="Image5"
-                                        className='w-full h-10 rounded-md bg-white border border-gray-300 p-[12px] hidden'
-                                        placeholder='Please enter the subject'/>
-                                <Upload />
+                                <input type="file" 
+                                        name="Img5"
+                                        className='w-full h-10 bg-white'
+                                        placeholder='Please enter the subject'
+                                        onChange={handleChange}
+                                        />
                             </td>
                         </tr>
                         <tr className='border-b border-[#dbdbdb]'>
@@ -247,7 +259,10 @@ function ReviewWrites({reviewDetail} : any) {
                     </tbody>
                 </table>
                 <div className="flex mt-[60px] justify-center items-center gap-[10px]">
-                    <button className='w-[140px] h-[45px] rounded-[3px] border border-[#dbdbdb]'>
+                        <button type="button"
+                                className='w-[140px] h-[45px] rounded-[3px] border border-[#dbdbdb]' 
+                                onClick={() => window.history.back()}
+                        >
                             <p className='text-[15px] text-[#252525]'>Cancellation</p>
                         </button> 
                         <button 

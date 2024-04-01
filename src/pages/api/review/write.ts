@@ -2,6 +2,7 @@ import connectDB from "@/app/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import formidable from "formidable";
 import { saveFile } from "@/utils/function";
+import { getSession } from "next-auth/react";
 
 export const config = {
   api: {
@@ -14,9 +15,11 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     const form = formidable({});
     const [fields, files] = await form.parse(req);
 
+    const session : any= await getSession({ req });
+    const UserID = session?.user?.id;
+    const UserName = session?.user?.name;
+
     const {
-      UserName,
-      UserID,
       ProductID,
       Title,
       ReviewDes,
@@ -48,11 +51,18 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     }
 
     const query = `INSERT INTO review SET 
+      UserID ='${UserID}',
+      UserName ='${UserName}',
       Title='${Title}',
       ReviewDes='${ReviewDes}',
       Start = '${Start}',
       ProductID = '${ProductID}',
       Post = '${Post}',
+      Img1 = '${Img1}',
+      Img2 = '${Img2}',
+      Img3 = '${Img3}',
+      Img4 = '${Img4}',
+      Img5 = '${Img5}',
       CreatedAt=NOW();`;
 
     await connect.execute(query);
