@@ -1,8 +1,8 @@
 import axios from "axios";
 import { SessionProvider, getSession } from "next-auth/react";
-import  {  AppProps } from "next/app";
+import { AppProps } from "next/app";
 import { createContext } from "react";
-import { getWebSetting } from "@/lib/functions";
+import { getApiUrl, getWebSetting } from "@/lib/functions";
 import { parse } from "cookie";
 type TProps = Pick<AppProps, "Component" | "pageProps"> & {
   session: any;
@@ -47,9 +47,9 @@ const MyCustomApp = ({
 
 MyCustomApp.getInitialProps = async (context: any) => {
   const session = await getSession(context);
-  const category = await axios.get("http://brillebeauty.vn/api/category/header");
+  const category = await axios.get(getApiUrl("/api/category/header"));
   const combo_category = await axios.get(
-    "http://brillebeauty.vn/api/combo_category/header"
+    getApiUrl("/api/combo_category/header")
   );
   const cookies = parse(context.ctx.req?.headers.cookie || "");
 
