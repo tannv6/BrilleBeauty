@@ -119,6 +119,7 @@ function ProductWrite({
     BrandID: productDetail?.BrandID || null,
     DelImage: "",
     DetailImages: productDetail?.Images || [],
+    Quantity: productDetail?.Quantity || 0,
   });
 
   const [detailImage, setDetailImage] = useState<any[]>([]);
@@ -248,9 +249,9 @@ function ProductWrite({
     <AdminLayout>
       <>
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold mb-4">
+          <h3 className="mb-4">
             {isNew ? "Add New Product" : "Edit Product"}
-          </h1>
+          </h3>
         </div>
         <form onSubmit={handleSubmit}>
           <div className="relative overflow-x-auto">
@@ -290,7 +291,7 @@ function ProductWrite({
                   >
                     Category
                   </th>
-                  <td className="px-6 py-2" colSpan={3}>
+                  <td className="px-6 py-2">
                     <div className="flex gap-1">
                       <Dropdown
                         containerClassName="w-[150px]"
@@ -322,6 +323,22 @@ function ProductWrite({
                         activeItem={Number(product.CategoryID3)}
                       />
                     </div>
+                  </td>
+                  <th
+                    scope="row"
+                    className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    Quantity
+                  </th>
+                  <td className="px-6 py-2">
+                  <input
+                      type="text"
+                      name="Quantity"
+                      value={product.Quantity}
+                      id="Quantity"
+                      onChange={handleChange}
+                      className="h-[35px] outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    />
                   </td>
                 </tr>
                 <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">

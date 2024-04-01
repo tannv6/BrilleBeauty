@@ -12,15 +12,6 @@ import Link from "next/link";
 export const getServerSideProps = (async (context: any) => {
   const cookies = parse(context.req.headers.cookie || "");
   const session = await getSession(context);
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/member/login",
-        permanent: false,
-      },
-    };
-  }
   const response = await getOrderByCustomer({ ...session });
 
   return {

@@ -16,15 +16,6 @@ import { MyContext } from "@/pages/_app";
 export const getServerSideProps = (async (context: any) => {
   const cookies = parse(context.req.headers.cookie || "");
   const session = await getSession(context);
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/member/login",
-        permanent: false,
-      },
-    };
-  }
   const response = await axios.get("http://localhost:3000/api/account/info", {
     params: { session: JSON.stringify(session) },
   });

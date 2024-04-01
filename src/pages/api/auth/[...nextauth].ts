@@ -62,9 +62,11 @@ export const authOptions: any = {
       return session;
     },
     async redirect({ url, baseUrl }: any) {
-      if (url.startsWith("/")) return `${baseUrl}${url}`;
-      else if (new URL(url).origin === baseUrl) return url;
-      return baseUrl;
+      if (url.startsWith("/"))
+        return `${process.env.NEXTAUTH_URL || baseUrl}${url}`;
+      else if (new URL(url).origin === (process.env.NEXTAUTH_URL || baseUrl))
+        return url;
+      return process.env.NEXTAUTH_URL || baseUrl;
     },
   },
 };
