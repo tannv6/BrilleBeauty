@@ -2,13 +2,12 @@
 import React, { FormEvent, useState } from 'react';
 import Layout from '@/components/Layout'
 import SubNav from '@/components/SubNav';
-import Upload from '@/components/Upload';
-import Start from '@/components/Start';
 import dynamic from 'next/dynamic';
 import axios from "axios";
 import { useRouter } from "next/router";
 import he from "he";
 import { getSession } from "next-auth/react";
+import { CDN_URL } from '@/utils/constants';
 
 const CustomEditor = dynamic(
     () => {
@@ -23,12 +22,6 @@ const CustomEditor = dynamic(
     const { reviewID } = params;
 
     const session : any = await getSession({ req });
-
-    const UserID = session?.user?.id;
-    const UserName = session?.user?.name;
-
-    
-    
 
     const reviewDetail = await axios.get(
       `http://localhost:3000/api/review/details`,
@@ -45,14 +38,14 @@ const CustomEditor = dynamic(
     };
   };
 
-function ReviewWrites({reviewDetail} : any) {
+function ReviewWrite({reviewDetail, isNew} : any) {
     const router = useRouter();
     const { ProductID } = router.query;
 
-    const [selectedStar, setSelectedStar] = useState(0);
     const [hoveredStar, setHoveredStar] = useState(0);
+    const [selectedStar, setSelectedStar] = useState(reviewDetail?.Start || 0);
 
-    const handleMouseEnter = (num: number) => {
+    const handleMouseEnter = (num : number) => {
         setHoveredStar(num);
     };
 
@@ -60,7 +53,7 @@ function ReviewWrites({reviewDetail} : any) {
         setHoveredStar(0);
     };
 
-    const handleClick = (num: number) => {
+    const handleStarClick = (num : number) => {
         setSelectedStar(num);
     };
 
@@ -79,53 +72,56 @@ function ReviewWrites({reviewDetail} : any) {
         Img5: any;
         Post: any;
     }>({
-        ReviewID: reviewDetail?.ReviewID,
+        ReviewID: reviewDetail?.ReviewID || "",
         UserName: reviewDetail?.UserName,
         UserID: reviewDetail?.UserID,
-        ProductID: reviewDetail?.ProductID,
-        Title: reviewDetail?.Title,
-        ReviewDes: reviewDetail?.ReviewDes,
+        ProductID: reviewDetail?.ProductID || "",
+        Title: reviewDetail?.Title || "",
+        ReviewDes: reviewDetail?.ReviewDes || "",
         Start: selectedStar,
         Img1: reviewDetail?.Img1 || "",
         Img2: reviewDetail?.Img2 || "",
         Img3: reviewDetail?.Img3 || "",
         Img4: reviewDetail?.Img4 || "",
         Img5: reviewDetail?.Img5 || "",
-        Post: "Y",
+        Post: reviewDetail?.Post || "Y",
     });
 
     const handleDisSelect = () => {
         setReview({ ...review, Post: 'Y' });
       };
     
-      const handlePotsSelect = () => {
-        setReview({ ...review, Post: 'N' });
-      };
+    const handlePotsSelect = () => {
+    setReview({ ...review, Post: 'N' });
+    };
+    function handleChange(e: any) {
+    if (e.target.files) {
+        setReview({ ...review, [e.target.name]: e.target.files[0] });
+    } else {
+        setReview({ ...review, [e.target.name]: e.target.value });
+    }
+    }
 
-        function handleChange(e: any) {
-        if (e.target.files) {
-          setReview({ ...review, [e.target.name]: e.target.files[0] });
-        } else {
-          setReview({ ...review, [e.target.name]: e.target.value });
+    async function handleSubmit(event: FormEvent<HTMLFormElement>){
+    event.preventDefault();
+
+    const updatedReview = { ...review, Start: selectedStar, ProductID: ProductID };
+
+    let formData = new FormData();
+
+    for (let [key, value] of Object.entries(updatedReview)) {
+        formData.append(key, value);
+    }
+    let response;
+    if(isNew) {
+        response = await axios.post("/api/review/write", formData);
+    } else {
+        response = await axios.post("/api/review/update", formData);
+    }
+    if (response.status === 201) {
+        alert("Review Sucess!");
+        window.history.back();
         }
-      }
-
-      async function handleSubmit(event: FormEvent<HTMLFormElement>){
-        event.preventDefault();
-
-        const updatedReview = { ...review, Start: selectedStar, ProductID: ProductID };
-    
-        let formData = new FormData();
-    
-        for (let [key, value] of Object.entries(updatedReview)) {
-          formData.append(key, value);
-        }
-        let response;
-          response = await axios.post("/api/review/write", formData);
-        if (response.status === 201) {
-            alert("Review Sucess!");
-            window.history.back();
-          }
     }
 
 
@@ -143,6 +139,7 @@ function ReviewWrites({reviewDetail} : any) {
                             <td className='w-full px-[15px] py-[10px]'>
                                 <input type="text" 
                                         name="Title"
+                                        value={review.Title}
                                         onChange={handleChange}
                                         className='w-full h-10 bg-white border border-gray-300 p-[12px]'
                                         placeholder='Please enter the subject'/>
@@ -152,14 +149,14 @@ function ReviewWrites({reviewDetail} : any) {
                             <td className='flex justify-center items-center h-[64px] w-[190px] bg-[#fafafa] text-[18px] text-[#252525] border-r border-[#dbdbdb]'>Score</td>
                             <td className='w-full px-[15px] py-[10px]'>
                                 <div>
-                                    <div className="star-container flex gap-[3px]">
+                                <div className="star-container flex gap-[3px]">
                                         {[1, 2, 3, 4, 5].map((index) => (
                                             <div
                                                 key={index}
-                                                className={selectedStar !== 0 && index <= selectedStar ? 'img_star' : 'img_star_none'}
+                                                className={index <= (selectedStar || hoveredStar) ? 'img_star' : 'img_star_none'}
                                                 onMouseEnter={() => handleMouseEnter(index)}
                                                 onMouseLeave={handleMouseLeave}
-                                                onClick={() => handleClick(index)}
+                                                onClick={() => handleStarClick(index)}
                                                 data-start={index}
                                             />
                                         ))}
@@ -239,7 +236,7 @@ function ReviewWrites({reviewDetail} : any) {
                                                     type="radio" 
                                                     id="dis" 
                                                     name="postType"
-                                                    checked={review.Post === 'Y'} 
+                                                    checked={!review.Post || review.Post === 'Y'} 
                                                         onChange={handleDisSelect}  />
                                                 <label htmlFor="dis" className='text-[16px] font-medium text-[#252525]'>Disclosure</label>
                                         </div>
@@ -277,4 +274,4 @@ function ReviewWrites({reviewDetail} : any) {
     </>
   )
 }
-export default ReviewWrites;
+export default ReviewWrite;

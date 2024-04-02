@@ -219,6 +219,13 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
 
   const totalReviews = review.data.filter((e: any) => e.ProductID === productID).length;
 
+  const handleDelete = async (id: number) => {
+    if (confirm("Are you sure delete this review?")) {
+      await axios.put(`/api/review/delete`, { ReviewID: id });
+      window.location.reload();
+    }
+  };
+
   return (
       <Layout {...props}>
         <div id="main">
@@ -381,8 +388,10 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                         </div>
                       </div>
                       <div className="flex basis-[20%] items-start justify-end gap-[10px]">
-                        <button className="w-[100px] h-7 text-[15px] text-[#999999] border rounded">EDIT</button>
-                        <button className="w-[100px] h-7 text-[15px] text-[#999999] border rounded">DELETE</button>
+                        <Link href={`/write_review/${e.ReviewID}?ProductID=${product.ProductID}`}
+                              className="flex items-center justify-center w-[100px] h-7 text-[15px] text-[#999999] border rounded"> EDIT
+                        </Link>
+                        <button type="button" className="w-[100px] h-7 text-[15px] text-[#999999] border rounded" onClick={() => handleDelete(e.ReviewID)}>DELETE</button>
                       </div>
                     </div>
                   ))}
