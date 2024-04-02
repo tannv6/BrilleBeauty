@@ -14,18 +14,19 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     const form = formidable({});
     const [fields] = await form.parse(req);
 
-    const { user_email2, password2, first_name, last_name, birth } = fields;
+    const { user_email2, password2, first_name, last_name, birth ,user_name} = fields;
 
-    const hash = hashSync(password2?.toString() || "", 10);
+    const hash = hashSync(password2?.[0] || "", 10);
 
     const connect = await connectDB();
 
     const query = `INSERT INTO customers SET 
                               Email = '${user_email2}'
+                              , UserName = '${user_name}'
                               , Password = '${hash}'
                               , FirstName = '${first_name}'
                               , LastName = '${last_name}'
-                              , BirthDay = '${birth}'
+                              , DateOfBirth = '${birth}'
                               , CreatedAt = now() `;
 
     const [results] = await connect.execute(query);

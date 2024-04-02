@@ -5,8 +5,25 @@ import connectDB from "@/app/db";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
 import { signIn } from "next-auth/react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../api/auth/[...nextauth]";
+import Head from "next/head";
 
-export const getServerSideProps = (async () => {
+export const getServerSideProps = (async (context: any) => {
+  const session: any = await getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
+
+  if (session?.user?.name === "admin") {
+    return {
+      redirect: {
+        destination: "/admin/category/list",
+        permanent: false,
+      },
+    };
+  }
   const connect = await connectDB();
   const [response] = await connect.execute("SELECT * FROM admin");
   connect.end();
@@ -43,13 +60,15 @@ function Main({ response }: any) {
       }
 
       router.push("/admin/category/list");
-
     } catch (error) {
       console.log(error);
     }
   }
   return (
     <section className="bg-gray-50 dark:bg-gray-900">
+      <Head>
+        <title>Brillebeauty CMS</title>
+      </Head>
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0 bg-[url('/backgroud_admin.png')]">
         <Link
           href=""
@@ -93,16 +112,16 @@ function Main({ response }: any) {
                   required={true}
                   onChange={handleChange}
                 />
-              <div>
-                <label
-                  htmlFor="remember"
-                  className="text-gray-500 dark:text-gray-300 text-sm text-red-400"
-                >
-                  {error}
-                </label>
+                <div>
+                  <label
+                    htmlFor="remember"
+                    className="text-gray-500 dark:text-gray-300 text-sm text-red-400"
+                  >
+                    {error}
+                  </label>
+                </div>
               </div>
-              </div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between invisible">
                 <div className="flex items-start">
                   <div className="flex items-center h-5">
                     <input

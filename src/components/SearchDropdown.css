@@ -1,0 +1,9 @@
+.dropdown_contents::-webkit-scrollbar {
+  width: 5px;
+  @apply bg-gray-200;
+}
+
+.dropdown_contents::-webkit-scrollbar-thumb {
+  width: 5px;
+  background-color: darkgrey;
+}

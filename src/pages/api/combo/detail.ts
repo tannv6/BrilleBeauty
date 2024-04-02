@@ -16,10 +16,6 @@ export default async function handle(
     connect.end();
     if (Array.isArray(result) && result.length > 0) {
       const combo: any = result[0];
-      combo["IsBest"] = combo["IsBest"][0];
-      combo["IsBigSale"] = combo["IsBigSale"][0];
-      combo["IsNew"] = combo["IsNew"][0];
-      combo["IsSeasonal"] = combo["IsSeasonal"]?.[0] || 0;
       combo["Images"] = result2;
       return res.status(200).json(combo);
     } else {
