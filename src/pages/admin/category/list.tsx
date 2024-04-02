@@ -9,17 +9,32 @@ import Thead from "../components/Thead";
 import Tr from "../components/Tr";
 import Th from "../components/Th";
 import Td from "../components/Td";
+import { pageSize } from "@/lib/constants";
+import Pagingnation from "../components/Pagingnation";
+import { useRouter } from "next/router";
+import { getApiUrl } from "@/lib/functions";
 
-export const getServerSideProps = (async () => {
-  const response = await axios.get("http://localhost:3000/api/category/list");
+export const getServerSideProps = (async (context: any) => {
+  const { page } = context.query;
+  const response = await axios.get(getApiUrl("/api/category/list"), {
+    params: { page, pageSize },
+  });
   return {
     props: {
-      response: response.data.data,
+      response: response.data,
     },
   };
 }) satisfies GetServerSideProps<{ response: any }>;
 
-function list({ response }: any) {
+function List({ response }: any) {
+  const { data, total, currentPage, totalPage } = response;
+  const router = useRouter();
+
+  const handleChangePage = (page: number) => {
+    router.query.page = page.toString();
+    router.push(router);
+  };
+
   const handleDelete = async (id: number) => {
     const data = {
       del: [{ CategoryID: id }],
@@ -54,10 +69,10 @@ function list({ response }: any) {
               </Tr>
             </Thead>
             <tbody className="text-blue-gray-900">
-              {response.map((e: any, i: any) => {
+              {data.map((e: any, i: any) => {
                 return (
                   <Tr key={i}>
-                    <Td>{response.length - i}</Td>
+                    <Td>{total - (currentPage - 1) * pageSize - i}</Td>
                     <Td>{e.CategoryName}</Td>
                     <Td>{e.totalProducts}</Td>
                     <Td>
@@ -83,8 +98,14 @@ function list({ response }: any) {
             </tbody>
           </Table>
         </div>
+      <Pagingnation
+        tP={totalPage}
+        cP={currentPage}
+        tE={total}
+        per={10}
+        onChange={handleChangePage}
+      />
     </AdminLayout>
   );
 }
-list.auth=false;
-export default list;
+export default List;

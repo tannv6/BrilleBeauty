@@ -14,7 +14,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import { MyContext } from "@/pages/_app";
 
 export const getServerSideProps = (async (context: any) => {
-  const cookies = parse(context.req.headers.cookie || "");
   const session = await getSession(context);
   const response = await axios.get("http://localhost:3000/api/account/info", {
     params: { session: JSON.stringify(session) },
@@ -23,14 +22,12 @@ export const getServerSideProps = (async (context: any) => {
   return {
     props: {
       userInfo: response.data,
-      ...(await getWebSetting(cookies)),
     },
   };
 }) satisfies GetServerSideProps<{ userInfo: any }>;
 
-export default function AboutMe({ userInfo = {}, ...props }: any) {
+export default function AboutMe({ userInfo = {} }: any) {
   const router = useRouter();
-  const value = useContext(MyContext);
 
   const [info, setInfo] = useState<{ [key: string]: any }>({
     ...userInfo,
@@ -71,7 +68,7 @@ export default function AboutMe({ userInfo = {}, ...props }: any) {
     }
   }
   return (
-    <Layout {...props}>
+    <Layout>
       <div id="main">
         <SubNav title1="My Account" title2="About Me" />
         <div className="inner-container mt-[75px] mb-[135px]">

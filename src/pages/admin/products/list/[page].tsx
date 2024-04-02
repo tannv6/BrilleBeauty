@@ -56,13 +56,6 @@ function ProductList({ response, initPage, total, totalPage }: any) {
   };
   return (
     <AdminLayout>
-      <SRLWrapper
-        options={{
-          thumbnails: {
-            showThumbnails: false,
-          },
-        }}
-      >
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold mb-4">Products List</h1>
           <Link
@@ -129,7 +122,6 @@ function ProductList({ response, initPage, total, totalPage }: any) {
           per={10}
           onChange={handleChangePage}
         />
-      </SRLWrapper>
     </AdminLayout>
   );
 }

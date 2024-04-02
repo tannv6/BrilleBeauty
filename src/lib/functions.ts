@@ -40,21 +40,16 @@ export function objectToSearchParams(obj: { [key: string]: any }) {
 }
 
 export async function getWebSetting(cookies: any) {
-  const response = await axios.get(
-    "http://localhost:3000/api/banners/get_by_position",
-    {
-      params: { position: "top", count: 1 },
-    }
-  );
+  const response = await axios.get(getApiUrl("/api/banners/get_by_position"), {
+    params: { position: "top", count: 1 },
+  });
 
-  const result = await axios.get(
-    "http://localhost:3000/api/setting/web_info_detail"
-  );
+  const result = await axios.get(getApiUrl("/api/setting/web_info_detail"));
 
-  const result1 = await axios.get(
-    "http://localhost:3000/api/popups/list_show_pop",
-    { params: { cookies1: JSON.stringify(cookies) }, withCredentials: true }
-  );
+  const result1 = await axios.get(getApiUrl("/api/popups/list_show_pop"), {
+    params: { cookies1: JSON.stringify(cookies) },
+    withCredentials: true,
+  });
 
   return {
     webSetting: result.data,
@@ -65,4 +60,12 @@ export async function getWebSetting(cookies: any) {
 
 export const getDiscount = (init: number = 0, sell: number = 0) => {
   return Math.round(((init - sell) / init) * 100);
+};
+
+export const getApiUrl = (basePath: any) => {
+  const baseUrlServer = "http://localhost:3000";
+  if (typeof window === "undefined") {
+    return `${baseUrlServer}${basePath}`;
+  }
+  return basePath;
 };

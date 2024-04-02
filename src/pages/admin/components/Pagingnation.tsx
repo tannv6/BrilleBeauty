@@ -17,8 +17,7 @@ function Pagingnation({ tP, cP = 1, tE = 0, per = 5, onChange }: any) {
       ? tP
       : cP + Math.ceil((per + 1) / 2) - 1;
   return (
-    <div>
-      <ol className="flex justify-center gap-1 text-xs font-medium mt-3">
+      <ul className="flex justify-center gap-1 text-xs font-medium mt-3">
         <li>
           <button
             type="button"
@@ -148,8 +147,7 @@ function Pagingnation({ tP, cP = 1, tE = 0, per = 5, onChange }: any) {
             <i className="fas fa-angle-double-right"></i>
           </button>
         </li>
-      </ol>
-    </div>
+      </ul>
   );
 }
 

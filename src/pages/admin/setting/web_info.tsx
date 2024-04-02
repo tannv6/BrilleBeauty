@@ -158,73 +158,26 @@ const dataArr3 = [
     title: "CS Phone",
   },
 ];
-function WebInfo({ data }: any) {
+function WebInfo({ data = {} }: any) {
   const router = useRouter();
-  const [info, setInfo] = useState<{ [key: string]: any }>({
-    idx: data?.idx,
-    site_name: data?.site_name,
-    domain_url: data?.domain_url,
-    admin_name: data?.admin_name,
-    admin_email: data?.admin_email,
-    browser_title: data?.browser_title,
-    meta_tag: data?.meta_tag,
-    meta_keyword: data?.meta_keyword,
-    home_name: data?.home_name,
-    home_name_en: data?.home_name_en,
-    store_service01: data?.store_service01,
-    store_service02: data?.store_service02,
-    zip: data?.zip,
-    addr1: data?.addr1,
-    addr2: data?.addr2,
-    comnum: data?.comnum,
-    mall_order: data?.mall_order,
-    com_owner: data?.com_owner,
-    info_owner: data?.info_owner,
-    custom_phone: data?.custom_phone,
-    fax: data?.fax,
-    sms_phone: data?.sms_phone,
-    email: data?.email,
-    munnote_code: data?.munnote_code,
-    logos: data?.logos,
-    bank_user: data?.bank_user,
-    banks: data?.banks,
-    bank_account: data?.bank_account,
-    ssl_chk: data?.ssl_chk,
-    language: data?.language,
-    buytext: data?.buytext,
-    trantext: data?.trantext,
-    og_title: data?.og_title,
-    og_des: data?.og_des,
-    og_url: data?.og_url,
-    og_site: data?.og_site,
-    og_img: data?.og_img,
-    favico_img: data?.favico_img,
-    naver_verfct: data?.naver_verfct,
-    google_verfct: data?.google_verfct,
-    logo_footer: data?.logo_footer,
-    sms_id: data?.sms_id,
-    sms_key: data?.sms_key,
-    npay_but_key: data?.npay_but_key,
-    npay_shop_id: data?.npay_shop_id,
-    npay_certikey: data?.npay_certikey,
-    counsel1: data?.counsel1,
-    counsel2: data?.counsel2,
-    auto_grade: data?.auto_grade,
-    use_mem1: data?.use_mem1,
-    logo_adm: data?.logo_adm,
-    app_name: data?.app_name,
-    app_tooltip: data?.app_tooltip,
-    app_img: data?.app_img,
-    app_img_70_70: data?.app_img_70_70,
-    app_img_150_150: data?.app_img_150_150,
-    app_img_310_150: data?.app_img_310_150,
-    app_img_310_310: data?.app_img_310_310,
+  const [info, setInfo] = useState<{ [key: string]: any }>({ ...data });
+  const [pass, setPass] = useState<{ [key: string]: any }>({
+    CurrentPassword: "",
+    NewPassword: "",
   });
   function handleChange(e: any) {
     if (e.target.files) {
       setInfo({ ...info, [e.target.name]: e.target.files[0] });
     } else {
       setInfo({ ...info, [e.target.name]: e.target.value });
+    }
+  }
+
+  function handleChangePass(e: any) {
+    if (e.target.files) {
+      setPass({ ...info, [e.target.name]: e.target.files[0] });
+    } else {
+      setPass({ ...info, [e.target.name]: e.target.value });
     }
   }
 
@@ -241,6 +194,25 @@ function WebInfo({ data }: any) {
 
     if (response.status === 201) {
       router.reload();
+    }
+  }
+
+  async function handleSubmitPass() {
+    try {
+      let formData = new FormData();
+
+      for (let [key, value] of Object.entries(pass)) {
+        formData.append(key, value);
+      }
+      let response;
+      response = await axios.post("/api/admin/change_pass", formData);
+
+      if (response.status === 200) {
+        alert("PassWord has changed!")
+        router.reload();
+      }
+    } catch (error: any) {
+      alert(error?.response?.data?.message || "Wrong!");
     }
   }
   return (
@@ -304,6 +276,47 @@ function WebInfo({ data }: any) {
                     </tr>
                   );
                 })}
+              <tr>
+                <th
+                  scope="row"
+                  className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  Admin PassWord
+                </th>
+                <td colSpan={3} className="px-6 py-2">
+                  <div className="flex gap-1 items-center">
+                    <span>
+                      <input
+                        placeholder="Current Password"
+                        type="password"
+                        name={"CurrentPassword"}
+                        value={pass["CurrentPassword"]}
+                        id={"CurrentPassword"}
+                        onChange={handleChangePass}
+                        className="h-[35px] outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      />
+                    </span>
+                    <span>
+                      <input
+                        placeholder="New Password"
+                        type="password"
+                        name={"NewPassword"}
+                        value={pass["NewPassword"]}
+                        id={"NewPassword"}
+                        onChange={handleChangePass}
+                        className="h-[35px] outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      />
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleSubmitPass}
+                      className="h-[35px] text-white bg-rose-700 hover:bg-rose-800 focus:ring-4 focus:outline-none focus:ring-rose-300 font-bold rounded-lg text-sm px-5 text-center dark:bg-rose-600 dark:hover:bg-rose-700 dark:focus:ring-rose-800"
+                    >
+                      Change PassWord
+                    </button>
+                  </div>
+                </td>
+              </tr>
             </tbody>
           </table>
           <h1 className="text-2xl font-bold mb-2 mt-4">SEO Tools</h1>

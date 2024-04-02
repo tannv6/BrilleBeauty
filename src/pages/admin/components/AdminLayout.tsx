@@ -48,14 +48,14 @@ function AdminLayout({ children }: any) {
         </div>
       </nav>
       <div className="flex overflow-x-auto h-[calc(100vh-60px)]">
-        <aside className="bg-gray-800 text-white w-64 h-full  overflow-y-auto py-4 flex flex-col items-start justify-between">
-          <nav>
+        <aside className="bg-gray-800 text-white w-64 h-full overflow-y-auto py-4 flex flex-col items-start justify-between">
+          <nav className="flex-1 overflow-auto w-full">
             <ul className="space-y-2">
               {listMenu.map((e, i) => {
                 return (
                   <li
                     key={i}
-                    className="opcion-con-desplegable ease-out duration-300"
+                    className="opcion-con-desplegable "
                   >
                     <div
                       role="button"
@@ -69,7 +69,7 @@ function AdminLayout({ children }: any) {
                       <i className="fas fa-chevron-down text-xs" />
                     </div>
                     <ul
-                      className={`duration-300 desplegable pl-6 ease-out overflow-hidden ${
+                      className={`desplegable pl-6 overflow-hidden ${
                         activeMenu === e.id ? "max-h-[500px]" : "max-h-[0px]"
                       }`}
                     >

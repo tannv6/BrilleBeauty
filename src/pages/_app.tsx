@@ -1,10 +1,8 @@
 import axios from "axios";
-import { getServerSession } from "next-auth";
 import { SessionProvider, getSession } from "next-auth/react";
-import App, { AppContext, AppProps } from "next/app";
-import { createContext, useState } from "react";
-import { authOptions } from "./api/auth/[...nextauth]";
-import { getWebSetting } from "@/lib/functions";
+import { AppProps } from "next/app";
+import { createContext } from "react";
+import { getApiUrl, getWebSetting } from "@/lib/functions";
 import { parse } from "cookie";
 type TProps = Pick<AppProps, "Component" | "pageProps"> & {
   session: any;
@@ -49,9 +47,9 @@ const MyCustomApp = ({
 
 MyCustomApp.getInitialProps = async (context: any) => {
   const session = await getSession(context);
-  const category = await axios.get("http://localhost:3000/api/category/header");
+  const category = await axios.get(getApiUrl("/api/category/header"));
   const combo_category = await axios.get(
-    "http://localhost:3000/api/combo_category/header"
+    getApiUrl("/api/combo_category/header")
   );
   const cookies = parse(context.ctx.req?.headers.cookie || "");
 
