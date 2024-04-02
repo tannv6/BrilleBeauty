@@ -33,7 +33,7 @@ export default function EyesLips({ cartList } : any) {
   const router = useRouter();
 
   let obj : any = {};
-  carts.forEach((cart : any) => {
+  carts?.forEach((cart : any) => {
     obj[cart.CartID] = cart.Quantity;
   });
 
@@ -85,12 +85,12 @@ export default function EyesLips({ cartList } : any) {
     if(checkAll){
       setTotalNumber(0);
       setTotalPrice(0);
-      carts.forEach((cart : any) => {
-        changeCheckboxes(cart.CartID, false, Number(cart.PoSellPrice || cart.SellPrice) * NumProduct[cart.CartID]);
+      carts?.forEach((cart : any) => {
+        changeCheckboxes(cart?.CartID, false, Number(cart?.PoSellPrice || cart?.SellPrice) * NumProduct[cart?.CartID]);
       });
     } else {
-      carts.forEach((cart : any) => {
-        changeCheckboxes(cart.CartID, true, Number(cart.PoSellPrice || cart.SellPrice) * NumProduct[cart.CartID]);
+      carts?.forEach((cart : any) => {
+        changeCheckboxes(cart?.CartID, true, Number(cart?.PoSellPrice || cart?.SellPrice) * NumProduct[cart?.CartID]);
       });
     }   
   }
@@ -125,30 +125,30 @@ export default function EyesLips({ cartList } : any) {
 
   }
 
-  const cartElement = carts.map((cart : any) => (
+  const cartElement = carts?.map((cart : any) => (
     <tr className="border-b" key={cart.CartID}>
       <td className="py-5 px-5">
-        <input onChange={()=>{changeCheckboxes(cart.CartID, !checkboxes[cart.CartID], (cart.PoSellPrice || cart.SellPrice) * NumProduct[cart.CartID])}} 
-              checked={checkboxes[cart.CartID]}  className="w-5 h-5 rounded appearance-none border checked:bg-[url('/checkbox_custome.png')]" type="checkbox" /></td>
+        <input onChange={()=>{changeCheckboxes(cart?.CartID, !checkboxes[cart?.CartID], (cart?.PoSellPrice || cart?.SellPrice) * NumProduct[cart?.CartID])}} 
+              checked={checkboxes[cart?.CartID]}  className="w-5 h-5 rounded appearance-none border checked:bg-[url('/checkbox_custome.png')]" type="checkbox" /></td>
       <td className="py-5">
         <div className="flex items-center gap-[25px]">
-          <Image className="rounded" src={`${CDN_URL}${cart.ProductImage || ""}`} width={100} height={100} alt=""></Image>
+          <Image className="rounded" src={`${CDN_URL}${cart?.ProductImage || ""}`} width={100} height={100} alt=""></Image>
           <div className="flex flex-col pr-8">
-            <p>{cart.ProductName}</p>
-            <p className="text-[15px] text-[#999999]">- [{cart.PotName}]</p>
+            <p>{cart?.ProductName}</p>
+            <p className="text-[15px] text-[#999999]">- [{cart?.PotName}]</p>
           </div>
         </div>
       </td>
-      <td className="text-center py-5 text-[#757575]">{cart.PoName}</td>
+      <td className="text-center py-5 text-[#757575]">{cart?.PoName}</td>
       <td className="py-5">
         <div className="flex flex-row justify-center">
-          <button onClick={() => { updateNumProduct(cart.CartID, Math.max((NumProduct[cart.CartID] || 1) - 1, 1), checkboxes[cart.CartID], "-", Number(cart.PoSellPrice || cart.SellPrice)) }} className="rounded-l w-[33px] h-[33px] bg-[url('/product_detail/product_number_desc_btn.png')]"></button>
-          <input type="number" value={NumProduct[cart.CartID] || 1} onChange={(e) => { updateNumProduct(cart.CartID, Number(e.target.value) || 1, checkboxes[cart.CartID], "", Number(cart.PoSellPrice || cart.SellPrice)) }} className="pt-1 border border-x-0 text-center min-w-[46px] max-w-[46px] h-[33px] outline-0" />
-          <button onClick={() => { updateNumProduct(cart.CartID, (NumProduct[cart.CartID] || 1) + 1, checkboxes[cart.CartID], "+", Number(cart.PoSellPrice || cart.SellPrice)) }} className="rounded-r w-[33px] h-[33px] bg-[url('/product_detail/product_number_asc_btn.png')]"></button>
+          <button onClick={() => { updateNumProduct(cart?.CartID, Math.max((NumProduct[cart?.CartID] || 1) - 1, 1), checkboxes[cart?.CartID], "-", Number(cart?.PoSellPrice || cart?.SellPrice)) }} className="rounded-l w-[33px] h-[33px] bg-[url('/product_detail/product_number_desc_btn.png')]"></button>
+          <input type="number" value={NumProduct[cart?.CartID] || 1} onChange={(e) => { updateNumProduct(cart?.CartID, Number(e.target.value) || 1, checkboxes[cart?.CartID], "", Number(cart?.PoSellPrice || cart?.SellPrice)) }} className="pt-1 border border-x-0 text-center min-w-[46px] max-w-[46px] h-[33px] outline-0" />
+          <button onClick={() => { updateNumProduct(cart?.CartID, (NumProduct[cart?.CartID] || 1) + 1, checkboxes[cart?.CartID], "+", Number(cart?.PoSellPrice || cart?.SellPrice)) }} className="rounded-r w-[33px] h-[33px] bg-[url('/product_detail/product_number_asc_btn.png')]"></button>
         </div>
       </td>
-      <td className="py-5 text-xl font-bold text-center">A${(cart.PoSellPrice || cart.SellPrice) * NumProduct[cart.CartID]}</td>
-      <td className="py-5 text-right"><button onClick={ () => { handleDeleteCart(cart.CartID, checkboxes[cart.CartID], Number(cart.PoSellPrice || cart.SellPrice)) } } className="w-[33px] h-[33px] rounded bg-[url('/cart/product_delete_btn.png')]"></button></td>
+      <td className="py-5 text-xl font-bold text-center">A${(cart?.PoSellPrice || cart?.SellPrice) * NumProduct[cart?.CartID]}</td>
+      <td className="py-5 text-right"><button onClick={ () => { handleDeleteCart(cart?.CartID, checkboxes[cart?.CartID], Number(cart?.PoSellPrice || cart?.SellPrice)) } } className="w-[33px] h-[33px] rounded bg-[url('/cart/product_delete_btn.png')]"></button></td>
     </tr>
   ));
   return (
