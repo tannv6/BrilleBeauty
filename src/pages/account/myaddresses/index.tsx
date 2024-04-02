@@ -10,7 +10,6 @@ import moment from "moment";
 import Link from "next/link";
 
 export const getServerSideProps = (async (context: any) => {
-
   const session = await getSession(context);
 
   const { params } = context;
@@ -28,84 +27,76 @@ export const getServerSideProps = (async (context: any) => {
     },
   };
 }) satisfies GetServerSideProps<{ data: any }>;
-export default function MyAddresses({
-  data,
-  page,
-  total,
-  totalPage,
-  ...props
-}: any) {
+export default function MyAddresses({ data, page, total, totalPage }: any) {
   return (
-      <Layout {...props}>
-        <div id="main">
-          <SubNav title1="My Account" title2="My Addresses" />
-          <div className="inner-container mt-[75px] mb-[135px]">
-            <div className="flex flex-row gap-[60px]">
-              <MypageNav></MypageNav>
-              <div className="grow mt-[17px]">
-                <div className="flex justify-between pb-4 items-center border-b border-black">
-                  <p className="text-2xl">My Addresses</p>
-                  <Link
-                    className="flex justify-center items-center bg-blue-600 text-white py-2 px-3 rounded h-[40px]"
-                    href="/account/myaddresses/write"
-                  >
-                    Add New Address
-                  </Link>
-                </div>
-                <table className="table-auto min-w-full">
-                  <colgroup>
-                    <col width="10%" />
-                    <col width="30%" />
-                    <col width="25%" />
-                    <col width="15%" />
-                    <col width="20%" />
-                  </colgroup>
-                  <thead>
-                    <tr>
-                      <th className="py-3 px-4 text-left">ID</th>
-                      <th className="py-3 px-4 text-left">Name</th>
-                      <th className="py-3 px-4 text-left">PhoneNumber</th>
-                      <th className="py-3 px-4 text-left">Default</th>
-                      <th className="py-3 px-4 text-left">Reg Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data?.map((e: any, i: number) => {
-                      return (
-                        <tr
-                          key={i}
-                          className="border-b border-blue-gray-200 last:border-0"
-                        >
-                          <td className="py-3 px-4 text-left">
-                            {total - (page - 1) * pageSize - i}
-                          </td>
-                          <td className="py-3 px-4 text-left">
-                            {e.FirstName} {e.LastName}
-                          </td>
-                          <td className="py-3 px-4 text-left">
-                            {e.PhoneNumber}
-                          </td>
-                          <td className="py-3 px-4 text-left">
-                            {e.IsDefault ? "Yes" : "No"}
-                          </td>
-                          <td className="py-3 px-4 text-left">
-                            {moment(e.CreatedAt).format("yyyy-MM-DD")}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-                <Pagination
-                  totalPage={totalPage}
-                  currentPage={page}
-                  totalElement={total}
-                  elementsPerPage={10}
-                />
+    <Layout>
+      <div id="main">
+        <SubNav title1="My Account" title2="My Addresses" />
+        <div className="inner-container mt-[75px] mb-[135px]">
+          <div className="flex flex-row gap-[60px]">
+            <MypageNav></MypageNav>
+            <div className="grow mt-[17px]">
+              <div className="flex justify-between pb-4 items-center border-b border-black">
+                <p className="text-2xl">My Addresses</p>
+                <Link
+                  className="flex justify-center items-center bg-blue-600 text-white py-2 px-3 rounded h-[40px]"
+                  href="/account/myaddresses/write"
+                >
+                  Add New Address
+                </Link>
               </div>
+              <table className="table-auto min-w-full">
+                <colgroup>
+                  <col width="10%" />
+                  <col width="30%" />
+                  <col width="25%" />
+                  <col width="15%" />
+                  <col width="20%" />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th className="py-3 px-4 text-left">ID</th>
+                    <th className="py-3 px-4 text-left">Name</th>
+                    <th className="py-3 px-4 text-left">PhoneNumber</th>
+                    <th className="py-3 px-4 text-left">Default</th>
+                    <th className="py-3 px-4 text-left">Reg Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data?.map((e: any, i: number) => {
+                    return (
+                      <tr
+                        key={i}
+                        className="border-b border-blue-gray-200 last:border-0"
+                      >
+                        <td className="py-3 px-4 text-left">
+                          {total - (page - 1) * pageSize - i}
+                        </td>
+                        <td className="py-3 px-4 text-left">
+                          {e.FirstName} {e.LastName}
+                        </td>
+                        <td className="py-3 px-4 text-left">{e.PhoneNumber}</td>
+                        <td className="py-3 px-4 text-left">
+                          {e.IsDefault ? "Yes" : "No"}
+                        </td>
+                        <td className="py-3 px-4 text-left">
+                          {moment(e.CreatedAt).format("yyyy-MM-DD")}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+              <Pagination
+                totalPage={totalPage}
+                currentPage={page}
+                totalElement={total}
+                elementsPerPage={10}
+              />
             </div>
           </div>
         </div>
-      </Layout>
+      </div>
+    </Layout>
   );
 }
