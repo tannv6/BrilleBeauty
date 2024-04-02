@@ -6,8 +6,7 @@ import axios from "axios";
 import { Product } from "@/lib/types";
 import { CDN_URL } from "@/utils/constants";
 import { getDiscount } from "@/lib/functions";
-import { getSession } from "next-auth/react";
-import { DataDispatchContext } from "@/pages/_app";
+import { DataDispatchContext, MyContext } from "@/pages/_app";
 
 type Props = {
   info?: Product;
@@ -17,11 +16,7 @@ function ProductItem({ info }: Props) {
 
   const dispatch:any = useContext(DataDispatchContext);
 
-  async function getUser() {
-    const session = await getSession();
-  
-    return session;   
-  }
+  const value: any = useContext(MyContext);
 
   const handleFavorite = async () => {
     await axios.post("/api/interactions/write", {
@@ -31,18 +26,16 @@ function ProductItem({ info }: Props) {
     });
   };
 
-
-
   const handleAddCart = async () => {
+    if(!value.isLogin){
+      alert("Please login!");
+      return;
+    }
+
     let options = JSON.stringify([{
       "PoID" : 0,
       "PoNum" : 1
     }]);
-
-    if(!getUser()){
-      alert("Please login!");
-      return;
-    }
 
     const response = await axios.get("/api/cart/write", {
       params: { options: options, productID: info?.ProductID },

@@ -19,7 +19,7 @@ import { log } from "console";
 import he from "he";
 import { Swiper as SwiperCore } from 'swiper/types';
 import ReviewDetail from "../review_detail";
-import { DataDispatchContext } from "../_app";
+import { DataDispatchContext, MyContext } from "../_app";
 
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 export const getServerSideProps = async (context: { params: any, query : any, req: any}) => {
@@ -81,6 +81,8 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
   
     return session;   
   }  
+
+  const value: any = useContext(MyContext);
   const dispatch:any = useContext(DataDispatchContext);
 
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
@@ -167,7 +169,7 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
 
     let options = JSON.stringify(addCartOption);
    
-    if(!getUser()){
+    if(!value.isLogin){
       alert("Please login!");
       return;
     }

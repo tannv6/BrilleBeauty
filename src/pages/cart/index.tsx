@@ -5,8 +5,9 @@ import axios from "axios";
 import { getSession } from "next-auth/react";
 import Image from "next/image";
 import { CDN_URL } from "@/utils/constants";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useRouter } from "next/router";
+import { DataDispatchContext } from "../_app";
 
 export const getServerSideProps = async(context : any) => {
 
@@ -28,6 +29,7 @@ export const getServerSideProps = async(context : any) => {
 
 export default function EyesLips({ cartList } : any) {
   
+  const dispatch:any = useContext(DataDispatchContext);
   const [carts, setCarts] = useState<[]>(cartList); 
   
   const router = useRouter();
@@ -113,10 +115,17 @@ export default function EyesLips({ cartList } : any) {
     });
 
     if (response.status === 201) {
+      dispatch({
+        type: "UPDATE_CART_COUNT",
+        payload: -1
+      });
+
       setCarts(response.data);
+
       if(isCheck){
         setTotalNumber( (totalNumber) => (totalNumber - NumProduct[id]) );
         setTotalPrice( (totalPrice) => (totalPrice - NumProduct[id] * price) );
+
       }
     }else{
       alert("Product deletion failed!");
