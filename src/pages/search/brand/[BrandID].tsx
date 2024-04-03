@@ -5,15 +5,9 @@ import Pagination from "@/components/Pagi";
 import axios from "axios";
 import { pageSize } from "@/lib/constants";
 import { useRouter } from "next/router";
-import {
-  getWebSetting,
-} from "@/lib/functions";
-import { parse } from "cookie";
 export async function getServerSideProps({
-  query: { BrandID, sort },
-  req,
+  query: { BrandID, sort = "", page },
 }: any) {
-  const cookies = parse(req.headers.cookie || "");
   const brandDetail = await axios.get(
     `http://localhost:3000/api/brand/detail`,
     {
@@ -21,28 +15,33 @@ export async function getServerSideProps({
     }
   );
   const response = await axios.get("http://localhost:3000/api/products/list", {
-    params: { page: 1, pageSize: pageSize, brand: BrandID, sort },
+    params: { page, pageSize: pageSize, brand: BrandID, sort },
   });
   return {
     props: {
       brand: brandDetail.data,
       products: response.data,
-      ...(await getWebSetting(cookies)),
       sort,
     },
   };
 }
 
-export default function BrandSearch({ brand, products, sort, ...props }: any) {
+export default function BrandSearch({ brand, products, sort }: any) {
   const router = useRouter();
-
+  const { data, total, currentPage, pageSize, totalPage } = products;
+  console.log(total, currentPage, pageSize, totalPage);
+  
+  const handleChangePage = (page: number) => {
+    router.query.page = page.toString();
+    router.push(router, undefined, { scroll: false });
+  };
   const handleChangeSort = (id: string | number) => {
     router.query.sort = id.toString();
-    router.push(router);
+    router.push(router, undefined, { scroll: false });
   };
 
   return (
-    <Layout {...props}>
+    <Layout>
       <div id="main">
         <div className="w-full h-[340px] bg-[url('/sub_face/main_visual.png')]">
           <div className="flex justify-center flex-col gap-5 h-full pl-[415px]">
@@ -77,15 +76,16 @@ export default function BrandSearch({ brand, products, sort, ...props }: any) {
             />
           </div>
           <div className="grid grid-cols-4 gap-x-5 gap-y-[30px]">
-            {products.data?.map((e: any, i: any) => {
+            {data?.map((e: any, i: any) => {
               return <ProductItem key={i} info={e} />;
             })}
           </div>
           <Pagination
-            totalPage={products.totalPage}
-            currentPage={products.page}
-            totalElement={products.total}
+            totalPage={totalPage}
+            currentPage={currentPage}
+            totalElement={total}
             elementsPerPage={10}
+            onChange={handleChangePage}
           />
         </div>
       </div>

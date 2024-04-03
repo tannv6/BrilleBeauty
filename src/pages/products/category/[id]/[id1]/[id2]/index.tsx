@@ -7,7 +7,7 @@ import Dropdown from "@/components/Dropdown";
 import ProductItem from "@/components/ProductItem";
 import Paginew from "@/components/Paginew";
 export async function getServerSideProps({ params, query, req }: any) {
-  const { page, sort, brand } = query;
+  const { page, sort = "", brand = "" } = query || {};
   const response = await axios.get(
     "http://localhost:3000/api/products/get_by_category",
     {

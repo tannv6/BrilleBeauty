@@ -49,9 +49,9 @@ export default async function handle(
     return res.status(200).json({
       data: result,
       total,
-      currentPage: page,
+      currentPage: Number(page),
       pageSize,
-      totalPage: Math.ceil(total / Number(pageSize)),
+      totalPage: Math.ceil(total / Number(pageSize)) || 1,
     });
   } catch (error) {
     return res.status(500).json({ error });
