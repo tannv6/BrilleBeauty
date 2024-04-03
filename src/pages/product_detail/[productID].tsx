@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import Layout from "@/components/Layout";
 import SubNav from "@/components/SubNav";
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -18,6 +18,8 @@ import { getSession } from "next-auth/react";
 import { log } from "console";
 import he from "he";
 import { Swiper as SwiperCore } from 'swiper/types';
+import ReviewDetail from "../review_detail";
+import { DataDispatchContext, MyContext } from "../_app";
 
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 export const getServerSideProps = async (context: { params: any, query : any, req: any}) => {
@@ -76,6 +78,9 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
   
     return session;   
   }  
+
+  const value: any = useContext(MyContext);
+  const dispatch:any = useContext(DataDispatchContext);
 
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   const [isHeart, setIsHeart] = useState<boolean>(true);
@@ -161,8 +166,9 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
 
     let options = JSON.stringify(addCartOption);
    
-    if(!getUser()){
+    if(!value.isLogin){
       alert("Please login!");
+      return;
     }
 
     if(addCartOption.length <= 0 ){
@@ -170,13 +176,18 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
       return;
     }
 
-    const response = await axios.get("http://localhost:3000/api/cart/write", {
+    const response = await axios.get("/api/cart/write", {
       params: { options: options, productID: productID },
     });
 
     if (response.status === 201) {
+
       alert("Add to cart successfully!");
       setSelectedOptions([]);
+      dispatch({
+        type: "UPDATE_CART_COUNT",
+        payload: addCartOption.length
+      })
     }else{
       alert("Add to cart failed");
       return;
