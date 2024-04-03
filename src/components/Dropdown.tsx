@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import "./SearchDropdown.css";
 
 type Props = {
   className?: string;
   options: { id: number | string; name: string }[];
   onChange: Function;
-  activeItem: number;
+  activeItem: number | string;
   containerClassName?: string;
   placeHolder?: string;
 };
@@ -18,20 +19,31 @@ function Dropdown({
   placeHolder,
 }: Props) {
   const activeOption = options.find((e) => e.id === activeItem);
+  const dropdownRef = useRef<any>(null);
   const [isOpen, setIsOpen] = useState(false);
   const handleClick = (id: number | string) => {
     onChange(id);
-  };
-  const handleBlur = (e: any) => {
     setIsOpen(false);
   };
+  useEffect(() => {
+    "use client;";
+    const handleClickOutside = (event: any) => {
+      if (dropdownRef.current && !dropdownRef.current?.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    window.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      window.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   return (
     <div
       className={`inline-block relative ${isOpen ? "z-50" : "z-49"} ${
         containerClassName || ""
       }`}
-      tabIndex={-1}
-      onBlur={handleBlur}
+      ref={dropdownRef}
     >
       <button
         type="button"

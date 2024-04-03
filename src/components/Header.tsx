@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { ChangeEvent, Fragment, useContext, useEffect, useState } from "react";
 import { CDN_URL } from "@/utils/constants";
 import { signOut } from "next-auth/react";
-import { MyContext } from "@/pages/_app";
+import { DataDispatchContext, MyContext } from "@/pages/_app";
 type Props = {
   brandListRecommended?: any[];
 };
@@ -15,13 +15,24 @@ export default function Header({ brandListRecommended }: Props) {
   const pathname = usePathname();
   const router = useRouter();
   const value: any = useContext(MyContext);
+  const dispatch: any = useContext(DataDispatchContext);
   const categoryList = JSON.parse(value?.category)?.data || [];
   const comboCategoryList = JSON.parse(value?.combo_category)?.data || [];
   const isLogin = value.isLogin;
   const webSetting = JSON.parse(value?.webSetting || "{}") || {};
   const banner_top = JSON.parse(value?.banner_top || "{}") || {};
+  const cartCount = value?.cartCount || 0;
 
   const [brandList, setBrandList] = useState(brandListRecommended || []);
+
+  useEffect(() => {
+    axios.get("/api/cart/count")
+      .then(response => dispatch({
+        type: "INIT_CART_COUNT",
+        payload: response.data
+      }))
+      .catch(error => console.error('Error fetching data:', error));
+  }, []);
 
   function handleKeyPress(e: any) {
     if (e.keyCode === 13) {
@@ -169,7 +180,7 @@ export default function Header({ brandListRecommended }: Props) {
                   className="object-cover"
                 />
                 <p className="absolute bottom-[3px] right-[10px] text-[#f15981] text-[13px] font-bold">
-                  3
+                  {cartCount}
                 </p>
               </Link>
             </div>
@@ -177,8 +188,8 @@ export default function Header({ brandListRecommended }: Props) {
         </div>
       </div>
       <nav className="relative gnb inner-container">
-        <ul className="flex justify-center items-center custom-gap-45 h-[50px] font-medium">
-          <li className="group">
+        <ul className="flex justify-center items-center h-[50px] font-medium">
+          <li className="group px-[20px]">
             <p
               className={`text-18 tracking-wide leading-[50px] text-gray-700 select-none`}
             >
@@ -226,7 +237,7 @@ export default function Header({ brandListRecommended }: Props) {
           {categoryList?.map((e: any, i: any) => {
             return (
               <Fragment key={i}>
-                <li key={i} className="group">
+                <li key={i} className="group px-[20px]">
                   <Link
                     className={`${
                       pathname?.slice(0) == `/products/category/${e.CategoryID}`
@@ -274,7 +285,7 @@ export default function Header({ brandListRecommended }: Props) {
             );
           })}
 
-          <li className="group">
+          <li className="group px-[20px]">
             <Link
               className={`${
                 pathname === "/sales" ? "gnb_active" : ""
