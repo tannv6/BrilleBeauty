@@ -29,27 +29,26 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     } = fields;
 
     const connect = await connectDB();
-    let Img1 = "";
-    let Img2 = "";
-    let Img3 = "";
-    let Img4 = "";
-    let Img5 = "";
-
-    if (files.Img1) {
-      Img1 = (await saveFile(files.Img1[0], "/review")).ufile;
+    const imgFiles = ["Img1", "Img2", "Img3", "Img4", "Img5"];
+    const fileNames: string[] = [];
+    const imgUrls: string[] = [];
+    
+    for (let i = 0; i < imgFiles.length; i++) {
+      const imgField = imgFiles[i];
+      const file = files[imgField];
+      
+      if (file) {
+        const { rfile, ufile } = await saveFile(file[0], "/review");
+        imgUrls.push(ufile);
+        fileNames.push(rfile !== null ? rfile : "");
+      } else {
+        imgUrls.push("");
+        fileNames.push("");
+      }
     }
-    if (files.Img2) {
-      Img2 = (await saveFile(files.Img2[0], "/review")).ufile;
-    }
-    if (files.Img3) {
-      Img3 = (await saveFile(files.Img3[0], "/review")).ufile;
-    }
-    if (files.Img4) {
-      Img4 = (await saveFile(files.Img4[0], "/review")).ufile;
-    }
-    if (files.Img5) {
-      Img5 = (await saveFile(files.Img5[0], "/review")).ufile;
-    }
+    
+    const [FileName1, FileName2, FileName3, FileName4, FileName5] = fileNames;
+    const [Img1, Img2, Img3, Img4, Img5] = imgUrls;
 
     const query = `UPDATE review SET 
       UserID ='${UserID}',
@@ -59,11 +58,16 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       Start = '${Start}',
       ProductID = '${ProductID}',
       Post = '${Post}',
-      Img1=${Img1 ? `'${Img1}'` : "Img1"},
-      Img2=${Img2 ? `'${Img2}'` : "Img2"},
-      Img3=${Img3 ? `'${Img3}'` : "Img3"},
-      Img4=${Img4 ? `'${Img4}'` : "Img4"},
-      Img5=${Img5 ? `'${Img5}'` : "Img5"},
+      Img1=${imgUrls[0] ? `'${imgUrls[0]}'` : "Img1"},
+      Img2=${imgUrls[1] ? `'${imgUrls[1]}'` : "Img2"},
+      Img3=${imgUrls[2] ? `'${imgUrls[2]}'` : "Img3"},
+      Img4=${imgUrls[3] ? `'${imgUrls[3]}'` : "Img4"},
+      Img5=${imgUrls[4] ? `'${imgUrls[4]}'` : "Img5"},
+      FileName1=${fileNames[0]? `'${fileNames[0]}'` : "FileName1"},
+      FileName2=${fileNames[1]? `'${fileNames[1]}'` : "FileName2"},
+      FileName3=${fileNames[2]? `'${fileNames[2]}'` : "FileName3"},
+      FileName4=${fileNames[3]? `'${fileNames[3]}'` : "FileName4"},
+      FileName5=${fileNames[4]? `'${fileNames[4]}'` : "FileName5"},
       UpdatedAt=NOW()
       WHERE ReviewID = '${ReviewID}' ;`;
 

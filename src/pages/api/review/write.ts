@@ -28,42 +28,47 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     } = fields;
 
     const connect = await connectDB();
-    let Img1 = "";
-    let Img2 = "";
-    let Img3 = "";
-    let Img4 = "";
-    let Img5 = "";
+    const imgFiles = ["Img1", "Img2", "Img3", "Img4", "Img5"];
+    const fileNames: string[] = [];
+    const imgUrls: string[] = [];
+    
+    for (let i = 0; i < imgFiles.length; i++) {
+      const imgField = imgFiles[i];
+      const file = files[imgField];
+      
+      if (file) {
+        const { rfile, ufile } = await saveFile(file[0], "/review");
+        imgUrls.push(ufile);
+        fileNames.push(rfile !== null ? rfile : "");
+      } else {
+        imgUrls.push("");
+        fileNames.push("");
+      }
+    }
+    
+    const [FileName1, FileName2, FileName3, FileName4, FileName5] = fileNames;
+    const [Img1, Img2, Img3, Img4, Img5] = imgUrls;
 
-    if (files.Img1) {
-      Img1 = (await saveFile(files.Img1[0], "/review")).ufile;
-    }
-    if (files.Img2) {
-      Img2 = (await saveFile(files.Img2[0], "/review")).ufile;
-    }
-    if (files.Img3) {
-      Img3 = (await saveFile(files.Img3[0], "/review")).ufile;
-    }
-    if (files.Img4) {
-      Img4 = (await saveFile(files.Img4[0], "/review")).ufile;
-    }
-    if (files.Img5) {
-      Img5 = (await saveFile(files.Img5[0], "/review")).ufile;
-    }
-
-    const query = `INSERT INTO review SET 
-      UserID ='${UserID}',
-      UserName ='${UserName}',
-      Title='${Title}',
-      ReviewDes='${ReviewDes}',
-      Start = '${Start}',
-      ProductID = '${ProductID}',
-      Post = '${Post}',
-      Img1 = '${Img1}',
-      Img2 = '${Img2}',
-      Img3 = '${Img3}',
-      Img4 = '${Img4}',
-      Img5 = '${Img5}',
-      CreatedAt=NOW();`;
+    let query = `INSERT INTO review SET 
+    UserID ='${UserID}',
+    UserName ='${UserName}',
+    Title='${Title}',
+    ReviewDes='${ReviewDes}',
+    Start = '${Start}',
+    ProductID = '${ProductID}',
+    Post = '${Post}',`;
+  
+  const imgFields = ['Img1', 'Img2', 'Img3', 'Img4', 'Img5'];
+  const fileNameFields = ['FileName1', 'FileName2', 'FileName3', 'FileName4', 'FileName5'];
+  
+  for (let i = 0; i < imgFields.length; i++) {
+    query += `
+      ${imgFields[i]} = '${imgUrls[i]}',
+      ${fileNameFields[i]} = '${fileNames[i]}',`;
+  }
+  
+  query += `
+    CreatedAt=NOW();`;
 
     await connect.execute(query);
     connect.end();

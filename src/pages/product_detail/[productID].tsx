@@ -15,7 +15,6 @@ import axios from "axios";
 import { parse } from "cookie";
 import { getWebSetting } from "@/lib/functions";
 import { getSession } from "next-auth/react";
-import { log } from "console";
 import he from "he";
 import { Swiper as SwiperCore } from 'swiper/types';
 
@@ -52,12 +51,18 @@ export const getServerSideProps = async (context: { params: any, query : any, re
     "http://localhost:3000/api/option_types/detail"
   );
 
+  const session = await getSession(context);
+  const response2 = await axios.get("http://localhost:3000/api/account/info", {
+    params: { session: JSON.stringify(session) },
+  });
+
   return {
     props: {
     optionTypes: result1.data.data,
     optionTypes2: result2.data.data,
     review: reviewDetail.data,
     product: productDetail.data,
+    userInfo: response2.data,
     productRelate: response.data,
       ...response.data,
       ...(await getWebSetting(cookies)),
@@ -68,7 +73,7 @@ export const getServerSideProps = async (context: { params: any, query : any, re
   };
 };
 
-export default function Face({ product, optionTypes, optionTypes2, productRelate, productID, review, ...props }: any) {
+export default function Face({ product, optionTypes, optionTypes2, productRelate, productID, review, userInfo, ...props }: any) {
   const swiperRef = useRef<SwiperCore>();
 
   async function getUser() {
@@ -280,10 +285,9 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                   </p>
                 </div>
                 <hr />
-                <div className="py-5">
+                <div className="py-5 hidden">
                   <p className="flex">
                     <span className="text-lg min-w-[190px]">Product Highlight</span>
-                    {/* <span className="text-lg text-[#757575]">{product.Description}</span> */}
                   </p>
                 </div>
                 <hr />
@@ -388,10 +392,11 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                         </div>
                       </div>
                       <div className="flex basis-[20%] items-start justify-end gap-[10px]">
-                        <Link href={`/write_review/${e.ReviewID}?ProductID=${product.ProductID}`}
-                              className="flex items-center justify-center w-[100px] h-7 text-[15px] text-[#999999] border rounded"> EDIT
-                        </Link>
-                        <button type="button" className="w-[100px] h-7 text-[15px] text-[#999999] border rounded" onClick={() => handleDelete(e.ReviewID)}>DELETE</button>
+                        {userInfo && userInfo.CustomerID !== null && e.UserID === userInfo.CustomerID &&
+                          <><Link href={`/write_review/${e.ReviewID}?ProductID=${product.ProductID}`}
+                            className="flex items-center justify-center w-[100px] h-7 text-[15px] text-[#999999] border rounded"> EDIT
+                          </Link><button type="button" className="w-[100px] h-7 text-[15px] text-[#999999] border rounded" onClick={() => handleDelete(e.ReviewID)}>DELETE</button></>
+                        }
                       </div>
                     </div>
                   ))}

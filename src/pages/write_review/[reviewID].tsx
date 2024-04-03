@@ -70,6 +70,11 @@ function ReviewWrite({reviewDetail, isNew} : any) {
         Img3: any;
         Img4: any;
         Img5: any;
+        FileName1: any;
+        FileName2: any;
+        FileName3: any;
+        FileName4: any;
+        FileName5: any;
         Post: any;
     }>({
         ReviewID: reviewDetail?.ReviewID || "",
@@ -84,6 +89,11 @@ function ReviewWrite({reviewDetail, isNew} : any) {
         Img3: reviewDetail?.Img3 || "",
         Img4: reviewDetail?.Img4 || "",
         Img5: reviewDetail?.Img5 || "",
+        FileName1: reviewDetail?.FileName1 || "",
+        FileName2: reviewDetail?.FileName2 || "",
+        FileName3: reviewDetail?.FileName3 || "",
+        FileName4: reviewDetail?.FileName4 || "",
+        FileName5: reviewDetail?.FileName5 || "",
         Post: reviewDetail?.Post || "Y",
     });
 
@@ -96,7 +106,14 @@ function ReviewWrite({reviewDetail, isNew} : any) {
     };
     function handleChange(e: any) {
     if (e.target.files) {
-        setReview({ ...review, [e.target.name]: e.target.files[0] });
+        const file = e.target.files[0];
+        const fieldName = e.target.name;
+        const reader = new FileReader();
+        reader.onloadend = () => {
+        const fileName = file.name; 
+        setReview({ ...review, [fieldName]: file, [`FileName${fieldName.slice(-1)}`]: fileName });
+        };
+        reader.readAsDataURL(file);
     } else {
         setReview({ ...review, [e.target.name]: e.target.value });
     }
@@ -172,58 +189,63 @@ function ReviewWrite({reviewDetail, isNew} : any) {
                             </td>
                         </tr>
                         <tr className='border-b border-[#dbdbdb]'>
-                            <td className='flex justify-center items-center h-[64px] w-[190px] bg-[#fafafa] text-[18px] text-[#252525] border-r border-[#dbdbdb]'>File Attachment 1</td>
-                            <td className='w-full px-[15px] py-[10px]'>
+                            <td className='flex justify-center items-center h-[74px] w-[190px] bg-[#fafafa] text-[18px] text-[#252525] border-r border-[#dbdbdb]'>File Attachment 1</td>
+                            <td className='w-full px-[15px] pt-[10px]'>
                                 <input type="file" 
                                         name="Img1"
                                         className='w-full h-10 bg-white'
                                         placeholder='Please enter the subject'
                                         onChange={handleChange}
                                         />
+                                {review.ReviewID && review.Img1 && <span>{review.FileName1}</span>}
                             </td>
                         </tr>
                         <tr className='border-b border-[#dbdbdb]'>
-                            <td className='flex justify-center items-center h-[64px] w-[190px] bg-[#fafafa] text-[18px] text-[#252525] border-r border-[#dbdbdb]'>File Attachment 2</td>
-                            <td className='w-full px-[15px] py-[10px]'>
+                            <td className='flex justify-center items-center h-[74px] w-[190px] bg-[#fafafa] text-[18px] text-[#252525] border-r border-[#dbdbdb]'>File Attachment 2</td>
+                            <td className='w-full px-[15px] pt-[10px]'>
                                 <input type="file" 
                                         name="Img2"
                                         className='w-full h-10 bg-white'
                                         placeholder='Please enter the subject'
                                         onChange={handleChange}
                                         />
+                                {review.ReviewID && review.Img2 && <span>{review.FileName2}</span>}
                             </td>
                         </tr>
                         <tr className='border-b border-[#dbdbdb]'>
-                            <td className='flex justify-center items-center h-[64px] w-[190px] bg-[#fafafa] text-[18px] text-[#252525] border-r border-[#dbdbdb]'>File Attachment 3</td>
-                            <td className='w-full px-[15px] py-[10px]'>
+                            <td className='flex justify-center items-center h-[74px] w-[190px] bg-[#fafafa] text-[18px] text-[#252525] border-r border-[#dbdbdb]'>File Attachment 3</td>
+                            <td className='w-full px-[15px] pt-[10px]'>
                                 <input type="file" 
                                         name="Img3"
                                         className='w-full h-10 bg-white'
                                         placeholder='Please enter the subject'
                                         onChange={handleChange}
                                         />
+                                {review.ReviewID && review.Img3 && <span>{review.FileName3}</span>}
                             </td>
                         </tr>
                         <tr className='border-b border-[#dbdbdb]'>
-                            <td className='flex justify-center items-center h-[64px] w-[190px] bg-[#fafafa] text-[18px] text-[#252525] border-r border-[#dbdbdb]'>File Attachment 4</td>
-                            <td className='w-full px-[15px] py-[10px]'>
+                            <td className='flex justify-center items-center h-[74px] w-[190px] bg-[#fafafa] text-[18px] text-[#252525] border-r border-[#dbdbdb]'>File Attachment 4</td>
+                            <td className='w-full px-[15px] pt-[10px]'>
                                 <input  name="Img4"
                                         className='w-full h-10 bg-white'
                                         placeholder='Please enter the subject'
                                         onChange={handleChange}
                                         type="file"
                                         />
+                                {review.ReviewID && review.Img4 && <span>{review.FileName4}</span>}
                             </td>
                         </tr>
                         <tr className='border-b border-[#dbdbdb]'>
-                            <td className='flex justify-center items-center h-[64px] w-[190px] bg-[#fafafa] text-[18px] text-[#252525] border-r border-[#dbdbdb]'>File Attachment 5</td>
-                            <td className='w-full px-[15px] py-[10px]'>
+                            <td className='flex justify-center items-center h-[74px] w-[190px] bg-[#fafafa] text-[18px] text-[#252525] border-r border-[#dbdbdb]'>File Attachment 5</td>
+                            <td className='w-full px-[15px] pt-[10px]'>
                                 <input type="file" 
                                         name="Img5"
                                         className='w-full h-10 bg-white'
                                         placeholder='Please enter the subject'
                                         onChange={handleChange}
                                         />
+                                {review.ReviewID && review.Img5 && <span>{review.FileName5}</span>}
                             </td>
                         </tr>
                         <tr className='border-b border-[#dbdbdb]'>
