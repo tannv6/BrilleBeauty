@@ -12,6 +12,8 @@ import moment from "moment";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import he from "he";
+import SearchDropdown from "@/components/SearchDropdown";
+import { debounce } from "@/lib/functions";
 
 const CustomEditor = dynamic(
   () => {
@@ -60,6 +62,8 @@ function ProductWrite({
   brandList,
 }: any) {
   const { level1, level2, level3 } = catObject;
+
+  const [brandListSearch, setBrandListSearch] = useState(brandList || []);
 
   const [level2List, setLevel2List] = useState(
     productDetail?.CategoryLevel === 1
@@ -239,6 +243,21 @@ function ProductWrite({
     });
   };
 
+  const handleChangeSearch = debounce(async (e: any) => {
+    const result2 = await axios.get("/api/brand/list", {
+      params: {
+        search: e.target.value,
+      },
+    });
+    setBrandListSearch(
+      result2.data.data.map((e: any) => ({
+        ...e,
+        id: e.BrandID,
+        name: e.BrandName,
+      }))
+    );
+  }, 300);
+
   const thumbSrc =
     typeof product.ProductImage === "object"
       ? URL.createObjectURL(product.ProductImage)
@@ -249,9 +268,7 @@ function ProductWrite({
     <AdminLayout>
       <>
         <div className="flex justify-between items-center">
-          <h3 className="mb-4">
-            {isNew ? "Add New Product" : "Edit Product"}
-          </h3>
+          <h3 className="mb-4">{isNew ? "Add New Product" : "Edit Product"}</h3>
         </div>
         <form onSubmit={handleSubmit}>
           <div className="relative overflow-x-auto">
@@ -331,7 +348,7 @@ function ProductWrite({
                     Quantity
                   </th>
                   <td className="px-6 py-2">
-                  <input
+                    <input
                       type="text"
                       name="Quantity"
                       value={product.Quantity}
@@ -536,10 +553,10 @@ function ProductWrite({
                     Brand
                   </th>
                   <td className="px-6 py-2">
-                    <Dropdown
+                    <SearchDropdown
                       containerClassName="w-[150px]"
                       className="w-full h-[35px] rounded-md"
-                      options={brandList}
+                      options={brandListSearch}
                       onChange={(id: number) => {
                         handleChange({
                           target: { name: "BrandID", value: id },
@@ -547,6 +564,7 @@ function ProductWrite({
                       }}
                       activeItem={Number(product.BrandID)}
                       placeHolder="--Brand--"
+                      onChangeSearch={handleChangeSearch}
                     />
                   </td>
                   <th
