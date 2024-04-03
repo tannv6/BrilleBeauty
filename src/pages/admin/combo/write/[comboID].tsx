@@ -57,6 +57,7 @@ function ComboWrite({ comboDetail, isNew, categoryList, seasonList }: any) {
   const [combo, setCombo] = useState<{ [key: string]: any }>({
     ComboID: comboDetail?.ComboID || "",
     ComboName: comboDetail?.ComboName || "",
+    Highlight: comboDetail?.Highlight || "",
     InitPrice: comboDetail?.InitPrice || 0,
     SellPrice: comboDetail?.SellPrice || 0,
     Description: comboDetail?.Description || "",
@@ -196,6 +197,24 @@ function ComboWrite({ comboDetail, isNew, categoryList, seasonList }: any) {
                       name="ComboName"
                       value={combo.ComboName}
                       id="ComboName"
+                      onChange={handleChange}
+                      className="h-[35px] outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                    />
+                  </td>
+                </tr>
+                <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                  <th
+                    scope="row"
+                    className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
+                  >
+                    Highlight
+                  </th>
+                  <td className="px-6 py-2" colSpan={3}>
+                    <input
+                      type="text"
+                      name="Highlight"
+                      value={combo.Highlight}
+                      id="Highlight"
                       onChange={handleChange}
                       className="h-[35px] outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     />

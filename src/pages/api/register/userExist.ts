@@ -9,26 +9,23 @@ export const config = {
   },
 };
 
-
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   try {
     const form = formidable({});
     const [fields] = await form.parse(req);
 
-    const {
-        user_email2,
-        password2,
-        first_name,
-        last_name,
-        birth,
-    } = fields;
+    const { user_name, user_email2, mode } = fields;
 
     const connect = await connectDB();
-    const query = `SELECT * FROM customers WHERE Email = '${user_email2}' `;
-    
-    const [results] = await connect.execute(query);
-    
-    return res.status(201).json({ data: results });
+    let query = "";
+    if (mode?.[0] === "user_name") {
+      query = `SELECT * FROM customers WHERE UserName = '${user_name}' `;
+    } else {
+      query = `SELECT * FROM customers WHERE Email = '${user_email2}' `;
+    }
+    const [results]: any = await connect.execute(query);
+
+    return res.status(201).json({ data: results.length > 0 });
   } catch (err) {
     return res.status(500).json({ error: err });
   }

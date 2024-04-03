@@ -29,8 +29,9 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       DelImage,
       CategoryID,
       SeasonID,
+      Highlight,
     } = fields;
-    
+
     const des = he.encode(he.decode(Description?.[0] || ""));
 
     let ComboImage = "";
@@ -41,6 +42,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     const connect = await connectDB();
     const query = `UPDATE combo SET 
     ComboName = ${ComboName?.[0] ? `'${ComboName}'` : "ComboName"}, 
+    Highlight = ${Highlight?.[0] ? `'${Highlight}'` : "Highlight"}, 
     InitPrice = ${InitPrice?.[0] ? `'${InitPrice}'` : "InitPrice"}, 
     SellPrice = ${SellPrice?.[0] ? `'${SellPrice}'` : "SellPrice"},
     Description = '${des}', 
