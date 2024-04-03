@@ -188,8 +188,8 @@ export default function Header({ brandListRecommended }: Props) {
         </div>
       </div>
       <nav className="relative gnb inner-container">
-        <ul className="flex justify-center items-center custom-gap-45 h-[50px] font-medium">
-          <li className="group">
+        <ul className="flex justify-center items-center h-[50px] font-medium">
+          <li className="group px-[20px]">
             <p
               className={`text-18 tracking-wide leading-[50px] text-gray-700 select-none`}
             >
@@ -237,7 +237,7 @@ export default function Header({ brandListRecommended }: Props) {
           {categoryList?.map((e: any, i: any) => {
             return (
               <Fragment key={i}>
-                <li key={i} className="group">
+                <li key={i} className="group px-[20px]">
                   <Link
                     className={`${
                       pathname?.slice(0) == `/products/category/${e.CategoryID}`
@@ -285,7 +285,7 @@ export default function Header({ brandListRecommended }: Props) {
             );
           })}
 
-          <li className="group">
+          <li className="group px-[20px]">
             <Link
               className={`${
                 pathname === "/sales" ? "gnb_active" : ""

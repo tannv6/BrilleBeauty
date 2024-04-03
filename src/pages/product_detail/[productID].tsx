@@ -42,7 +42,7 @@ export const getServerSideProps = async (context: { params: any, query : any, re
 
 
 
-  const response = await axios.get("http://localhost:3000/api/products/category", {
+  const response = await axios.get("http://localhost:3000/api/products/get_by_category", {
     params: { cate_id: params.id2, depth: 3 },
 });
 
