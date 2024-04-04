@@ -2,16 +2,12 @@ import Layout from "@/components/Layout";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
-import { getSession, signIn } from "next-auth/react";
+import {  signIn } from "next-auth/react";
 import { GetServerSideProps } from "next";
-import { parse } from "cookie";
-import { getWebSetting } from "@/lib/functions";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/[...nextauth]";
 export const getServerSideProps = (async (context: any) => {
-  const cookies = parse(context.req.headers.cookie || "");
   const session = await getServerSession(context.req, context.res, authOptions);
-
   if (session) {
     return {
       redirect: {
