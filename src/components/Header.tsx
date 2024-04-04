@@ -25,18 +25,23 @@ export default function Header({ brandListRecommended }: Props) {
 
   const [brandList, setBrandList] = useState(brandListRecommended || []);
 
+  const [searchTxt, setSearchTxt] = useState("");
+
   useEffect(() => {
-    axios.get("/api/cart/count")
-      .then(response => dispatch({
-        type: "INIT_CART_COUNT",
-        payload: response.data
-      }))
-      .catch(error => console.error('Error fetching data:', error));
+    axios
+      .get("/api/cart/count")
+      .then((response) =>
+        dispatch({
+          type: "INIT_CART_COUNT",
+          payload: response.data,
+        })
+      )
+      .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
   function handleKeyPress(e: any) {
     if (e.keyCode === 13) {
-      router.push("/search");
+      router.push(`/search?search_txt=${searchTxt}`);
     }
   }
 
@@ -92,6 +97,7 @@ export default function Header({ brandListRecommended }: Props) {
         <div className="search-container flex items-center mx-5">
           <div className="relative">
             <input
+              onChange={(e) => setSearchTxt(e.target.value)}
               onKeyDown={(e) => handleKeyPress(e)}
               type="text"
               className="peer h-[35px] w-[615px] 2xl:w-[450px] rounded-full bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-f04b76"
