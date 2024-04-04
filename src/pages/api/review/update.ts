@@ -25,7 +25,6 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       Title,
       ReviewDes,
       Start,
-      Post,
     } = fields;
 
     const connect = await connectDB();
@@ -57,7 +56,6 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       ReviewDes='${ReviewDes}',
       Start = '${Start}',
       ProductID = '${ProductID}',
-      Post = '${Post}',
       Img1=${imgUrls[0] ? `'${imgUrls[0]}'` : "Img1"},
       Img2=${imgUrls[1] ? `'${imgUrls[1]}'` : "Img2"},
       Img3=${imgUrls[2] ? `'${imgUrls[2]}'` : "Img3"},

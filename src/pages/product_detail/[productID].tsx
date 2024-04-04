@@ -19,6 +19,7 @@ import he from "he";
 import { Swiper as SwiperCore } from 'swiper/types';
 import ReviewDetail from "../review_detail";
 import { DataDispatchContext, MyContext } from "../_app";
+import { useRouter } from "next/router";
 
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 export const getServerSideProps = async (context: { params: any, query : any, req: any}) => {
@@ -242,6 +243,18 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
     }
   };
 
+  const router = useRouter();
+
+  const handleWriteReview = () => {
+    if (!value.isLogin) {
+      alert("Please login!");
+      router.push('/member/login');
+      return;
+    }
+
+    router.push(`/write_review?ProductID=${product.ProductID}`);
+  };
+
   return (
       <Layout {...props}>
         <div id="main">
@@ -363,9 +376,9 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                   <span className="font-bold">PRODUCT REVIEWS</span>
                   <span className="text-[#757575]">({totalReviews})</span>
                 </p>
-                <Link href={`/write_review?ProductID=${product.ProductID}`}>
-                  <button className="w-[130px] h-[35px] border border-[#ef426f] rounded text-[#ef426f] font-medium">Write review</button>
-                </Link>
+                  <button className="w-[130px] h-[35px] border border-[#ef426f] rounded text-[#ef426f] font-medium" onClick={handleWriteReview}>
+                    Write review
+                  </button>
               </div>
               <hr />
 

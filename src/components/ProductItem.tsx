@@ -65,6 +65,7 @@ function ProductItem({ info }: Props) {
             alt=""
             width={286}
             height={294}
+            className="rounded-t-2xl"
           />
           {Boolean(info?.IsNew) && (
             <span className="flex items-center justify-center w-[50px] h-[30px] absolute bottom-[10px] left-3 bg-[#ffffff] text-[#fe3a40] rounded-[15px] text-[14px]">

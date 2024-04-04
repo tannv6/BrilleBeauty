@@ -248,7 +248,7 @@ function ReviewWrite({reviewDetail, isNew} : any) {
                                 {review.ReviewID && review.Img5 && <span>{review.FileName5}</span>}
                             </td>
                         </tr>
-                        <tr className='border-b border-[#dbdbdb]'>
+                        {/* <tr className='border-b border-[#dbdbdb]'>
                             <td className='flex justify-center items-center h-[64px] w-[190px] bg-[#fafafa] text-[18px] text-[#252525] border-r border-[#dbdbdb]'>Secret Posts</td>
                             <td className='w-full px-[15px] py-[10px]'>
                                     <div className="flex gap-[35px]">
@@ -274,7 +274,7 @@ function ReviewWrite({reviewDetail, isNew} : any) {
                                         </div>
                                     </div>
                             </td>
-                        </tr>
+                        </tr> */}
                     </tbody>
                 </table>
                 <div className="flex mt-[60px] justify-center items-center gap-[10px]">
