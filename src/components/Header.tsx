@@ -63,14 +63,6 @@ export default function Header({ brandListRecommended }: Props) {
         setBrandList(response.data.data);
       });
     }
-
-    // axios.get("/api/category/header").then((response) => {
-    //   setCategoryList(response.data.data);
-    // });
-    // axios.get("/api/combo_category/header").then((response) => {
-    //   setComboCategoryList(response.data.data);
-    // });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLinkClick = async (e: any, BrandID: number) => {
