@@ -1,11 +1,24 @@
 import Layout from "@/components/Layout";
-import Link from "next/link";
+import axios from "axios";
 import { useState } from "react";
 
 export default function Find() {
   const [activeTab, setActiveTab] = useState("id");
-  const [selectedTab, setSelectedTab] = useState("phone");
-  const [selectedTab2, setSelectedTab2] = useState("phone2");
+  const [selectedTab, setSelectedTab] = useState("email");
+  const [selectedTab2, setSelectedTab2] = useState("email2");
+
+  const [email, setEmail] = useState({
+    email1: "",
+    email2: "",
+  });
+
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
+    setEmail({
+      ...email,
+      [name]: value,
+    });
+  };
 
   const handleTabChange = (tab: any) => {
     setActiveTab(tab);
@@ -19,10 +32,22 @@ export default function Find() {
     setSelectedTab2(tab);
   };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name } = event.target;
-    handleTabChange(name);
+  // const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name } = event.target;
+  //   handleTabChange(name);
+  // };
+
+  const handleCheckUser = async () => {
+    const res = await axios.post("/api/account/find_id", {
+      Email: email.email1 + "@" + email.email2,
+    });
+    if (res?.data?.result === "OK") {
+      alert("Found");
+    } else {
+      alert("Not Found");
+    }
   };
+
   return (
     <Layout>
       <div className="inner-530 mt-[95px] mb-[375px]">
@@ -51,7 +76,7 @@ export default function Find() {
         </div>
         {activeTab === "id" && (
           <form>
-            <div className="flex">
+            {/* <div className="flex">
               <input
                 id="phone"
                 type="radio"
@@ -82,7 +107,7 @@ export default function Find() {
                 <span className="w-8 h-8 inline-block mr-2 rounded-full border border-grey"></span>
                 Find by email
               </label>
-            </div>
+            </div> */}
             <div className={`${selectedTab === "phone" ? "phone" : "hidden"}`}>
               <div className="mt-10">
                 <div className="mt-2">
@@ -119,7 +144,10 @@ export default function Find() {
                 </div>
               </div>
               <div className="mt-4">
-                <button className="w-full h-[50px] border border-[#757575] flex items-center justify-center text-[16px] text-[#252525]">
+                <button
+                  type="button"
+                  className="w-full h-[50px] border border-[#757575] flex items-center justify-center text-[16px] text-[#252525]"
+                >
                   Certification Number
                 </button>
               </div>
@@ -132,14 +160,12 @@ export default function Find() {
                   className="block w-full rounded-md border outline-none border-gray-200 bg-transparent py-3 pl-2 text-[16px] placeholder:text-[#999] transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-f04b76"
                 />
               </div>
-              <Link href={""}>
-                <button
-                  type="button"
-                  className="mt-7 w-full h-[62px] flex items-center justify-center rounded bg-[#f04b76] text-[18px] text-white font-medium"
-                >
-                  Check
-                </button>
-              </Link>
+              <button
+                type="button"
+                className="mt-7 w-full h-[62px] flex items-center justify-center rounded bg-[#f04b76] text-[18px] text-white font-medium"
+              >
+                Check
+              </button>
             </div>
             <div className={`${selectedTab === "email" ? "email" : "hidden"}`}>
               <div className="mt-10">
@@ -156,27 +182,37 @@ export default function Find() {
                 <div className="flex gap-[10px]">
                   <input
                     type="text"
-                    name="email"
+                    name="email1"
+                    value={email.email1}
+                    onChange={handleChange}
                     className="block w-[162px] rounded-md border outline-none border-gray-200 bg-transparent py-3 pl-2 text-[16px] placeholder:text-[#999] transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-f04b76"
                   />
                   <span className="leading-[50px]">@</span>
                   <input
+                    value={email.email2 || "gmail.com"}
                     type="text"
-                    name="email"
                     className="block w-[162px] rounded-md border outline-none border-gray-200 bg-transparent py-3 pl-2 text-[16px] placeholder:text-[#999] transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-f04b76"
                   />
                   <div className="relative w-[160px] flex items-center after:w-[8px] after:h-[8px] after:border-black/70 after:border-b after:border-r after:transform after:rotate-45 after:absolute after:right-3">
                     <select
+                      name="email2"
+                      value={email.email2 || "gmail.com"}
+                      onChange={handleChange}
                       required
                       className="text-black/70 bg-white py-3 pl-2  outline-none transition-all cursor-pointer border border-gray-200 rounded-md focus:bg-white focus:ring-2 focus:ring-f04b76 appearance-none invalid:text-black/30 w-[160px]"
                     >
-                      <option value="option-1">gmail.com</option>
+                      <option value="gmail.com">gmail.com</option>
+                      <option value="yahoo.com">yahoo.com</option>
                     </select>
                   </div>
                 </div>
               </div>
               <div className="mt-4">
-                <button className="w-full h-[50px] border border-[#757575] flex items-center justify-center text-[16px] text-[#252525]">
+                <button
+                  onClick={handleCheckUser}
+                  type="button"
+                  className="w-full h-[50px] border border-[#757575] flex items-center justify-center text-[16px] text-[#252525]"
+                >
                   Certification Number
                 </button>
               </div>
@@ -189,20 +225,18 @@ export default function Find() {
                   className="block w-full rounded-md border outline-none border-gray-200 bg-transparent py-3 pl-2 text-[16px] placeholder:text-[#999] transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-f04b76"
                 />
               </div>
-              <Link href={""}>
-                <button
-                  type="button"
-                  className="mt-7 w-full h-[62px] flex items-center justify-center rounded bg-[#f04b76] text-[18px] text-white font-medium"
-                >
-                  Check
-                </button>
-              </Link>
+              <button
+                type="button"
+                className="mt-7 w-full h-[62px] flex items-center justify-center rounded bg-[#f04b76] text-[18px] text-white font-medium"
+              >
+                Check
+              </button>
             </div>
           </form>
         )}
         {activeTab === "password" && (
           <form>
-            <div className="flex">
+            {/* <div className="flex">
               <input
                 id="phone2"
                 type="radio"
@@ -233,7 +267,7 @@ export default function Find() {
                 <span className="w-8 h-8 inline-block mr-2 rounded-full border border-grey"></span>
                 Find by email
               </label>
-            </div>
+            </div> */}
             <div
               className={`${selectedTab2 === "phone2" ? "phone2" : "hidden"}`}
             >
@@ -293,14 +327,12 @@ export default function Find() {
                   className="block w-full rounded-md border outline-none border-gray-200 bg-transparent py-3 pl-2 text-[16px] placeholder:text-[#999] transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-f04b76"
                 />
               </div>
-              <Link href={""}>
-                <button
-                  type="button"
-                  className="mt-7 w-full h-[62px] flex items-center justify-center rounded bg-[#f04b76] text-[18px] text-white font-medium"
-                >
-                  Check
-                </button>
-              </Link>
+              <button
+                type="button"
+                className="mt-7 w-full h-[62px] flex items-center justify-center rounded bg-[#f04b76] text-[18px] text-white font-medium"
+              >
+                Check
+              </button>
             </div>
             <div
               className={`${selectedTab2 === "email2" ? "email2" : "hidden"}`}
@@ -360,14 +392,12 @@ export default function Find() {
                   className="block w-full rounded-md border outline-none border-gray-200 bg-transparent py-3 pl-2 text-[16px] placeholder:text-[#999] transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-f04b76"
                 />
               </div>
-              <Link href={""}>
-                <button
-                  type="button"
-                  className="mt-7 w-full h-[62px] flex items-center justify-center rounded bg-[#f04b76] text-[18px] text-white font-medium"
-                >
-                  Check
-                </button>
-              </Link>
+              <button
+                type="button"
+                className="mt-7 w-full h-[62px] flex items-center justify-center rounded bg-[#f04b76] text-[18px] text-white font-medium"
+              >
+                Check
+              </button>
             </div>
           </form>
         )}
