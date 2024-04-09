@@ -12,23 +12,28 @@ myOAuth2Client.setCredentials({
   refresh_token: GOOGLE_MAILER_REFRESH_TOKEN,
 });
 export async function sendEmail(toMail: string, subject: string, html: string) {
-  const myAccessTokenObject = await myOAuth2Client.getAccessToken();
-  const myAccessToken = myAccessTokenObject?.token;
-  const transport = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      type: "OAuth2",
-      user: ADMIN_EMAIL_ADDRESS,
-      clientId: GOOGLE_MAILER_CLIENT_ID,
-      clientSecret: GOOGLE_MAILER_CLIENT_SECRET,
-      refresh_token: GOOGLE_MAILER_REFRESH_TOKEN,
-      accessToken: myAccessToken,
-    },
-  } as any);
-  const mailOptions = {
-    to: toMail,
-    subject,
-    html,
-  };
-  await transport.sendMail(mailOptions);
+  try {
+    const myAccessTokenObject = await myOAuth2Client.getAccessToken();
+    const myAccessToken = myAccessTokenObject?.token;
+    const transport = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        type: "OAuth2",
+        user: ADMIN_EMAIL_ADDRESS,
+        clientId: GOOGLE_MAILER_CLIENT_ID,
+        clientSecret: GOOGLE_MAILER_CLIENT_SECRET,
+        refresh_token: GOOGLE_MAILER_REFRESH_TOKEN,
+        accessToken: myAccessToken,
+      },
+    } as any);
+    const mailOptions = {
+      to: toMail,
+      subject,
+      html,
+    };
+    await transport.sendMail(mailOptions);
+    return true;
+  } catch {
+    return false;
+  }
 }

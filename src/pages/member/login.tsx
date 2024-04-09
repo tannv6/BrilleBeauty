@@ -127,7 +127,7 @@ export default function Login({}) {
                 Save Password
               </label>
             </div>
-            <Link href={"/find_id"}>
+            <Link href={"/find_account/id"}>
               <p className="text-[16px] font-medium text-[#454545]">
                 Forgot Your Password?
               </p>
