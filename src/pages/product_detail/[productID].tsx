@@ -17,9 +17,9 @@ import { getWebSetting } from "@/lib/functions";
 import { getSession } from "next-auth/react";
 import he from "he";
 import { Swiper as SwiperCore } from 'swiper/types';
-import ReviewDetail from "../review_detail";
 import { DataDispatchContext, MyContext } from "../_app";
 import { useRouter } from "next/router";
+import Paginew from "@/components/Paginew";
 
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 export const getServerSideProps = async (context: { params: any, query : any, req: any}) => {
@@ -27,7 +27,7 @@ export const getServerSideProps = async (context: { params: any, query : any, re
   
   const cookies = parse(context.req.headers.cookie || "");
   const { params, query} = context;
-  const { productID} = params;
+  const { productID , page} = params;
   const productDetail = await axios.get(
     `http://localhost:3000/api/products/detail`,
     {
@@ -37,6 +37,9 @@ export const getServerSideProps = async (context: { params: any, query : any, re
 
   const reviewDetail = await axios.get(
     `http://localhost:3000/api/review/list`,
+    {
+      params: { page, pageSize: 12, },
+    }
   );
 
 
@@ -78,6 +81,13 @@ export const getServerSideProps = async (context: { params: any, query : any, re
 
 export default function Face({ product, optionTypes, optionTypes2, productRelate, productID, review, userInfo, ...props }: any) {
   const swiperRef = useRef<SwiperCore>();
+
+  const { data, total, currentPage, pageSize, totalPage } = review;
+
+  const handleChangePage = (page: number) => {
+    router.query.page = page.toString();
+    router.push(router, undefined, { scroll: false });
+  };
 
   async function getUser() {
     const session = await getSession();
@@ -433,7 +443,19 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                 </div>
               </div>
 
-              <Pagi></Pagi>
+              {data.length ? (
+            <>
+              <Paginew
+                tP={totalPage}
+                cP={currentPage}
+                tE={total}
+                per={10}
+                onChange={handleChangePage}
+              ></Paginew>
+            </>
+          ) : (
+            ``
+          )}
 
             </div>
             <div id="product_rlt" className="mt-[120px] mb-[60px]">

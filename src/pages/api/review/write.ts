@@ -20,6 +20,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     const UserName = session?.user?.name;
 
     const {
+      ReviewType,
       ProductID,
       Title,
       ReviewDes,
@@ -51,6 +52,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     let query = `INSERT INTO review SET 
     UserID ='${UserID}',
     UserName ='${UserName}',
+    ReviewType = '${ReviewType}',
     Title='${Title}',
     ReviewDes='${ReviewDes}',
     Start = '${Start}',

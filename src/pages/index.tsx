@@ -53,6 +53,9 @@ export const getServerSideProps: GetServerSideProps<{
 
   const reviewDetail = await axios.get(
     `http://localhost:3000/api/review/list`,
+    {
+      params: { page: 1, pageSize: 12, },
+    }
   );
 
   return {

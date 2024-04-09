@@ -10,11 +10,16 @@ import { parse } from "cookie";
 import axios from "axios";
 import { CDN_URL } from "@/utils/constants";
 import he from "he";
+import router from "next/router";
+import Paginew from "@/components/Paginew";
 
 export async function getServerSideProps({ params, query, req }: any) {
   const cookies = parse(req.headers.cookie || "");
   const reviewDetail = await axios.get(
     `http://localhost:3000/api/review/list`,
+    {
+      params: { page : 1, pageSize: 12, },
+    }
   );
   return {
     props: {
@@ -24,6 +29,13 @@ export async function getServerSideProps({ params, query, req }: any) {
   };
 }
 export default function ReviewList({review, ...props } : any) {
+
+  const { data, total, currentPage, pageSize, totalPage } = review;
+
+  const handleChangePage = (page: number) => {
+    router.query.page = page.toString();
+    router.push(router, undefined, { scroll: false });
+  };
   const formatCreatedAt = (createdAt : any) => {
     const date = new Date(createdAt);
     const year = date.getFullYear();
@@ -98,7 +110,19 @@ export default function ReviewList({review, ...props } : any) {
                 </Link>
             ))}
             </div>
-            <Pagination></Pagination>
+            {data.length ? (
+            <>
+              <Paginew
+                tP={totalPage}
+                cP={currentPage}
+                tE={total}
+                per={10}
+                onChange={handleChangePage}
+              ></Paginew>
+            </>
+          ) : (
+            ``
+          )}
           </div>
         </div>
       </Layout>
