@@ -75,7 +75,7 @@ export default function Find() {
           </button>
         </div>
         {activeTab === "id" && (
-          <form>
+          <div>
             {/* <div className="flex">
               <input
                 id="phone"
@@ -232,10 +232,10 @@ export default function Find() {
                 Check
               </button>
             </div>
-          </form>
+          </div>
         )}
         {activeTab === "password" && (
-          <form>
+          <div>
             {/* <div className="flex">
               <input
                 id="phone2"
@@ -399,7 +399,7 @@ export default function Find() {
                 Check
               </button>
             </div>
-          </form>
+          </div>
         )}
       </div>
     </Layout>
