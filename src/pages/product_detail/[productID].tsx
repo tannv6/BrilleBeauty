@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from "react";
+import { FormEvent, useContext, useRef, useState } from "react";
 import Layout from "@/components/Layout";
 import SubNav from "@/components/SubNav";
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -27,7 +27,7 @@ export const getServerSideProps = async (context: { params: any, query : any, re
   
   const cookies = parse(context.req.headers.cookie || "");
   const { params, query} = context;
-  const { productID , page} = params;
+  const { productID , page, replyID} = params;
   const productDetail = await axios.get(
     `http://localhost:3000/api/products/detail`,
     {
@@ -62,11 +62,24 @@ export const getServerSideProps = async (context: { params: any, query : any, re
     params: { session: JSON.stringify(session) },
   });
 
+  const replys = await axios.get(
+    `http://localhost:3000/api/review/reply_details`,
+    {
+      params: { replyID },
+    }
+  );
+
+  const result3 = await axios.get(
+    `http://localhost:3000/api/review/reply_list`,
+  );
+
   return {
     props: {
     optionTypes: result1.data.data,
     optionTypes2: result2.data.data,
     review: reviewDetail.data,
+    reply: replys.data,
+    replyList: result3.data.data,
     product: productDetail.data,
     userInfo: response2.data,
     productRelate: response.data,
@@ -79,8 +92,9 @@ export const getServerSideProps = async (context: { params: any, query : any, re
   };
 };
 
-export default function Face({ product, optionTypes, optionTypes2, productRelate, productID, review, userInfo, ...props }: any) {
+export default function Face({ product, optionTypes, optionTypes2, productRelate, productID, review, reply, replyList, userInfo, ...props }: any) {
   const swiperRef = useRef<SwiperCore>();
+  
 
   const { data, total, currentPage, pageSize, totalPage } = review;
 
@@ -193,7 +207,7 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
     }
 
     const response = await axios.get("/api/cart/write", {
-      params: { options: options, productID: productID },
+      params: { options: options, productID: productID,  },
     });
 
     if (response.status === 201) {
@@ -264,6 +278,40 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
 
     router.push(`/write_review?ProductID=${product.ProductID}`);
   };
+
+  const [replyDetail, setReply] = useState<{
+    ReplyID: any;
+    ReviewID: any;
+    ProductID: any;
+    ReplyDes: any;
+  }>({
+    ReplyID: reply?.ReplyID,
+    ReviewID: reply?.ReviewID || "",
+    ProductID: reply?.ProductID || "",
+    ReplyDes: reply?.ReplyDes || "",
+  });
+
+  function handleChangeReply(e: any) {
+    setReply({ ...replyDetail, [e.target.name]: e.target.value });
+    }
+
+  async function handleSubmitReply(event: FormEvent<HTMLFormElement>, reviewID: any){
+    event.preventDefault();
+
+    const updatedReply = { ...replyDetail, ProductID: product.ProductID, ReviewID: reviewID};
+
+    let formData = new FormData();
+
+    for (let [key, value] of Object.entries(updatedReply)) {
+        formData.append(key, value);
+    }
+    let response;
+        response = await axios.post("/api/review/reply_write", formData);
+    if (response.status === 201) {
+        alert("Reply Sucess!");
+        window.location.reload();
+        }
+    }
 
   return (
       <Layout {...props}>
@@ -396,7 +444,8 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
               {review.data
                   .filter((e: any) => e.ProductID === productID) 
                   .map((e: any) => (
-                    <div className="py-5 flex flex-row border-b border-gray-300" key={e.ReviewID}>
+                  <div key={e.ReviewID}>
+                    <div className="py-5 flex flex-row border-b border-gray-300" >
                       <div className="flex flex-col basis-[80%] ml-5 gap-y-3">
                         <div className="flex gap-0.5">
                           {Array.from({ length: Math.min(Math.max(0, e.Start), 5) }).map((_, index) => (
@@ -433,14 +482,33 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                         }
                       </div>
                     </div>
+                    {replyList.ReplyDes && replyList.ReviewID === e.ReviewID &&
+                        <div className="flex items-center justify-center h-[123px] bg-[#f9f9f9] border-b">
+                          <div className="flex w-[1131px] h-[82px]">
+                            <div>
+                              {replyList.ReplyDes}
+                            </div>
+                          </div>
+                        </div>
+                      }
+                    <form onSubmit={(event) => handleSubmitReply(event, e.ReviewID)}>
+                      {userInfo && userInfo.CustomerID !== null && userInfo.UserName === 'thoai' &&
+                        <div className="flex items-center justify-center h-[123px] bg-[#f9f9f9] border-b">
+                          <div className="flex w-[1131px] h-[82px]">
+                            <input 
+                                type="text" 
+                                name="ReplyDes"
+                                onChange={handleChangeReply}
+                                placeholder="Please enter your reply." 
+                                className="focus:outline-none placeholder:text-lg p-5 pt-3 border rounded-l-[5px] grow resize-none" />
+                            <button type="submit" className="w-[120px] rounded-r bg-[#ef426f] text-lg text-[#ffffff]">OK</button>
+                          </div>
+                        </div>
+                      }
+                    </form>
+                  </div>
                   ))}
                 <hr />
-                <div className="flex items-center justify-center h-[123px] bg-[#f9f9f9] border-b hidden">
-                  <div className="flex w-[1131px] h-[82px]">
-                    <textarea placeholder="Please enter your comment." className="focus:outline-none placeholder:text-lg p-5 pt-3 border rounded-l-[5px] grow resize-none" />
-                    <button className="w-[120px] rounded-r bg-[#ef426f] text-lg text-[#ffffff]">OK</button>
-                  </div>
-                </div>
               </div>
 
               {data.length ? (

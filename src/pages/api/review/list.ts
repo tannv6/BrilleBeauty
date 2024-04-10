@@ -11,7 +11,11 @@ export default async function handle(
     const { page = 1, pageSize = 1000 } = params;
 
     const connect = await connectDB();
-    const totalQuery = `select * from review where DeletedAt is null order by CreatedAt desc`;
+    const totalQuery = `select s1.*, s2.ReplyDes 
+    from review s1 
+    left join review_reply s2 
+    on s1.Reply = s2.ReplyDes
+    where s1.DeletedAt is null order by s1.CreatedAt desc`;
 
     const [resultTotal]: any = await connect.execute(totalQuery);
 
