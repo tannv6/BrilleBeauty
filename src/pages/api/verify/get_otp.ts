@@ -10,39 +10,31 @@ export default async function handle(
   try {
     const params = req.body;
 
-    const { FullName, Email, verify_code }: any = params;
+    const { FullName, Email }: any = params;
 
     const query = `select * from customers where Email = '${Email}'`;
 
     const connect = await connectDB();
 
-    const [results] = await connect.execute(query);
+    const [results]: any = await connect.execute(query);
 
     connect.end();
 
     if (Array.isArray(results) && results.length > 0) {
       const info: any = results[0];
-      const CacheData = Cache.get(`user_${info.CustomerID}`);
-      if (!CacheData) {
-        return res.status(200).json({
-          message: "Please get a opt number!",
-        });
-      }
-      if (CacheData !== Number(verify_code)) {
-        return res.status(200).json({
-          message: "Your opt number is not match!",
-        });
-      }
+      const verifyCode = Math.floor(100000 + Math.random() * 900000);
       const sended = await sendEmail(
         Email,
-        "[FIND ID]",
-        `<h3>Your ID is: ${info.UserName}</h3>`
+        "[VERIFY]",
+        `<h3>Your verify code is: ${verifyCode} <br/>
+                                            It will exprire in 60 seconds.</h3>`
       );
       if (sended) {
-        return res.status(200).json({ result: "OK" });
+        Cache.put(`user_${info.CustomerID}`, verifyCode, 60000);
       } else {
-        return res.status(500).json(null);
+        Cache.del(`user_${info.CustomerID}`);
       }
+      return res.status(200).json({ result: "OK" });
     } else {
       return res.status(200).json(null);
     }

@@ -22,7 +22,7 @@ function dataReducer(state: any, action: any) {
       return { ...state, cartCount: action.payload };
     case "UPDATE_CART_COUNT":
       return { ...state, cartCount: state.cartCount + action.payload };
-    case "UPDATE_LOGIN":
+    case "UPDATE_STATE":
       return { ...state, ...action.payload };
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
@@ -58,13 +58,21 @@ const MyCustomApp = ({
     const isLogin = !!sessionJson;
     const customerID = sessionJson?.user?.id;
     dispatch({
-      type: "UPDATE_LOGIN",
+      type: "UPDATE_STATE",
       payload: {
         isLogin,
         customerID,
       },
     });
   }, [sessionJson]);
+  useEffect(() => {
+    dispatch({
+      type: "UPDATE_STATE",
+      payload: {
+        popup,
+      },
+    });
+  }, [popup]);
   return (
     <>
       <SessionProvider session={session} refetchInterval={5 * 60}>

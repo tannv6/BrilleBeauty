@@ -59,7 +59,7 @@ function ProductItem({ info }: Props) {
         href={`/product_detail/${info?.ProductID}`}
         className="font-Arial flex flex-col"
       >
-        <div className="h-[294px] border border-[#dbdbdb] rounded-t-2xl relative ">
+        <div className="h-[294px] border border-[#dbdbdb] rounded-t-2xl relative overflow-hidden">
           <Image
             src={`${CDN_URL}${info?.ProductImage || ""}`}
             alt=""
