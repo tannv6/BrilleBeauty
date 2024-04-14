@@ -28,12 +28,12 @@ export default function Payment() {
                     <div className="flex items-center">
                       <input checked id="default-radio-1" type="radio" value="" name="default-radio" className="w-[22px] h-[22px] rounded-full p-1 appearance-none checked:bg-[#ef426f] bg-clip-content border-2 border-[#dbdbdb] cursor-pointer">
                       </input>
-                      <label htmlFor="default-radio-1" className="ms-[10px] cursor-pointer">Same as member information</label>
+                      <label htmlFor="default-radio-1" className="ms-[10px] cursor-pointer select-none">Same as member information</label>
                     </div>
                     <div className="flex items-center">
                       <input id="default-radio-2" type="radio" value="" name="default-radio" className="w-[22px] h-[22px] rounded-full p-1 appearance-none checked:bg-[#ef426f] bg-clip-content border-2 border-[#dbdbdb] cursor-pointer">
                       </input>
-                      <label htmlFor="default-radio-2" className="ms-[10px] cursor-pointer">New shipping address</label>
+                      <label htmlFor="default-radio-2" className="ms-[10px] cursor-pointer select-none">New shipping address</label>
                     </div>
                   </div>
                   <div className="my-5 flex items-center">
@@ -155,7 +155,7 @@ export default function Payment() {
                         />
                         <label
                           htmlFor="save"
-                          className="text-[16px] font-medium text-[#252525] cursor-pointer"
+                          className="text-[16px] font-medium text-[#252525] cursor-pointer select-none"
                         >
                           Save as default shipping address
                         </label>
@@ -163,6 +163,63 @@ export default function Payment() {
                     </div>
                   </div>
                 </div>
+              </div>
+              <div className="w-full h-[60px] bg-[#f9f9f9]"></div>
+              <div className="p-[50px]">
+                <p className="text-xl mb-[25px]">Ordered product</p>
+                <div className="pr-[70px]">
+                  <hr />
+                  <div>
+                    <div className="flex items-center my-5">
+                      <Image src={"/payment_product_img.png"} alt={""} width={120} height={120}></Image>
+                      <div className="flex flex-col pl-[30px] gap-1">
+                        <p>Damage Care Perfect Serum Original (New) - 80ml</p>
+                        <p className="text-[15px] text-[#999999]">Quantity: 1</p>
+                        <p className="text-lg">A$16.25</p>
+                      </div>
+                      <button className="w-[32px] h-[32px] border border-[#dbdbdb] rounded bg-[url('/payment_product_remove_ico.png')] bg-center bg-no-repeat ml-auto"></button>
+                    </div>
+                    <hr />
+                  </div>
+                  <div>
+                    <div className="flex items-center my-5">
+                      <Image src={"/payment_product_img.png"} alt={""} width={120} height={120}></Image>
+                      <div className="flex flex-col pl-[30px] gap-1">
+                        <p>Damage Care Perfect Serum Original (New) - 80ml</p>
+                        <p className="text-[15px] text-[#999999]">Quantity: 1</p>
+                        <p className="text-lg">A$16.25</p>
+                      </div>
+                      <button className="w-[32px] h-[32px] border border-[#dbdbdb] rounded bg-[url('/payment_product_remove_ico.png')] bg-center bg-no-repeat ml-auto"></button>
+                    </div>
+                    <hr />
+                  </div>
+                </div>
+              </div>
+              <div className="w-full h-[46px] bg-[#ffe6e6] flex items-center justify-between px-[50px]">
+                <p>Delivery fee</p>
+                <p>0 (free) $</p>
+              </div>
+              <div className="w-full h-[60px] bg-[#f9f9f9]"></div>
+              <div className="p-[50px]">
+                <p className="text-xl mb-[25px]">Payment information</p>
+                <div className="pr-[70px]">
+                  <div className="flex justify-between mb-2">
+                    <p>Ordered product</p>
+                    <p>A$16.25</p>
+                  </div>
+                  <div className="flex justify-between mb-4">
+                    <p>Delivery fee</p>
+                    <p>A$ + 0</p>
+                  </div>
+                  <div className="flex justify-between">
+                    <p>Discount/additional payment</p>
+                    <p>A$ <span className="text-[#f50e3f]">- 0</span></p>
+                  </div>
+                </div>
+              </div>
+              <div className="w-full h-[60px] bg-[#ffe6e6] flex items-center justify-between px-[50px]">
+                <p className="text-xl font-bold">Final payment amount</p>
+                <p className="font-bold text-[#f50e3f]">A$16.25</p>
               </div>
               <div className="w-full h-[60px] bg-[#f9f9f9]"></div>
             </div>
