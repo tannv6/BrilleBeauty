@@ -92,7 +92,9 @@ MyCustomApp.getInitialProps = async (context: any) => {
   const combo_category = await axios.get(
     getApiUrl("/api/combo_category/header")
   );
-  const cookies = parse(context.ctx.req?.headers.cookie || "");
+  const cookies = parse(
+    context.ctx.req?.headers.cookie || document.cookie || ""
+  );
 
   const webSetting = await getWebSetting(cookies);
   return {
