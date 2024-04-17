@@ -22,7 +22,10 @@ export default function Payment() {
             <div className="border-l border-r">
               <div className="w-full h-[60px] bg-[#f9f9f9]"></div>
               <div className="p-[50px]">
-                <p className="text-xl mb-[25px]">Delivery address</p>
+                <div className="flex items-center justify-between">
+                  <p className="text-xl mb-[25px]">Delivery address</p>
+                  <i className="block w-5 h-3 bg-[url('/payment_dropdown_ico.png')]"></i>
+                </div>
                 <div className="pr-[70px]">
                   <div className="flex gap-[100px]">
                     <div className="flex items-center">
@@ -166,7 +169,10 @@ export default function Payment() {
               </div>
               <div className="w-full h-[60px] bg-[#f9f9f9]"></div>
               <div className="p-[50px]">
-                <p className="text-xl mb-[25px]">Ordered product</p>
+                <div className="flex items-center justify-between">
+                  <p className="text-xl mb-[25px]">Ordered product</p>
+                  <i className="block w-5 h-3 bg-[url('/payment_dropdown_ico.png')]"></i>
+                </div>
                 <div className="pr-[70px]">
                   <hr />
                   <div>
@@ -195,13 +201,16 @@ export default function Payment() {
                   </div>
                 </div>
               </div>
-              <div className="w-full h-[46px] bg-[#ffe6e6] flex items-center justify-between px-[50px]">
+              <div className="w-full h-[46px] bg-[#ffe6e6] flex items-center justify-between px-[50px] pr-[120px]">
                 <p>Delivery fee</p>
                 <p>0 (free) $</p>
               </div>
               <div className="w-full h-[60px] bg-[#f9f9f9]"></div>
               <div className="p-[50px]">
-                <p className="text-xl mb-[25px]">Payment information</p>
+                <div className="flex items-center justify-between">
+                  <p className="text-xl mb-[25px]">Payment information</p>
+                  <i className="block w-5 h-3 bg-[url('/payment_dropdown_ico.png')]"></i>
+                </div>
                 <div className="pr-[70px]">
                   <div className="flex justify-between mb-2">
                     <p>Ordered product</p>
@@ -217,11 +226,143 @@ export default function Payment() {
                   </div>
                 </div>
               </div>
-              <div className="w-full h-[60px] bg-[#ffe6e6] flex items-center justify-between px-[50px]">
+              <div className="w-full h-[60px] bg-[#ffe6e6] flex items-center justify-between px-[50px] pr-[120px]">
                 <p className="text-xl font-bold">Final payment amount</p>
                 <p className="font-bold text-[#f50e3f]">A$16.25</p>
               </div>
               <div className="w-full h-[60px] bg-[#f9f9f9]"></div>
+              <div className="p-[50px]">
+                <div className="flex items-center justify-between">
+                  <p className="text-xl mb-[25px]">Payment method</p>
+                  <i className="block w-5 h-3 bg-[url('/payment_dropdown_ico.png')]"></i>
+                </div>
+                <div className="pr-[70px]">
+                  <p>Select payment method</p>
+                  <div className="flex justify-between gap-6 h-[50px] mt-5">
+                    <button className="grow border border-[#dbdbdb] rounded-sm text-lg">Bank transfer</button>
+                    <button className="grow bg-[#ef426f] text-white rounded-sm text-lg">Credit card</button>
+                  </div>
+                  <div className="p-[40px] bg-[#f6f6f6] mt-[30px]">
+                    <div className="flex items-center">
+                      <p className="min-w-[152px]">
+                        Select card
+                        <span className="text-[#ef426f]">*</span>
+                      </p>
+                      <div className="w-full">
+                        <Dropdown
+                          options={[
+                            { id: "1", name: "Please contact us in advance before shipping." },
+                            { id: "2", name: "If you are absent, please leave it at the security office." },
+                          ]}
+                          onChange={() => { }}
+                          activeItem=""
+                          className="h-[50px] w-[800px] text-[#757575]"
+                          placeHolder="Please select"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex items-center mt-5">
+                      <p className="min-w-[152px]">
+                        Installment period
+                        <span className="text-[#ef426f]">*</span>
+                      </p>
+                      <div className="w-full">
+                        <Dropdown
+                          options={[
+                            { id: "1", name: "Please contact us in advance before shipping." },
+                            { id: "2", name: "If you are absent, please leave it at the security office." },
+                          ]}
+                          onChange={() => { }}
+                          activeItem=""
+                          className="h-[50px] w-[800px] text-[#dbdbdb]"
+                          placeHolder="lump sum payment"
+                        />
+                      </div>
+                    </div>
+                    <p className="pl-[152px] text-[#757575] pt-2">Interest-free Installments are not applicable to corporate cards.</p>
+                    <div className="flex items-center mt-5">
+                      <p className="min-w-[152px]">
+                        Cell Phone
+                        <span className="text-[#ef426f]">*</span>
+                      </p>
+                      <div className="w-full flex justify-between gap-[10px] h-[50px]">
+                        <input className="grow rounded-sm border border-[#757575] px-5 placeholder-[#757575] placeholder:text-sm" type="text" placeholder="Guide to issuing public certificates" />
+                        <input className="grow rounded-sm border border-[#757575] px-5 placeholder-[#757575] placeholder:text-sm" type="text" placeholder="Safe Click Information" />
+                        <input className="grow rounded-sm border border-[#757575] px-5 placeholder-[#757575] placeholder:text-sm" type="text" placeholder="Safe Click Information" />
+                      </div>
+                    </div>
+                    <p className="pl-[152px] text-[#757575] pt-5 text-lg">Interest-free Installments are not applicable to corporate cards.</p>
+                  </div>
+                  <div className="flex gap-2 items-center mt-5">
+                    <input
+                      className="w-[22px] h-[22px] rounded appearance-none border checked:bg-[url('/checkbox_customer.png')] checked:border-0 cursor-pointer"
+                      type="checkbox"
+                      id="save1"
+                    />
+                    <label
+                      htmlFor="save1"
+                      className="text-[16px] font-medium text-[#252525] cursor-pointer select-none"
+                    >
+                      The payment method and input information will also be used next time.
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div className="w-full h-[60px] bg-[#f9f9f9]"></div>
+              <div className="p-[50px]">
+                <div className="flex items-center justify-between">
+                  <p className="text-xl mb-[25px]">Accumulated benefits</p>
+                  <i className="block w-5 h-3 bg-[url('/payment_dropdown_ico.png')]"></i>
+                </div>
+                <div className="pr-[70px]">
+                  <div className="flex justify-between mb-2">
+                    <p>Points for each product</p>
+                    <p>A$0</p>
+                  </div>
+                  <div className="flex justify-between mb-4">
+                    <p>Member savings</p>
+                    <p>A$0</p>
+                  </div>
+                  <div className="flex justify-between">
+                    <p>Coupon points</p>
+                    <p>A$0</p>
+                  </div>
+                </div>
+              </div>
+              <div className="w-full h-[60px] bg-[#ffe6e6] flex items-center justify-between px-[50px] pr-[120px]">
+                <p className="text-xl font-bold">Expected accumulated amount</p>
+                <p className="font-bold text-[#f50e3f]">A$0</p>
+              </div>
+              <div className="w-full h-[60px] bg-[#f9f9f9]"></div>
+              <div className="px-[50px] py-[30px]">
+                <div className="flex gap-2 items-center">
+                  <input
+                    className="w-[22px] h-[22px] rounded appearance-none border checked:bg-[url('/checkbox_customer.png')] checked:border-0 cursor-pointer"
+                    type="checkbox"
+                    id="agree1"
+                  />
+                  <label
+                    htmlFor="agree1"
+                    className="text-[16px] font-medium text-[#252525] cursor-pointer select-none"
+                  >
+                    Agree to all terms and conditions
+                  </label>
+                </div>
+                <div className="flex gap-2 items-center mt-5">
+                  <input
+                    className="w-[22px] h-[22px] rounded appearance-none border checked:bg-[url('/checkbox_customer.png')] checked:border-0 cursor-pointer"
+                    type="checkbox"
+                    id="agree2"
+                  />
+                  <label
+                    htmlFor="agree2"
+                    className="text-[16px] font-medium text-[#252525] cursor-pointer select-none"
+                  >
+                    [Required] Agree to the payment agency service terms and conditions
+                  </label>
+                </div>
+              </div>
+              <button className="w-full h-[70px] bg-[#ffe6e6] text-3xl text-[#f50e3f] font-bold">PAY A$16.25</button>
             </div>
           </div>
         </div>
