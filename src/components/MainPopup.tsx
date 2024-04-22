@@ -2,6 +2,7 @@ import { MyContext } from "@/pages/_app";
 import { CDN_URL } from "@/utils/constants";
 import { setCookieClient } from "@/utils/cookie";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import React, { Fragment, useContext, useEffect, useState } from "react";
 type Props = {
   popup?: {
@@ -25,6 +26,7 @@ type Props = {
   }[];
 };
 function MainPopup() {
+  const router = useRouter();
   const value: any = useContext(MyContext);
   const popup: Props["popup"] = JSON.parse(value?.popup || "{}") || {};
   const [scrollEnabled, setScrollEnabled] = useState(Number(popup?.length) > 0);
@@ -38,7 +40,6 @@ function MainPopup() {
     setPopupList(popCopy);
     setScrollEnabled(false);
   };
-
   const handleNotShowAgain = (id: number) => {
     const popCopy = [...popupList];
     const pop = popCopy.find((e) => e.PopupID === id);
@@ -48,6 +49,9 @@ function MainPopup() {
     setPopupList(popCopy);
     setScrollEnabled(false);
     setCookieClient(`pop_${id}`, "closed", 0.5);
+    if ([...popCopy].filter((e) => e.IsShow).length === 0) {
+      router.reload();
+    }
   };
 
   const toggleScroll = () => {
