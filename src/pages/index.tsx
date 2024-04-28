@@ -7,7 +7,7 @@ import { getWebSetting } from "@/lib/functions";
 import { parse } from "cookie";
 import { getSession } from "next-auth/react";
 export const getServerSideProps: GetServerSideProps<{
-  main_visual: any;
+  main_visual: any[];
   after_main_visual: any[];
   main_middle: any;
 }> = async (context: any) => {
@@ -17,7 +17,7 @@ export const getServerSideProps: GetServerSideProps<{
   const response = await axios.get(
     "http://localhost:3000/api/banners/get_by_position",
     {
-      params: { position: "main_visual" },
+      params: { position: "main_visual", count: 3 },
     }
   );
   const response1 = await axios.get(
@@ -60,7 +60,7 @@ export const getServerSideProps: GetServerSideProps<{
 
   return {
     props: {
-      main_visual: response.data[0] || null,
+      main_visual: response.data,
       after_main_visual: response1.data,
       main_middle: response2.data[0] || null,
       best_main: response3.data,

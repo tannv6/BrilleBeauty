@@ -24,6 +24,8 @@ export default function Main({
   review,
 }: any) {
   
+  console.log(main_visual);
+  
 
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   const [bestPrd, setBestPrd] = useState(best_main);
@@ -116,18 +118,37 @@ export default function Main({
 
   return (
     <div className="container-main">
-      <Link
-        href={main_visual?.BannerLink ? main_visual?.BannerLink : ""}
-        target={main_visual?.OpenNewTab == 1 ? "_blank" : ""}
-        className={`main_visual w-full h-[663px] overflow-hidden relative block`}
+       <div className="swiper-container relative overflow-hidden">
+      <Swiper
+        className=""
+        loop={true}
+        slidesPerView={1}
+        modules={[Thumbs, Autoplay]}
+        thumbs={{ swiper: thumbsSwiper }}
+        autoplay={{
+          delay: 3000,
+          disableOnInteraction: true,
+        }}
+        spaceBetween={20}
       >
-        <Image
-          src={`${CDN_URL}${main_visual?.BannerImg || ""}`}
-          alt=""
-          className="object-cover"
-          fill
-        />
-      </Link>
+      {main_visual?.map((e: any, i: any) => (
+          <SwiperSlide>
+          <Link
+            href={e?.BannerLink ? e?.BannerLink : ""}
+            target={e?.OpenNewTab == 1 ? "_blank" : ""}
+            className={`main_visual w-full h-[882px] overflow-hidden relative block`}
+          >
+            <Image
+              src={`${CDN_URL}${e?.BannerImg || ""}`}
+              alt=""
+              className="object-cover"
+              fill
+            />
+          </Link>
+          </SwiperSlide>
+            ))}
+      </Swiper>
+      </div>
       <div className="inner-container">
         <div className="main_banner flex custom-gap-30 my-6">
           {after_main_visual?.map((e: any, i: number) => {
@@ -235,7 +256,7 @@ export default function Main({
           <Swiper
             className="mt-[45px] mb-[115px] select-none"
             loop={true}
-            slidesPerView={4}
+            slidesPerView={5}
             modules={[Thumbs, Autoplay]}
             thumbs={{ swiper: thumbsSwiper }}
             autoplay={{

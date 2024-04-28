@@ -124,7 +124,7 @@ body {
 .inner-container {
   position: relative;
   margin-inline: auto;
-  max-width: 1200px;
+  max-width: 1690px;
   width: calc(100% - 1.875rem);
 }
 
