@@ -59,13 +59,13 @@ function ProductItem({ info }: Props) {
         href={`/product_detail/${info?.ProductID}`}
         className="font-Arial flex flex-col"
       >
-        <div className="h-[294px] border border-[#dbdbdb] rounded-t-2xl relative overflow-hidden">
+        <div className="h-full max-h-[285px] border border-[#dbdbdb] rounded-t relative overflow-hidden bg-[#f7f7f7]">
           <Image
             src={`${CDN_URL}${info?.ProductImage || ""}`}
             alt=""
-            width={286}
+            width={295}
             height={294}
-            className="rounded-t-2xl"
+            className="rounded-t"
           />
           {Boolean(info?.IsNew) && (
             <span className="flex items-center justify-center w-[50px] h-[30px] absolute bottom-[10px] left-3 bg-[#ffffff] text-[#fe3a40] rounded-[15px] text-[14px]">
@@ -79,16 +79,16 @@ function ProductItem({ info }: Props) {
           )}
           <div className="absolute hidden top-0 w-full h-full bg-gray-400/50 z-9 rounded-t-2xl items-center justify-center gap-x-5 group-hover:flex"></div>
         </div>
-        <div className="p-5 pb-10 border border-t-0 border-[#dbdbdb]">
+        <div className="2xl:p-5 xl:pt-5 xl:px-3 pb-10 border border-t-0 border-[#dbdbdb]">
           <span className="font-bold text-[18px] truncate overflow-hidden whitespace-pre-wrap line-clamp-2 min-h-[54px]">{info?.ProductName}</span>
           <p className="pt-2">
             <span className="line-through text-[#bbbbbb]">
               A${info?.InitPrice}
             </span>
-            <span className="pl-[10px] text-[20px] font-bold">
+            <span className="pl-[10px] text-[18px] font-bold">
               A${info?.SellPrice}
             </span>
-            <span className="pl-[15px] text-[22px] text-[#fe3a40] font-bold">
+            <span className="pl-[10px] text-[18px] text-[#fe3a40] font-bold">
               {getDiscount(info?.InitPrice, info?.SellPrice)}%
             </span>
           </p>

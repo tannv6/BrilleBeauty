@@ -1,4 +1,4 @@
-import { FormEvent, useContext, useRef, useState } from "react";
+import { FormEvent, useContext, useEffect, useRef, useState } from "react";
 import Layout from "@/components/Layout";
 import SubNav from "@/components/SubNav";
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -46,7 +46,7 @@ export const getServerSideProps = async (context: { params: any, query : any, re
 
 
   const response = await axios.get("http://localhost:3000/api/products/get_by_category", {
-    params: { cate_id: params.id2, depth: 3 },
+    params: { depth: 3 },
 });
 
   const result1 = await axios.get(
@@ -79,7 +79,7 @@ export const getServerSideProps = async (context: { params: any, query : any, re
     optionTypes2: result2.data.data,
     review: reviewDetail.data,
     reply: replys.data,
-    replyList: result3.data.data,
+    replyList: result3.data,
     product: productDetail.data,
     userInfo: response2.data,
     productRelate: response.data,
@@ -95,8 +95,11 @@ export const getServerSideProps = async (context: { params: any, query : any, re
 export default function Face({ product, optionTypes, optionTypes2, productRelate, productID, review, reply, replyList, userInfo, ...props }: any) {
   const swiperRef = useRef<SwiperCore>();
   
-
+  
   const { data, total, currentPage, pageSize, totalPage } = review;
+
+  console.log(productRelate);
+  
 
   const handleChangePage = (page: number) => {
     router.query.page = page.toString();
@@ -267,6 +270,13 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
     }
   };
 
+  const handleDeleteReply = async (id: number) => {
+    if (confirm("Are you sure delete this review?")) {
+      await axios.put(`/api/review/reply_delete`, { ReplyID: id });
+      window.location.reload();
+    }
+  };
+
   const router = useRouter();
 
   const handleWriteReview = () => {
@@ -312,6 +322,18 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
         window.location.reload();
         }
     }
+
+    const [numSlides, setNumSlides] = useState(0);
+    
+    useEffect(() => {
+      const swiper = swiperRef.current;
+      if (swiper) {
+        setNumSlides(swiper.slides.length);
+        swiper.on('slideChange', () => {
+          setNumSlides(swiper.slides.length);
+        });
+      }
+    }, []);
 
   return (
       <Layout {...props}>
@@ -482,15 +504,30 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                         }
                       </div>
                     </div>
-                    {replyList.ReplyDes && replyList.ReviewID === e.ReviewID &&
-                        <div className="flex items-center justify-center h-[123px] bg-[#f9f9f9] border-b">
-                          <div className="flex w-[1131px] h-[82px]">
-                            <div>
-                              {replyList.ReplyDes}
-                            </div>
+                    {replyList.data
+                    .filter((e1: any) => e1.ReviewID === e.ReviewID) 
+                    .map((e1: any) => (
+                      <div className="min-h-[104px] bg-[#fafafa] border-t border-b border-b-[#eeeeee] pl-5 my-8">
+                        <div className="py-[25px] flex justify-between">
+                          <p className="font-bold">
+                            Administrator Reply
+                            <span className="pl-6 text-[15px] text-[#999999] font-normal">
+                            {formatCreatedAt(e1.CreatedAt)}
+                            </span>
+                          </p>
+                          <div className="flex basis-[20%] items-start justify-end gap-[10px]">
+                            {userInfo && userInfo.CustomerID !== null && userInfo.UserName === 'thoai' &&
+                              <><Link href={`/write_review/${e.ReviewID}?ProductID=${product.ProductID}`}
+                                className="flex items-center justify-center w-[100px] h-7 text-[15px] text-[#999999] border rounded"> EDIT
+                              </Link><button type="button" className="w-[100px] h-7 text-[15px] text-[#999999] border rounded" onClick={() => handleDeleteReply(e.ReplyID)}>DELETE</button></>
+                            }
                           </div>
                         </div>
-                      }
+                          <p className="mt-2 text-[15px] pb-[15px]">
+                            {e1.ReplyDes}
+                          </p>
+                      </div>
+                    ))}
                     <form onSubmit={(event) => handleSubmitReply(event, e.ReviewID)}>
                       {userInfo && userInfo.CustomerID !== null && userInfo.UserName === 'thoai' &&
                         <div className="flex items-center justify-center h-[123px] bg-[#f9f9f9] border-b">
@@ -536,15 +573,17 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                     slidesPerView={5}
                     spaceBetween={20}
                     loop={true}
-                    onBeforeInit={(swiper) => {
-                    swiperRef.current = swiper;
+                    onSwiper={(swiper) => {
+                      swiperRef.current = swiper;
                     }}
                     autoplay={{
                         delay: 2500,
                         disableOnInteraction: true,
                     }}
                 >
-                  {productRelate.data.map((e: any, i: any) => {
+                  {productRelate.data
+                    .filter((e: any) => e.CategoryID === product.CategoryID && e.ProductID !== product.ProductID) 
+                    .map((e: any, i: any) => {
                               return (
                                   <>
                                   <SwiperSlide key={i}>
@@ -576,8 +615,12 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                               );
                           })}
                     </Swiper>
+                    {numSlides > 5 && (
+                    <>
                 <button className="absolute top-1/4 left-[-56px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_prev.png')]" onClick={() => swiperRef.current?.slidePrev()}></button>
                 <button className="absolute top-1/4 right-[-56px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_next.png')]" onClick={() => swiperRef.current?.slideNext()}></button>
+                    </>
+                    )}
             </div>
           </div>
         </div>

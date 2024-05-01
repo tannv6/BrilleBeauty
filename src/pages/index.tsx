@@ -51,6 +51,13 @@ export const getServerSideProps: GetServerSideProps<{
     }
   );
 
+  const response6 = await axios.get(
+    "http://localhost:3000/api/banners/get_by_position",
+    {
+      params: { position: "middle", count: 1 },
+    }
+  );
+
   const reviewDetail = await axios.get(
     `http://localhost:3000/api/review/list`,
     {
@@ -63,6 +70,7 @@ export const getServerSideProps: GetServerSideProps<{
       main_visual: response.data,
       after_main_visual: response1.data,
       main_middle: response2.data[0] || null,
+      middle: response6.data[0] || null,
       best_main: response3.data,
       new_main: response4.data,
       sale_main: response5.data,
@@ -80,6 +88,7 @@ export default function Page({
   new_main,
   sale_main,
   review,
+  middle,
   ...props
 }: any) {
   return (
@@ -92,6 +101,7 @@ export default function Page({
         new_main={new_main}
         sale_main={sale_main}
         review={review}
+        middle={middle}
       />
     </Layout>
   );

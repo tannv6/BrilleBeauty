@@ -15,7 +15,7 @@ import { getSession } from "next-auth/react";
 export const getServerSideProps = async (context: { params: any, req : any }) => {
 
     const { params, req } = context;
-    const { reviewID } = params;
+    const { replyID, reviewID } = params;
 
     const cookies = parse(req.headers.cookie || "");
 
@@ -29,15 +29,20 @@ export const getServerSideProps = async (context: { params: any, req : any }) =>
       }
     );
 
+    const reviewReplys = await axios.get(
+      `http://localhost:3000/api/review/reply_list`,
+    );
+
   
     return {
       props: {
+        reply: reviewReplys.data,
         reviewDetail: reviewDetail.data,
         ...(await getWebSetting(cookies)),
       },
     };
   };
-export default function ReviewDetail({reviewDetail, ...props } : any) {
+export default function ReviewDetail({reviewDetail, reply, ...props } : any) {
     const formatCreatedAt = (createdAt : any) => {
         const date = new Date(createdAt);
         const year = date.getFullYear();
@@ -45,6 +50,7 @@ export default function ReviewDetail({reviewDetail, ...props } : any) {
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}.${month}.${day}`;
       };
+      
   return (
       <Layout {...props}>
         <div id="main">
@@ -89,7 +95,7 @@ export default function ReviewDetail({reviewDetail, ...props } : any) {
                 </p>
               </div>
               <div className="min-h-[45px] border-b border-b-[#dddddd] pl-5 py-[30px]" dangerouslySetInnerHTML={{ __html: he.decode(reviewDetail.ReviewDes) }} />
-              <div className="h-[45px] border-b border-b-[#eeeeee] flex items-center pl-5 text-[15px]">
+              <div className="h-[45px] border-b border-b-[#eeeeee] flex items-center pl-5 text-[15px] hidden">
                 <p className="text-[#757575] min-w-[115px]">Next Post</p>
                 <i className="block w-[11px] h-[6px] bg-[url('/product_review_next_post_ico.png')]"></i>
                 <span className="block w-[1px] h-[11px] bg-[#eeeeee] mx-[15px]"></span>
@@ -97,7 +103,7 @@ export default function ReviewDetail({reviewDetail, ...props } : any) {
                   Write a review
                 </Link>
               </div>
-              <div className="h-[45px] border-b border-b-[#eeeeee] flex items-center pl-5 text-[15px]">
+              <div className="h-[45px] border-b border-b-[#eeeeee] flex items-center pl-5 text-[15px] hidden">
                 <p className="text-[#757575] min-w-[115px]">Previous Post</p>
                 <i className="block w-[11px] h-[6px] bg-[url('/product_review_previous_post_ico.png')]"></i>
                 <span className="block w-[1px] h-[11px] bg-[#eeeeee] mx-[15px]"></span>
@@ -111,20 +117,44 @@ export default function ReviewDetail({reviewDetail, ...props } : any) {
               >
                 To list
               </Link>
-              <div className="min-h-[104px] bg-[#fafafa] border-t border-b border-b-[#eeeeee] pl-5 mt-8">
-                <div className="py-[25px]">
-                  <p className="font-bold">
-                    Administrator Reply
-                    <span className="pl-6 text-[15px] text-[#999999] font-normal">
-                      2023-06-13
-                    </span>
-                  </p>
-                  <p className="mt-2 text-[15px]">
-                    Dear Customer, First of all, We thank you for your trust in
-                    the product and wish you a good product experience.
-                  </p>
-                </div>
-              </div>
+              {reply.data
+                .filter((e: any) => e.ReviewID === reviewDetail.ReviewID) 
+                .map((e: any) => (
+                  e.ReplyDes && (
+                    <div className="min-h-[104px] bg-[#fafafa] border-t border-b border-b-[#eeeeee] pl-5 mt-8" key={e.ReplyID}>
+                      <div className="py-[25px]">
+                        <p className="font-bold">
+                          Administrator Reply
+                          <span className="pl-6 text-[15px] text-[#999999] font-normal">
+                            {formatCreatedAt(e.CreatedAt)}
+                          </span>
+                        </p>
+                        <p className="mt-2 text-[15px]">
+                          {e.ReplyDes}
+                        </p>
+                      </div>
+                    </div>
+                  )
+                ))}
+              {reply.data
+                .filter((e: any) => e.ReviewID === reviewDetail.ReviewID).length === 0 && (
+                  <div className="min-h-[104px] bg-[#fafafa] border-t border-b border-b-[#eeeeee] pl-5 mt-8">
+                    <div className="py-[25px]">
+                      <p className="font-bold">
+                        Administrator Reply
+                        <span className="pl-6 text-[15px] text-[#999999] font-normal">
+                        </span>
+                      </p>
+                      <p className="mt-2 text-[15px]">
+                        Dear Customer, First of all, We thank you for your trust in
+                        the product and wish you a good product experience.
+                      </p>
+                    </div>
+                  </div>
+                )
+              }
+
+
             </div>
           </div>
         </div>

@@ -14,8 +14,8 @@ export default async function handle(
     const [result] = await connect.execute(query);
     connect.end();
     if (Array.isArray(result) && result.length > 0) {
-      const review: any = result[0];
-      return res.status(200).json(review);
+      const reply: any = result[0];
+      return res.status(200).json(reply);
     } else {
       return res.status(200).json(null);
     }

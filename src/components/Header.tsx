@@ -100,7 +100,7 @@ export default function Header({ brandListRecommended }: Props) {
               onChange={(e) => setSearchTxt(e.target.value)}
               onKeyDown={(e) => handleKeyPress(e)}
               type="text"
-              className="peer h-[35px] w-[615px] 2xl:w-[450px] rounded-full bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-f04b76"
+              className="peer h-[35px] w-[615px] 2xl:w-[430px] rounded-full bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-f04b76"
             />
             <Image
               src="/search_ico.png"
@@ -301,14 +301,17 @@ export default function Header({ brandListRecommended }: Props) {
                         <h3 className="mb-[24px] text-[22px] font-bold text-[#252525]">
                           {e.CategoryName}
                         </h3>
+                        <div className="h-[247px]">
                         <Link href={`/combo/category/${e.CategoryID}`}>
                           <Image
                             src={`${CDN_URL}/${e.ThumbImage}`}
                             alt=""
                             width={250}
                             height={250}
+                            style={{ height: '247px !important' }}
                           />
                         </Link>
+                        </div>
                       </div>
                     </Fragment>
                   );

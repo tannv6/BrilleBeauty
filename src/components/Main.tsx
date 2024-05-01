@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import Link from "next/link";
-import { useState } from "react";
+import { Fragment, useContext, useRef, useState } from "react";
 import ProductItem from "@/components/ProductItem";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Thumbs } from "swiper/modules";
@@ -12,6 +12,8 @@ import Image from "next/image";
 import { CDN_URL } from "@/utils/constants";
 import axios from "axios";
 import he from "he";
+import { MyContext } from "@/pages/_app";
+import { Swiper as SwiperCore } from 'swiper/types';
 
 
 export default function Main({
@@ -22,16 +24,20 @@ export default function Main({
   new_main,
   sale_main,
   review,
+  middle,
 }: any) {
-  
-  console.log(main_visual);
-  
 
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   const [bestPrd, setBestPrd] = useState(best_main);
   const [newPrd, setNewPrd] = useState(new_main);
   const [salePrd, setSalePrd] = useState(sale_main);
   const [reviews, setReviews] = useState(review);
+  const value: any = useContext(MyContext);
+  const categoryList = JSON.parse(value?.category)?.data || [];
+
+  const swiperRef = useRef<SwiperCore>();
+  
+
 
   const handleLoadMoreBest = async () => {
     const response3 = await axios.get(
@@ -126,10 +132,11 @@ export default function Main({
         modules={[Thumbs, Autoplay]}
         thumbs={{ swiper: thumbsSwiper }}
         autoplay={{
-          delay: 3000,
+          delay: 5000,
           disableOnInteraction: true,
         }}
         spaceBetween={20}
+        speed={800}
       >
       {main_visual?.map((e: any, i: any) => (
           <SwiperSlide>
@@ -149,37 +156,114 @@ export default function Main({
             ))}
       </Swiper>
       </div>
-      <div className="inner-container">
-        <div className="main_banner flex custom-gap-30 my-6">
+      <div className="inner-container-main">
+        <div className="main_banner flex my-6 relative">
           {after_main_visual?.map((e: any, i: number) => {
             return (
-              <Link
-                href={e?.BannerLink ? e?.BannerLink : ""}
-                target={e?.OpenNewTab == 1 ? "_blank" : ""}
-                className="banner_img w-[585px] h-[170px] relative block"
-                key={i}
-              >
-                <Image
-                  src={`${CDN_URL}${e?.BannerImg || ""}`}
-                  alt=""
-                  fill
-                  className="object-cover"
-                />
-              </Link>
+              <>
+              <div
+                  className={i === 0 ? "banner_img w-3/5 h-[725px] relative block" : "banner_img w-2/5 h-[725px] relative block"}
+                  key={i}
+                >
+                  <Image
+                    src={`${CDN_URL}${e?.BannerImg || ""}`}
+                    alt=""
+                    fill
+                  />
+                  <div className="absolute bottom-[-160px]">
+                    <p className="text-[20px] font-bold mb-[15px]">
+                      {e.BannerTitle}
+                    </p>
+                    <p className="text-[20px] text-[#000] font-bold mb-[20px] max-w-[610px]">
+                      {e.BannerDes}
+                    </p>
+                    <Link
+                      href={e?.BannerLink ? e?.BannerLink : ""}
+                      target={e?.OpenNewTab == 1 ? "_blank" : ""}
+                      key={i}
+                      className="relative inline-block text-[14px] font-bold"
+                      >
+                      Shop now
+                    </Link>
+                    <div className="absolute bottom-[-3px] left-0 w-[68px] h-[1px] bg-black" />
+                  </div>
+                </div>
+              </>
             );
           })}
         </div>
-        <div className="main_ttl text-center">
+      </div>
+      <div className="mt-[200px]">
+        <div className="inner-container-main">
           <p className="text-[22px] tracking-wide leading-8 uppercase text-gray-700 font-bold mb-2.5">
-            BEST PRODUCTS
+            Shop by Category
           </p>
         </div>
-        <div className="grid grid-cols-4 gap-x-5 gap-y-[30px] mt-10">
-          {bestPrd.list?.map((elm: any, idx: number) => {
-            return <ProductItem key={idx} info={elm} />;
-          })}
+        <Swiper
+            className="mt-[30px]"
+            loop={true}
+            slidesPerView={4}
+            modules={[Thumbs, Autoplay]}
+            thumbs={{ swiper: thumbsSwiper }}
+            spaceBetween={4}
+            autoplay={{
+              delay: 4000,
+              disableOnInteraction: true,
+            }}
+            speed={800}
+          >
+            {categoryList?.map((e: any, i: any) => (
+              <SwiperSlide key={i}>
+                <Link
+                    href={`/products/category/${e.CategoryID}`}
+                    key={i}
+                    >
+                  <Image
+                    src={`${CDN_URL}${e?.CategoryImage || ""}`}
+                    alt=""
+                    width={482}
+                    height={640}
+                  />
+                  <p className="mt-[20px] text-[18px] text-center text-medium text-[#252525]">
+                    {e.CategoryName}
+                  </p>
+                  </Link>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+
+      </div>
+      <div className="inner-container-main">
+        <div className="flex mt-[70px] items-center gap-[120px]">
+          <div className="main_ttl min-w-[325px]">
+            <h2 className="text-[34px] tracking-wide leading-[1.3] uppercase text-gray-700 font-bold mb-2.5">
+              BEST <br /> PRODUCTS
+            </h2>
+            <p className="text-[18px] mt-[45px] text-[#252525] text-medium">
+              We've done the searching for you and handpicked the gifts she's guaranteed to love... 
+            </p>
+          </div>
+            <Swiper
+                className="mt-[30px] relative"
+                loop={true}
+                slidesPerView={4}
+                modules={[Thumbs, Autoplay]}
+                thumbs={{ swiper: thumbsSwiper }}
+                spaceBetween={20}
+                onSwiper={(swiper) => {
+                  swiperRef.current = swiper;
+                }}
+              >
+                {bestPrd.list?.map((elm: any, idx: number) => (
+                  <SwiperSlide>
+                    <ProductItem key={idx} info={elm} />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+              <button className="absolute top-1/4 left-[450px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_prev.png')]" onClick={() => swiperRef.current?.slidePrev()}></button>
+              <button className="absolute top-1/4 right-[-56px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_next.png')]" onClick={() => swiperRef.current?.slideNext()}></button>
         </div>
-        {bestPrd.currentPage < bestPrd.totalPage && (
+        {/* {bestPrd.currentPage < bestPrd.totalPage && (
           <div className="btn flex items-center justify-center mt-[45px]">
             <button
               onClick={handleLoadMoreBest}
@@ -189,18 +273,29 @@ export default function Main({
               See More
             </button>
           </div>
-        )}
-        <div className="main_ttl text-center mt-[80px]">
+        )} */}
+        <div className="main_ttl mt-[80px]">
           <p className="text-[22px] tracking-wide leading-8 uppercase text-gray-700 font-bold mb-2.5">
-            NEW PRODUCTS
+            NEW FOR YOU
           </p>
         </div>
-        <div className="grid grid-cols-4 gap-x-5 gap-y-[30px] mt-10">
-          {newPrd.list?.map((elm: any, idx: number) => {
-            return <ProductItem key={idx} info={elm} />;
-          })}
-        </div>
-        {newPrd.currentPage < newPrd.totalPage && (
+        <>
+          <Swiper
+              className="mt-[30px]"
+              loop={true}
+              slidesPerView={6}
+              modules={[Thumbs, Autoplay]}
+              thumbs={{ swiper: thumbsSwiper }}
+              spaceBetween={20}
+            >
+              {newPrd.list?.map((elm: any, idx: number) => (
+                <SwiperSlide>
+                  <ProductItem key={idx} info={elm} />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </>
+        {/* {newPrd.currentPage < newPrd.totalPage && (
           <div className="btn flex items-center justify-center mt-[45px]">
             <button
               onClick={handleLoadMoreNew}
@@ -210,11 +305,12 @@ export default function Main({
               See More
             </button>
           </div>
-        )}
+        )} */}
+      </div>
         <Link
           href={main_middle?.BannerLink ? main_middle?.BannerLink : ""}
           target={main_middle?.OpenNewTab == 1 ? "_blank" : ""}
-          className="my-[80px] w-[1201px] h-[140px] relative block"
+          className="my-[80px] w-full h-[648px] relative block"
         >
           <Image
             src={`${CDN_URL}${main_middle?.BannerImg || ""}`}
@@ -223,17 +319,34 @@ export default function Main({
             fill
           />
         </Link>
-        <div className="main_ttl text-center">
-          <p className="text-[22px] tracking-wide leading-8 uppercase text-gray-700 font-bold mb-2.5">
-            BIG SALE
-          </p>
+      <div className="inner-container-main">
+        <div className="flex mt-[70px] items-center gap-[120px]">
+          <div className="main_ttl min-w-[325px]">
+            <h2 className="text-[34px] tracking-wide leading-[1.3] uppercase text-gray-700 font-bold mb-2.5">
+              BIG <br /> SALES
+            </h2>
+            <p className="text-[18px] mt-[45px] text-[#252525] text-medium">
+              We've done the searching for you and handpicked the gifts she's guaranteed to love... 
+            </p>
+          </div>
+          <>
+            <Swiper
+              className="mt-[30px]"
+              loop={true}
+              slidesPerView={4}
+              modules={[Thumbs, Autoplay]}
+              thumbs={{ swiper: thumbsSwiper }}
+              spaceBetween={20}
+            >
+              {salePrd.list?.map((elm: any, idx: number) => (
+                <SwiperSlide>
+                  <ProductItem key={idx} info={elm} />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </>
         </div>
-        <div className="grid grid-cols-4 gap-x-5 gap-y-[30px] mt-10">
-          {salePrd.list?.map((elm: any, idx: number) => {
-            return <ProductItem key={idx} info={elm} />;
-          })}
-        </div>
-        {salePrd.currentPage < salePrd.totalPage && (
+        {/* {salePrd.currentPage < salePrd.totalPage && (
           <div className="btn flex items-center justify-center mt-[45px]">
             <button
               onClick={handleLoadMoreSale}
@@ -243,9 +356,9 @@ export default function Main({
               See More
             </button>
           </div>
-        )}
+        )} */}
         <div className="main_ttl text-center mt-[100px]">
-          <p className="text-[22px] tracking-wide leading-8 uppercase text-gray-700 font-bold mb-2.5">
+          <p className="text-[28px] tracking-wide leading-8 uppercase text-gray-700 font-bold mb-2.5">
             Review Board{" "}
           </p>
           <span className="text-[18px] tracking-wide leading-5 text-gray-500">
@@ -256,7 +369,7 @@ export default function Main({
           <Swiper
             className="mt-[45px] mb-[115px] select-none"
             loop={true}
-            slidesPerView={5}
+            slidesPerView={6}
             modules={[Thumbs, Autoplay]}
             thumbs={{ swiper: thumbsSwiper }}
             autoplay={{
@@ -316,6 +429,20 @@ export default function Main({
           </Swiper>
         </div>
       </div>
+      <>
+          <Link
+            href={middle?.BannerLink ? middle?.BannerLink : ""}
+            target={middle?.OpenNewTab == 1 ? "_blank" : ""}
+            className="my-[80px] w-full h-[316px] relative block"
+          >
+            <Image
+              src={`${CDN_URL}${middle?.BannerImg || ""}`}
+              alt=""
+              className="object-cover"
+              fill
+            />
+          </Link>
+        </>
     </div>
   );
 }
