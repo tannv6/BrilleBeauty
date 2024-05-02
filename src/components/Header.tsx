@@ -89,8 +89,8 @@ export default function Header({ brandListRecommended }: Props) {
             <Image
               src={`${CDN_URL}${webSetting?.logos || ""}`}
               alt=""
-              width={234}
-              height={33}
+              width={124}
+              height={47}
             />
           </Link>
         </div>
@@ -105,25 +105,27 @@ export default function Header({ brandListRecommended }: Props) {
             <Image
               src="/search_ico.png"
               alt="Search"
-              width={100}
-              height={100}
-              className="absolute right-0 top-1 mt-1 mb-1 mr-5 h-5 w-5"
+              width={20}
+              height={20}
+              className="absolute right-0 top-1 mt-1 mb-1 mr-5 h-[20px] w-[20px]"
             />
           </div>
-          <div className="img_sale ml-5">
-            <Link
-              href={banner_top?.BannerLink ? banner_top?.BannerLink : ""}
-              target={banner_top?.OpenNewTab == 1 ? "_blank" : ""}
-              className="w-[218px] h-[64px] relative inline-block"
-            >
-              <Image
-                src={`${CDN_URL}${banner_top?.BannerImg || ""}`}
-                alt=""
-                fill
-                className="object-cover"
-              />
-            </Link>
-          </div>
+          {banner_top && banner_top.BannerLink && banner_top.BannerImg && (
+              <div className="img_sale ml-5">
+                <Link
+                  href={banner_top.BannerLink}
+                  target={banner_top.OpenNewTab === 1 ? "_blank" : ""}
+                  className="w-[218px] h-[64px] relative inline-block"
+                >
+                  <Image
+                    src={`${CDN_URL}${banner_top.BannerImg}`}
+                    alt=""
+                    fill
+                    className="object-cover"
+                  />
+                </Link>
+              </div>
+            )}
         </div>
         <div className="header_right flex items-center">
           {isLogin ? (
