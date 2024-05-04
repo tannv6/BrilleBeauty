@@ -506,8 +506,8 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                     </div>
                     {replyList.data
                     .filter((e1: any) => e1.ReviewID === e.ReviewID) 
-                    .map((e1: any) => (
-                      <div className="min-h-[104px] bg-[#fafafa] border-t border-b border-b-[#eeeeee] pl-5 my-8">
+                    .map((e1: any, key1:any) => (
+                      <div className="min-h-[104px] bg-[#fafafa] border-t border-b border-b-[#eeeeee] pl-5 my-8" key={key1}>
                         <div className="py-[25px] flex justify-between">
                           <p className="font-bold">
                             Administrator Reply

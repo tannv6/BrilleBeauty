@@ -139,7 +139,7 @@ export default function Main({
         speed={800}
       >
       {main_visual?.map((e: any, i: any) => (
-          <SwiperSlide>
+          <SwiperSlide key={i}>
           <Link
             href={e?.BannerLink ? e?.BannerLink : ""}
             target={e?.OpenNewTab == 1 ? "_blank" : ""}
@@ -255,7 +255,7 @@ export default function Main({
                 }}
               >
                 {bestPrd.list?.map((elm: any, idx: number) => (
-                  <SwiperSlide>
+                  <SwiperSlide key={idx}>
                     <ProductItem key={idx} info={elm} />
                   </SwiperSlide>
                 ))}
@@ -289,7 +289,7 @@ export default function Main({
               spaceBetween={20}
             >
               {newPrd.list?.map((elm: any, idx: number) => (
-                <SwiperSlide>
+                <SwiperSlide key={idx}>
                   <ProductItem key={idx} info={elm} />
                 </SwiperSlide>
               ))}
@@ -339,7 +339,7 @@ export default function Main({
               spaceBetween={20}
             >
               {salePrd.list?.map((elm: any, idx: number) => (
-                <SwiperSlide>
+                <SwiperSlide key={idx}>
                   <ProductItem key={idx} info={elm} />
                 </SwiperSlide>
               ))}
