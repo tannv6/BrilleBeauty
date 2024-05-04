@@ -5,20 +5,37 @@ import axios from "axios";
 import { getSession } from "next-auth/react";
 import Image from "next/image";
 import { CDN_URL } from "@/utils/constants";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { DataDispatchContext } from "../_app";
 import Dropdown from "@/components/Dropdown";
-
+import { PayPalButton } from "react-paypal-button-v2";
 export default function Payment() {
-
+  const [sdk, setSdk] = useState(false);
+  const getConfig = async () => {
+    const res = await axios.get("/api/payment/config");
+    console.log(res.data.result);
+    const script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = `https://www.paypal.com/sdk/js?client-id=${res.data.result}`;
+    script.async = true;
+    script.onload = () => {
+      setSdk(true);
+    };
+    document.body.append(script);
+  };
+  useEffect(() => {
+    getConfig();
+  }, []);
   return (
     <>
       <Layout>
         <div id="main">
           <SubNav title1="Order/Payment" />
           <div className="inner-container mt-[65px] mb-[180px]">
-            <div className="w-full h-[60px] bg-[#ef426f] font-bold text-white text-2xl flex items-center justify-center">Order/Payment</div>
+            <div className="w-full h-[60px] bg-[#ef426f] font-bold text-white text-2xl flex items-center justify-center">
+              Order/Payment
+            </div>
             <div className="border-l border-r">
               <div className="w-full h-[60px] bg-[#f9f9f9]"></div>
               <div className="p-[50px]">
@@ -29,14 +46,35 @@ export default function Payment() {
                 <div className="pr-[70px]">
                   <div className="flex gap-[100px]">
                     <div className="flex items-center">
-                      <input checked id="default-radio-1" type="radio" value="" name="default-radio" className="w-[22px] h-[22px] rounded-full p-1 appearance-none checked:bg-[#ef426f] bg-clip-content border-2 border-[#dbdbdb] cursor-pointer">
-                      </input>
-                      <label htmlFor="default-radio-1" className="ms-[10px] cursor-pointer select-none">Same as member information</label>
+                      <input
+                        checked
+                        id="default-radio-1"
+                        type="radio"
+                        value=""
+                        name="default-radio"
+                        className="w-[22px] h-[22px] rounded-full p-1 appearance-none checked:bg-[#ef426f] bg-clip-content border-2 border-[#dbdbdb] cursor-pointer"
+                      ></input>
+                      <label
+                        htmlFor="default-radio-1"
+                        className="ms-[10px] cursor-pointer select-none"
+                      >
+                        Same as member information
+                      </label>
                     </div>
                     <div className="flex items-center">
-                      <input id="default-radio-2" type="radio" value="" name="default-radio" className="w-[22px] h-[22px] rounded-full p-1 appearance-none checked:bg-[#ef426f] bg-clip-content border-2 border-[#dbdbdb] cursor-pointer">
-                      </input>
-                      <label htmlFor="default-radio-2" className="ms-[10px] cursor-pointer select-none">New shipping address</label>
+                      <input
+                        id="default-radio-2"
+                        type="radio"
+                        value=""
+                        name="default-radio"
+                        className="w-[22px] h-[22px] rounded-full p-1 appearance-none checked:bg-[#ef426f] bg-clip-content border-2 border-[#dbdbdb] cursor-pointer"
+                      ></input>
+                      <label
+                        htmlFor="default-radio-2"
+                        className="ms-[10px] cursor-pointer select-none"
+                      >
+                        New shipping address
+                      </label>
                     </div>
                   </div>
                   <div className="my-5 flex items-center">
@@ -62,11 +100,12 @@ export default function Payment() {
                       name="Zipcode"
                       placeholder="Zip code"
                     ></input>
-                    <button className="w-[200px] h-[50px] border border-[#757575] text-[#757575]">Address search</button>
+                    <button className="w-[200px] h-[50px] border border-[#757575] text-[#757575]">
+                      Address search
+                    </button>
                   </div>
                   <div className="my-5 flex items-center">
-                    <p className="min-w-[130px]">
-                    </p>
+                    <p className="min-w-[130px]"></p>
                     <input
                       type="text"
                       className="px-[10px] w-full h-[50px] border rounded-[2px]"
@@ -75,8 +114,7 @@ export default function Payment() {
                     ></input>
                   </div>
                   <div className="my-5 flex items-center">
-                    <p className="min-w-[130px]">
-                    </p>
+                    <p className="min-w-[130px]"></p>
                     <input
                       type="text"
                       className="px-[10px] w-full h-[50px] border rounded-[2px]"
@@ -95,7 +133,7 @@ export default function Payment() {
                           { id: "010", name: "010" },
                           { id: "011", name: "011" },
                         ]}
-                        onChange={() => { }}
+                        onChange={() => {}}
                         activeItem=""
                         className="h-[50px] w-[290px] shrink-0"
                         placeHolder="000"
@@ -136,16 +174,21 @@ export default function Payment() {
                     </div>
                   </div>
                   <div className="my-5 flex items-center">
-                    <p className="min-w-[130px]">
-                    </p>
+                    <p className="min-w-[130px]"></p>
                     <div className="w-full">
                       <hr className="mb-5 border-[#252525]" />
                       <Dropdown
                         options={[
-                          { id: "1", name: "Please contact us in advance before shipping." },
-                          { id: "2", name: "If you are absent, please leave it at the security office." },
+                          {
+                            id: "1",
+                            name: "Please contact us in advance before shipping.",
+                          },
+                          {
+                            id: "2",
+                            name: "If you are absent, please leave it at the security office.",
+                          },
                         ]}
-                        onChange={() => { }}
+                        onChange={() => {}}
                         activeItem=""
                         className="h-[50px] w-[898px]"
                         placeHolder="Select message (optional) "
@@ -177,10 +220,17 @@ export default function Payment() {
                   <hr />
                   <div>
                     <div className="flex items-center my-5">
-                      <Image src={"/payment_product_img.png"} alt={""} width={120} height={120}></Image>
+                      <Image
+                        src={"/payment_product_img.png"}
+                        alt={""}
+                        width={120}
+                        height={120}
+                      ></Image>
                       <div className="flex flex-col pl-[30px] gap-1">
                         <p>Damage Care Perfect Serum Original (New) - 80ml</p>
-                        <p className="text-[15px] text-[#999999]">Quantity: 1</p>
+                        <p className="text-[15px] text-[#999999]">
+                          Quantity: 1
+                        </p>
                         <p className="text-lg">A$16.25</p>
                       </div>
                       <button className="w-[32px] h-[32px] border border-[#dbdbdb] rounded bg-[url('/payment_product_remove_ico.png')] bg-center bg-no-repeat ml-auto"></button>
@@ -189,10 +239,17 @@ export default function Payment() {
                   </div>
                   <div>
                     <div className="flex items-center my-5">
-                      <Image src={"/payment_product_img.png"} alt={""} width={120} height={120}></Image>
+                      <Image
+                        src={"/payment_product_img.png"}
+                        alt={""}
+                        width={120}
+                        height={120}
+                      ></Image>
                       <div className="flex flex-col pl-[30px] gap-1">
                         <p>Damage Care Perfect Serum Original (New) - 80ml</p>
-                        <p className="text-[15px] text-[#999999]">Quantity: 1</p>
+                        <p className="text-[15px] text-[#999999]">
+                          Quantity: 1
+                        </p>
                         <p className="text-lg">A$16.25</p>
                       </div>
                       <button className="w-[32px] h-[32px] border border-[#dbdbdb] rounded bg-[url('/payment_product_remove_ico.png')] bg-center bg-no-repeat ml-auto"></button>
@@ -222,7 +279,9 @@ export default function Payment() {
                   </div>
                   <div className="flex justify-between">
                     <p>Discount/additional payment</p>
-                    <p>A$ <span className="text-[#f50e3f]">- 0</span></p>
+                    <p>
+                      A$ <span className="text-[#f50e3f]">- 0</span>
+                    </p>
                   </div>
                 </div>
               </div>
@@ -239,8 +298,12 @@ export default function Payment() {
                 <div className="pr-[70px]">
                   <p>Select payment method</p>
                   <div className="flex justify-between gap-6 h-[50px] mt-5">
-                    <button className="grow border border-[#dbdbdb] rounded-sm text-lg">Bank transfer</button>
-                    <button className="grow bg-[#ef426f] text-white rounded-sm text-lg">Credit card</button>
+                    <button className="grow border border-[#dbdbdb] rounded-sm text-lg">
+                      Bank transfer
+                    </button>
+                    <button className="grow bg-[#ef426f] text-white rounded-sm text-lg">
+                      Credit card
+                    </button>
                   </div>
                   <div className="p-[40px] bg-[#f6f6f6] mt-[30px]">
                     <div className="flex items-center">
@@ -251,10 +314,16 @@ export default function Payment() {
                       <div className="w-full">
                         <Dropdown
                           options={[
-                            { id: "1", name: "Please contact us in advance before shipping." },
-                            { id: "2", name: "If you are absent, please leave it at the security office." },
+                            {
+                              id: "1",
+                              name: "Please contact us in advance before shipping.",
+                            },
+                            {
+                              id: "2",
+                              name: "If you are absent, please leave it at the security office.",
+                            },
                           ]}
-                          onChange={() => { }}
+                          onChange={() => {}}
                           activeItem=""
                           className="h-[50px] w-[800px] text-[#757575]"
                           placeHolder="Please select"
@@ -269,29 +338,53 @@ export default function Payment() {
                       <div className="w-full">
                         <Dropdown
                           options={[
-                            { id: "1", name: "Please contact us in advance before shipping." },
-                            { id: "2", name: "If you are absent, please leave it at the security office." },
+                            {
+                              id: "1",
+                              name: "Please contact us in advance before shipping.",
+                            },
+                            {
+                              id: "2",
+                              name: "If you are absent, please leave it at the security office.",
+                            },
                           ]}
-                          onChange={() => { }}
+                          onChange={() => {}}
                           activeItem=""
                           className="h-[50px] w-[800px] text-[#dbdbdb]"
                           placeHolder="lump sum payment"
                         />
                       </div>
                     </div>
-                    <p className="pl-[152px] text-[#757575] pt-2">Interest-free Installments are not applicable to corporate cards.</p>
+                    <p className="pl-[152px] text-[#757575] pt-2">
+                      Interest-free Installments are not applicable to corporate
+                      cards.
+                    </p>
                     <div className="flex items-center mt-5">
                       <p className="min-w-[152px]">
                         Cell Phone
                         <span className="text-[#ef426f]">*</span>
                       </p>
                       <div className="w-full flex justify-between gap-[10px] h-[50px]">
-                        <input className="grow rounded-sm border border-[#757575] px-5 placeholder-[#757575] placeholder:text-sm" type="text" placeholder="Guide to issuing public certificates" />
-                        <input className="grow rounded-sm border border-[#757575] px-5 placeholder-[#757575] placeholder:text-sm" type="text" placeholder="Safe Click Information" />
-                        <input className="grow rounded-sm border border-[#757575] px-5 placeholder-[#757575] placeholder:text-sm" type="text" placeholder="Safe Click Information" />
+                        <input
+                          className="grow rounded-sm border border-[#757575] px-5 placeholder-[#757575] placeholder:text-sm"
+                          type="text"
+                          placeholder="Guide to issuing public certificates"
+                        />
+                        <input
+                          className="grow rounded-sm border border-[#757575] px-5 placeholder-[#757575] placeholder:text-sm"
+                          type="text"
+                          placeholder="Safe Click Information"
+                        />
+                        <input
+                          className="grow rounded-sm border border-[#757575] px-5 placeholder-[#757575] placeholder:text-sm"
+                          type="text"
+                          placeholder="Safe Click Information"
+                        />
                       </div>
                     </div>
-                    <p className="pl-[152px] text-[#757575] pt-5 text-lg">Interest-free Installments are not applicable to corporate cards.</p>
+                    <p className="pl-[152px] text-[#757575] pt-5 text-lg">
+                      Interest-free Installments are not applicable to corporate
+                      cards.
+                    </p>
                   </div>
                   <div className="flex gap-2 items-center mt-5">
                     <input
@@ -303,7 +396,8 @@ export default function Payment() {
                       htmlFor="save1"
                       className="text-[16px] font-medium text-[#252525] cursor-pointer select-none"
                     >
-                      The payment method and input information will also be used next time.
+                      The payment method and input information will also be used
+                      next time.
                     </label>
                   </div>
                 </div>
@@ -358,11 +452,34 @@ export default function Payment() {
                     htmlFor="agree2"
                     className="text-[16px] font-medium text-[#252525] cursor-pointer select-none"
                   >
-                    [Required] Agree to the payment agency service terms and conditions
+                    [Required] Agree to the payment agency service terms and
+                    conditions
                   </label>
                 </div>
               </div>
-              <button className="w-full h-[70px] bg-[#ffe6e6] text-3xl text-[#f50e3f] font-bold">PAY A$16.25</button>
+              {sdk && (
+                <PayPalButton
+                  amount="5"
+                  // shippingPreference="NO_SHIPPING" // default is "GET_FROM_FILE"
+                  onSuccess={(details: any, data: any) => {
+                    alert(
+                      "Transaction completed by " +
+                        details.payer.name.given_name
+                    );
+
+                    // OPTIONAL: Call your server to save the transaction
+                    return fetch("/paypal-transaction-complete", {
+                      method: "post",
+                      body: JSON.stringify({
+                        orderID: data.orderID,
+                      }),
+                    });
+                  }}
+                />
+              )}
+              <button className="w-full h-[70px] bg-[#ffe6e6] text-3xl text-[#f50e3f] font-bold">
+                PAY A$16.25
+              </button>
             </div>
           </div>
         </div>
