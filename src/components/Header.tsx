@@ -110,7 +110,7 @@ export default function Header({ brandListRecommended }: Props) {
               className="absolute right-0 top-1 mt-1 mb-1 mr-5 h-[20px] w-[20px]"
             />
           </div>
-          {banner_top && banner_top.BannerLink && banner_top.BannerImg && (
+          {banner_top && banner_top.BannerImg && (
               <div className="img_sale ml-5">
                 <Link
                   href={banner_top.BannerLink}

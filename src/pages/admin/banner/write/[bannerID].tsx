@@ -59,6 +59,7 @@ function BannerWrite({ bannerDetail, isNew, catObject }: any) {
     BannerName: any;
     BannerImg: any;
     BannerDes: any;
+    BannerTitle: any,
     BannerLink: any;
     ImageUpload: File | null;
     ShowDate: any;
@@ -72,6 +73,7 @@ function BannerWrite({ bannerDetail, isNew, catObject }: any) {
     BannerName: bannerDetail?.BannerName || "",
     BannerImg: bannerDetail?.BannerImg || "",
     BannerDes: bannerDetail?.BannerDes || "",
+    BannerTitle: bannerDetail?.BannerTitle || "",
     BannerLink: bannerDetail?.BannerLink || "",
     ImageUpload: null,
     ShowDate: moment(bannerDetail?.ShowDate || undefined).format(
@@ -327,6 +329,24 @@ function BannerWrite({ bannerDetail, isNew, catObject }: any) {
                     name="BannerLink"
                     value={banner.BannerLink}
                     id="BannerLink"
+                    onChange={handleChange}
+                    className="h-[35px] outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  />
+                </td>
+              </tr>
+              <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th
+                  scope="row"
+                  className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
+                >
+                  Banner Title
+                </th>
+                <td className="px-6 py-2" colSpan={3}>
+                  <input
+                    type="text"
+                    name="BannerTitle"
+                    value={banner.BannerTitle}
+                    id="BannerTitle"
                     onChange={handleChange}
                     className="h-[35px] outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   />

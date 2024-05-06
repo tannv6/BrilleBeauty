@@ -15,8 +15,8 @@ function Footer() {
               <Image
                 src={`${CDN_URL}${webSetting?.logo_footer || ""}`}
                 alt=""
-                width={234}
-                height={33}
+                width={210}
+                height={80}
               />
             </div>
             <div>
