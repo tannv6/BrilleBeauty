@@ -104,7 +104,16 @@ export default function EyesLips({ cartList } : any) {
       alert("Please select at least 1 product!");
       return;
     }
-    router.push("/payment");
+    const res = await axios.post("/api/orders/write" , {
+      TotalAmount: "1000",
+      OrderPhone: "4545",
+      ProvinceID: "1",
+      DistrictID: "1",
+      CommuneID: "1",
+      CountryID: "1",
+      OrderAddress: "hgh",
+    })
+    router.push(`/payment/${res.data?.OrdersCode}`);
   }
 
   const handleDeleteCart = async (id : number, isCheck: boolean, price : number) => {
