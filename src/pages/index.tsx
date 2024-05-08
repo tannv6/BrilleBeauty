@@ -58,6 +58,10 @@ export const getServerSideProps: GetServerSideProps<{
     }
   );
 
+  const response7 = await axios.get(
+    "http://localhost:3000/api/combo/list",
+  );
+
   const reviewDetail = await axios.get(
     `http://localhost:3000/api/review/list`,
     {
@@ -74,6 +78,7 @@ export const getServerSideProps: GetServerSideProps<{
       best_main: response3.data,
       new_main: response4.data,
       sale_main: response5.data,
+      combo: response7.data,
       review: reviewDetail.data,
       ...(await getWebSetting(cookies)),
     },
@@ -82,6 +87,7 @@ export const getServerSideProps: GetServerSideProps<{
 
 export default function Page({
   main_visual,
+  combo,
   after_main_visual,
   main_middle,
   best_main,
@@ -95,6 +101,7 @@ export default function Page({
     <Layout {...props}>
       <Main
         main_visual={main_visual}
+        combo={combo}
         after_main_visual={after_main_visual}
         main_middle={main_middle}
         best_main={best_main}

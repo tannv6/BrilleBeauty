@@ -14,10 +14,12 @@ import axios from "axios";
 import he from "he";
 import { MyContext } from "@/pages/_app";
 import { Swiper as SwiperCore } from 'swiper/types';
+import ComboItem from "./ComboItem";
 
 
 export default function Main({
   main_visual,
+  combo,
   after_main_visual,
   main_middle,
   best_main,
@@ -29,11 +31,14 @@ export default function Main({
 
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   const [bestPrd, setBestPrd] = useState(best_main);
+  const [comboPrd, setComboPrd] = useState(combo);
   const [newPrd, setNewPrd] = useState(new_main);
   const [salePrd, setSalePrd] = useState(sale_main);
   const [reviews, setReviews] = useState(review);
   const value: any = useContext(MyContext);
   const categoryList = JSON.parse(value?.category)?.data || [];
+
+  
 
   const swiperRef = useRef<SwiperCore>();
   
@@ -100,6 +105,16 @@ export default function Main({
     });
   };
 
+  const getCombo = async () => {
+    const response6 = await axios.get(
+      "http://localhost:3000/api/combo/list",
+    );
+    setComboPrd({
+      ...response6.data,
+      data: [...comboPrd.data, ...response6.data.data],
+    });
+  };
+
 
 
   const formatCreatedAt = (createdAt : any) => {
@@ -157,6 +172,36 @@ export default function Main({
       </Swiper>
       </div>
       <div className="inner-container-main">
+        <div className="flex mt-[70px] items-center gap-[120px]">
+          <div className="main_ttl min-w-[325px]">
+            <h2 className="text-[34px] tracking-wide leading-[1.3] uppercase text-gray-700 font-bold mb-2.5">
+            Need Mother's <br />
+            Day <br />
+            Inspiration?
+            </h2>
+          </div>
+            <Swiper
+                className="mt-[30px] relative"
+                loop={true}
+                slidesPerView={4}
+                modules={[Thumbs, Autoplay]}
+                thumbs={{ swiper: thumbsSwiper }}
+                spaceBetween={20}
+                onSwiper={(swiper) => {
+                  swiperRef.current = swiper;
+                }}
+              >
+                {comboPrd.data?.map((elm: any, idx: number) => (
+                  <SwiperSlide key={idx}>
+                    <ComboItem info={elm} />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+              <button className="absolute top-1/4 left-[450px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_prev.png')]" onClick={() => swiperRef.current?.slidePrev()}></button>
+              <button className="absolute top-1/4 right-[-56px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_next.png')]" onClick={() => swiperRef.current?.slideNext()}></button>
+        </div>
+      </div>
+      <div className="inner-container-main">
         <div className="main_banner flex my-6 relative">
           {after_main_visual?.map((e: any, i: number) => {
             return (
@@ -171,10 +216,10 @@ export default function Main({
                     fill
                   />
                   <div className="absolute bottom-[-160px]">
-                    <p className="text-[20px] font-bold mb-[15px]">
+                    <p className="text-[22px] font-bold mb-[15px]">
                       {e.BannerTitle}
                     </p>
-                    <p className="text-[20px] text-[#000] font-bold mb-[20px] max-w-[610px]">
+                    <p className="text-[18px] text-[#000] font-medium mb-[20px] max-w-[610px]">
                       {e.BannerDes}
                     </p>
                     <Link
@@ -307,6 +352,7 @@ export default function Main({
           </div>
         )} */}
       </div>
+      {main_middle && main_middle.BannerImg && (
         <Link
           href={main_middle?.BannerLink ? main_middle?.BannerLink : ""}
           target={main_middle?.OpenNewTab == 1 ? "_blank" : ""}
@@ -319,6 +365,7 @@ export default function Main({
             fill
           />
         </Link>
+      )}
       <div className="inner-container-main">
         <div className="flex mt-[70px] items-center gap-[120px]">
           <div className="main_ttl min-w-[325px]">
@@ -429,6 +476,7 @@ export default function Main({
           </Swiper>
         </div>
       </div>
+      {middle && middle.BannerImg && (
       <>
           <Link
             href={middle?.BannerLink ? middle?.BannerLink : ""}
@@ -443,6 +491,7 @@ export default function Main({
             />
           </Link>
         </>
+        )}
     </div>
   );
 }
