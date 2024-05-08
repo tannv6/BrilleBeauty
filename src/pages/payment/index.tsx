@@ -14,10 +14,9 @@ export default function Payment() {
   const [sdk, setSdk] = useState(false);
   const getConfig = async () => {
     const res = await axios.get("/api/payment/config");
-    console.log(res.data.result);
     const script = document.createElement("script");
     script.type = "text/javascript";
-    script.src = `https://www.paypal.com/sdk/js?client-id=${res.data.result}`;
+    script.src = `https://www.paypal.com/sdk/js?client-id=${res.data.CLIENT_ID}`;
     script.async = true;
     script.onload = () => {
       setSdk(true);

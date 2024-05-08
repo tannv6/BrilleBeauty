@@ -11,7 +11,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
 
     connect.end();
 
-    return res.status(201).json({ result: process.env.CLIENT_ID });
+    return res.status(201).json({ CLIENT_ID: process.env.PAYPAL_CLIENT_ID });
   } catch (err) {
     return res.status(500).json({ error: err });
   }
