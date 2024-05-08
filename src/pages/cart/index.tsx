@@ -103,7 +103,8 @@ export default function EyesLips({ cartList } : any) {
     if(selectCartLength <= 0 ){
       alert("Please select at least 1 product!");
       return;
-    } 
+    }
+    router.push("/payment");
   }
 
   const handleDeleteCart = async (id : number, isCheck: boolean, price : number) => {
