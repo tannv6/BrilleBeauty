@@ -12,13 +12,9 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   try {
     const form = formidable({});
     const [fields, files] = await form.parse(req);
-    const {
-      CategoryID,
-      CategoryName,
-    } = fields;
+    const { CategoryID, CategoryName, Description,IsHomepage } = fields;
 
     const image = files.ImageUpload?.[0];
-
 
     const connect = await connectDB();
 
@@ -30,6 +26,8 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
 
     const query = `update combocategories SET
     CategoryName='${CategoryName}',
+    Description='${Description}',
+    IsHomepage='${IsHomepage}',
     ThumbImage='${ThumbImage}',
     UpdatedAt = now() where CategoryID='${CategoryID}';`;
 

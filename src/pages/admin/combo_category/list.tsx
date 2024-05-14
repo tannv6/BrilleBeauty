@@ -30,11 +30,15 @@ function List({ list }: any) {
     CategoryName: string;
     ImageUpload: File | null;
     ThumbImage: string;
+    Description: string;
+    IsHomepage: string;
   }>({
     CategoryID: "0",
     CategoryName: "",
     ImageUpload: null,
     ThumbImage: "",
+    Description: "",
+    IsHomepage: "",
   });
   const handleOpenWrite = (category: any) => {
     setDetail({
@@ -42,6 +46,8 @@ function List({ list }: any) {
       CategoryID: category?.CategoryID || "",
       CategoryName: category?.CategoryName || "",
       ThumbImage: category?.ThumbImage || "",
+      Description: category?.Description || "",
+      IsHomepage: category?.IsHomepage || "",
     });
     setIsOpenWrite(true);
   };
@@ -135,6 +141,35 @@ function List({ list }: any) {
                 placeholder="Type Category name"
                 required
               />
+              <label
+                htmlFor="name"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white mt-1"
+              >
+                Description
+              </label>
+              <textarea
+                className="min-h-[100px] bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                name="Description"
+                id="Description"
+                onChange={handleChange}
+                value={detail.Description}
+              ></textarea>
+              <label
+                htmlFor="name"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white mt-1"
+              >
+                Show In Homepage
+              </label>
+              <select
+                name="IsHomepage"
+                id="IsHomepage"
+                value={detail.IsHomepage}
+                onChange={handleChange}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              >
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+              </select>
               <label
                 htmlFor="name"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white mt-1"
