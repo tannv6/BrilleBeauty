@@ -20,8 +20,8 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     const UserName = session?.user?.name;
 
     const {
-      ReviewType,
       ProductID,
+      ComboID,
       Title,
       ReviewDes,
       Start,
@@ -52,11 +52,11 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     let query = `INSERT INTO review SET 
     UserID ='${UserID}',
     UserName ='${UserName}',
-    ReviewType = '${ReviewType}',
     Title='${Title}',
     ReviewDes='${ReviewDes}',
     Start = '${Start}',
-    ProductID = '${ProductID}',`;
+    ProductID = ${ProductID ? "'" + ProductID + "'" : "''"},
+    ComboID = ${ComboID ? "'" + ComboID + "'" : "''"},`;
   
   const imgFields = ['Img1', 'Img2', 'Img3', 'Img4', 'Img5'];
   const fileNameFields = ['FileName1', 'FileName2', 'FileName3', 'FileName4', 'FileName5'];

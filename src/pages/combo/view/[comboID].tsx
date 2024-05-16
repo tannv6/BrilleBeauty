@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import Layout from "@/components/Layout";
 import SubNav from "@/components/SubNav";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -19,6 +19,9 @@ import { log } from "console";
 import he from "he";
 import { Swiper as SwiperCore } from "swiper/types";
 import ReviewDetail from "../../review_detail";
+import { useRouter } from "next/router";
+import { MyContext } from "@/pages/_app";
+import Paginew from "@/components/Paginew";
 
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 export const getServerSideProps = async (context: {
@@ -27,7 +30,7 @@ export const getServerSideProps = async (context: {
   req: any;
 }) => {
   const { params, query } = context;
-  const { comboID, reviewID } = params;
+  const { comboID, page, reviewID } = params;
   const comboDetail = await axios.get(
     `http://localhost:3000/api/combo/detail`,
     {
@@ -41,6 +44,18 @@ export const getServerSideProps = async (context: {
 
   const result2 = await axios.get("http://localhost:3000/api/season/list");
 
+  const reviewDetail = await axios.get(
+    `http://localhost:3000/api/review/list`,
+    {
+      params: { page, pageSize: 12, },
+    }
+  );
+
+  const session = await getSession(context);
+  const response2 = await axios.get("http://localhost:3000/api/account/info", {
+    params: { session: JSON.stringify(session) },
+  });
+
   return {
     props: {
       comboDetail: comboDetail.data,
@@ -53,6 +68,9 @@ export const getServerSideProps = async (context: {
         id: e.SeasonID,
         name: e.SeasonName,
       })),
+      review: reviewDetail.data,
+      comboID: comboID,
+      userInfo: response2.data,
     },
   };
 };
@@ -80,11 +98,21 @@ type Props = {
   };
   categoryList: any;
   seasonList: any;
+  review: any,
+  comboID: any,
+  userInfo: any,
 };
-export default function Face({ comboDetail, categoryList, seasonList }: Props) {
+export default function Face({ comboDetail, review, comboID, categoryList, seasonList, userInfo }: Props) {
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   const [isHeart, setIsHeart] = useState<boolean>(true);
   const [numProduct, setNumProduct] = useState<number>(1);
+
+  const { data, total, currentPage, pageSize, totalPage } = review;
+
+  const handleChangePage = (page: number) => {
+    router.query.page = page.toString();
+    router.push(router, undefined, { scroll: false });
+  };
 
   const calculateNewPrice = (price: number, numProduct: number) => {
     return price * numProduct;
@@ -112,6 +140,38 @@ export default function Face({ comboDetail, categoryList, seasonList }: Props) {
   }
 
   const comboImages = comboDetail?.Images;
+
+  const value: any = useContext(MyContext);
+
+  const router = useRouter();
+
+  const handleWriteReview = () => {
+    if (!value.isLogin) {
+      alert("Please login!");
+      router.push('/member/login');
+      return;
+    }
+
+    router.push(`/write_review?ComboID=${comboDetail.ComboID}`);
+  };
+
+  const formatCreatedAt = (createdAt : any) => {
+    const date = new Date(createdAt);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}.${month}.${day}`;
+  };
+  
+
+  const totalReviews = review.data.filter((e: any) => e.ComboID === comboID).length;
+
+  const handleDelete = async (id: number) => {
+    if (confirm("Are you sure delete this review?")) {
+      await axios.put(`/api/review/delete`, { ReviewID: id });
+      window.location.reload();
+    }
+  };
 
   return (
     <Layout>
@@ -262,72 +322,74 @@ export default function Face({ comboDetail, categoryList, seasonList }: Props) {
             <div className="flex justify-between pb-5">
               <p className="text-xl">
                 <span className="font-bold">PRODUCT REVIEWS</span>
-                <span className="text-[#757575]">(12)</span>
+                <span className="text-[#757575]">({totalReviews})</span>
               </p>
-              <Link href={`/write_review?ProductID=${comboDetail?.ComboID}`}>
-                <button className="w-[130px] h-[35px] border border-[#ef426f] rounded text-[#ef426f] font-medium">
+                <button className="w-[130px] h-[35px] border border-[#ef426f] rounded text-[#ef426f] font-medium" onClick={handleWriteReview}>
                   Write review
                 </button>
-              </Link>
             </div>
             <hr />
 
             <div className="">
-              <div className="py-5 flex flex-row">
-                <div className="flex flex-col basis-[80%] ml-5 gap-y-3">
-                  <div className="flex gap-0.5">
-                    <i className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_on.png')]"></i>
-                    <i className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_on.png')]"></i>
-                    <i className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_on.png')]"></i>
-                    <i className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_on.png')]"></i>
-                    <i className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_off.png')]"></i>
+              {review.data
+                  .filter((e: any) => e.ComboID === comboID) 
+                  .map((e: any) => (
+                  <div key={e.ReviewID}>
+                    <div className="py-5 flex flex-row border-b border-gray-300" >
+                      <div className="flex flex-col basis-[80%] ml-5 gap-y-3">
+                        <div className="flex gap-0.5">
+                          {Array.from({ length: Math.min(Math.max(0, e.Start), 5) }).map((_, index) => (
+                            <i key={index} className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_on.png')]"></i>
+                          ))}
+                          {Array.from({ length: Math.max(0, 5 - Math.min(Math.max(0, e.Start), 5)) }).map((_, index) => (
+                            <i key={index + e.Start} className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_off.png')]"></i>
+                          ))}
+                        </div>
+                        <p className="text-xl font-medium"></p>
+                        <p className="text-[#999999]">{e.Title}</p>
+                        <div className="flex items-center gap-[20px]">
+                          <span className="font-medium text-[17px]">{e.UserName && e.UserName}</span>
+                          <span className="font-medium text-[17px]">{formatCreatedAt(e.CreatedAt)}</span>    
+                        </div>
+                        <div className="text-[15px] text-[#999999] pl-3" dangerouslySetInnerHTML={{ __html: he.decode(e.ReviewDes) }} />
+                        <div className="flex gap-[10px]">
+                          {e.Img1 && <Image src={`${CDN_URL}${e.Img1}`} alt="" width={110} height={110} />}
+                          {e.Img2 && <Image src={`${CDN_URL}${e.Img2}`} alt="" width={110} height={110} />}
+                          {e.Img3 && <Image src={`${CDN_URL}${e.Img3}`} alt="" width={110} height={110} />}
+                          {e.Img4 && <Image src={`${CDN_URL}${e.Img4}`} alt="" width={110} height={110} />}
+                          {e.Img5 && <Image src={`${CDN_URL}${e.Img5}`} alt="" width={110} height={110} />}
+                        </div>
+                        <div className="flex gap-[10px] hidden">
+                          <button className="w-[140px] h-[36px] bg-[url('/product_detail/comment_show_btn.png')] rounded-[5px] text-[15px] text-[#757575] pl-3 pt-0.5">COMMENT</button>
+                          <button className="w-[140px] h-[36px] rounded-[5px] text-[15px] text-[#757575] border">WRITE COMMENT</button>
+                        </div>
+                      </div>
+                      <div className="flex basis-[20%] items-start justify-end gap-[10px]">
+                        {userInfo && userInfo.CustomerID !== null && e.UserID === userInfo.CustomerID &&
+                          <><Link href={`/write_review/${e.ReviewID}?ComboID=${comboDetail.ComboID}`}
+                            className="flex items-center justify-center w-[100px] h-7 text-[15px] text-[#999999] border rounded"> EDIT
+                          </Link><button type="button" className="w-[100px] h-7 text-[15px] text-[#999999] border rounded" onClick={() => handleDelete(e.ReviewID)}>DELETE</button></>
+                        }
+                      </div>
+                    </div>
                   </div>
-                  <p className="text-xl font-medium"></p>
-                  <p className="text-[#999999]">CONTOUR POWDER</p>
-                  <p>
-                    <span className="font-medium text-[17px]">uwa***</span>
-                    <span className="text-[15px] text-[#999999] pl-3">
-                      Ive been absolutely obsessed with this lip stain lately.
-                      16 Baked...
-                    </span>
-                  </p>
-                  <div className="flex gap-[10px]">
-                    <div className="w-[110px] h-[110px] bg-[#eeeeee] rounded-[5px]"></div>
-                    <div className="w-[110px] h-[110px] bg-[#eeeeee] rounded-[5px]"></div>
-                  </div>
-                  <div className="flex gap-[10px]">
-                    <button className="w-[140px] h-[36px] bg-[url('/product_detail/comment_show_btn.png')] rounded-[5px] text-[15px] text-[#757575] pl-3 pt-0.5">
-                      COMMENT
-                    </button>
-                    <button className="w-[140px] h-[36px] rounded-[5px] text-[15px] text-[#757575] border">
-                      WRITE COMMENT
-                    </button>
-                  </div>
-                </div>
-                <div className="flex basis-[20%] items-start justify-end gap-[10px]">
-                  <button className="w-[100px] h-7 text-[15px] text-[#999999] border rounded">
-                    EDIT
-                  </button>
-                  <button className="w-[100px] h-7 text-[15px] text-[#999999] border rounded">
-                    DELETE
-                  </button>
-                </div>
-              </div>
-              <hr />
-              <div className="flex items-center justify-center h-[123px] bg-[#f9f9f9] border-b">
-                <div className="flex w-[1131px] h-[82px]">
-                  <textarea
-                    placeholder="Please enter your comment."
-                    className="focus:outline-none placeholder:text-lg p-5 pt-3 border rounded-l-[5px] grow resize-none"
-                  />
-                  <button className="w-[120px] rounded-r bg-[#ef426f] text-lg text-[#ffffff]">
-                    OK
-                  </button>
-                </div>
-              </div>
-            </div>
+                  ))}
+                <hr />
 
-            <Pagi></Pagi>
+                {data.length ? (
+                    <>
+                      <Paginew
+                        tP={totalPage}
+                        cP={currentPage}
+                        tE={total}
+                        per={10}
+                        onChange={handleChangePage}
+                      ></Paginew>
+                    </>
+                  ) : (
+                    ``
+                  )}
+              </div>
           </div>
         </div>
       </div>

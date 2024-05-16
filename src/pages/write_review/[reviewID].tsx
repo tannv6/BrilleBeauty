@@ -41,6 +41,7 @@ const CustomEditor = dynamic(
 function ReviewWrite({reviewDetail, isNew} : any) {
     const router = useRouter();
     const { ProductID } = router.query;
+    const { ComboID } = router.query;
 
     const [hoveredStar, setHoveredStar] = useState(0);
     const [selectedStar, setSelectedStar] = useState(reviewDetail?.Start || 0);
@@ -62,6 +63,7 @@ function ReviewWrite({reviewDetail, isNew} : any) {
         UserName: any;
         UserID: any;
         ProductID: any;
+        ComboID: any;
         Title: any;
         ReviewDes: any;
         Start: any;
@@ -81,6 +83,7 @@ function ReviewWrite({reviewDetail, isNew} : any) {
         UserName: reviewDetail?.UserName,
         UserID: reviewDetail?.UserID,
         ProductID: reviewDetail?.ProductID || "",
+        ComboID: reviewDetail?.ComboID || "",
         Title: reviewDetail?.Title || "",
         ReviewDes: reviewDetail?.ReviewDes || "",
         Start: selectedStar,
@@ -122,7 +125,23 @@ function ReviewWrite({reviewDetail, isNew} : any) {
     async function handleSubmit(event: FormEvent<HTMLFormElement>){
     event.preventDefault();
 
-    const updatedReview = { ...review, Start: selectedStar, ProductID: ProductID };
+    if (!review.Title.trim()) {
+        alert("Please enter the subject.");
+        return;
+    }
+
+    if (!selectedStar) {
+        alert("Please select a star rating.");
+        return;
+    }
+
+    let updatedReview;
+
+    if (ProductID) {
+        updatedReview = { ...review, Start: selectedStar, ProductID: ProductID, ComboID: '' };
+    } else {
+        updatedReview = { ...review, Start: selectedStar, ComboID: ComboID, ProductID: ''  };
+    }
 
     let formData = new FormData();
 

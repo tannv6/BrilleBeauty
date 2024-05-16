@@ -97,8 +97,6 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
   
   
   const { data, total, currentPage, pageSize, totalPage } = review;
-
-  console.log(productRelate);
   
 
   const handleChangePage = (page: number) => {
@@ -271,7 +269,7 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
   };
 
   const handleDeleteReply = async (id: number) => {
-    if (confirm("Are you sure delete this review?")) {
+    if (confirm("Are you sure delete this reply?")) {
       await axios.put(`/api/review/reply_delete`, { ReplyID: id });
       window.location.reload();
     }
@@ -507,7 +505,7 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                     {replyList.data
                     .filter((e1: any) => e1.ReviewID === e.ReviewID) 
                     .map((e1: any, key1:any) => (
-                      <div className="min-h-[104px] bg-[#fafafa] border-t border-b border-b-[#eeeeee] pl-5 my-8" key={key1}>
+                      <div className="min-h-[104px] bg-[#fafafa] px-5 mb-8" key={key1}>
                         <div className="py-[25px] flex justify-between">
                           <p className="font-bold">
                             Administrator Reply
@@ -517,13 +515,16 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                           </p>
                           <div className="flex basis-[20%] items-start justify-end gap-[10px]">
                             {userInfo && userInfo.CustomerID !== null && userInfo.UserName === 'thoai' &&
-                              <><Link href={`/write_review/${e.ReviewID}?ProductID=${product.ProductID}`}
+                              <>
+                              <div
                                 className="flex items-center justify-center w-[100px] h-7 text-[15px] text-[#999999] border rounded"> EDIT
-                              </Link><button type="button" className="w-[100px] h-7 text-[15px] text-[#999999] border rounded" onClick={() => handleDeleteReply(e.ReplyID)}>DELETE</button></>
+                              </div>
+                              <button type="button" className="w-[100px] h-7 text-[15px] text-[#999999] border rounded" onClick={() => handleDeleteReply(e1.ReplyID)}>DELETE</button>
+                              </>
                             }
                           </div>
                         </div>
-                          <p className="mt-2 text-[15px] pb-[15px]">
+                          <p className="mt-2 text-[15px] pb-[15px] pr-[100px]">
                             {e1.ReplyDes}
                           </p>
                       </div>
