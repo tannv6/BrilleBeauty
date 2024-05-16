@@ -112,6 +112,7 @@ export default function EyesLips({ cartList } : any) {
       CommuneID: "1",
       CountryID: "1",
       OrderAddress: "hgh",
+      CartList: Object.entries(checkboxes).filter(([key, value]) => !!value).map(([key, value]) => key).join(",")
     })
     router.push(`/payment/${res.data?.OrdersCode}`);
   }

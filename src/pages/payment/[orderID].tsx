@@ -17,11 +17,16 @@ export const getServerSideProps = async (context: {
 }) => {
   const { params } = context;
   const { orderID } = params;
+  const res = await axios.get("http://localhost:3000/api/orders/detail", {
+    params: { OrderID: orderID, mode: "code" },
+  });
   return {
-    props: { orderID },
+    props: { orderDetail: res.data },
   };
 };
-export default function Payment({ orderID }: any) {
+export default function Payment({ orderDetail }: any) {
+  console.log(orderDetail);
+  
   const [sdk, setSdk] = useState(false);
   const getConfig = async () => {
     const res = await axios.get("/api/payment/config");
@@ -37,6 +42,7 @@ export default function Payment({ orderID }: any) {
   useEffect(() => {
     getConfig();
   }, []);
+  const [state, setState] = useState<any>(orderDetail?.order || {});
   return (
     <>
       <Layout>
@@ -44,7 +50,7 @@ export default function Payment({ orderID }: any) {
           <SubNav title1="Order/Payment" />
           <div className="inner-container mt-[65px] mb-[180px]">
             <div className="w-full h-[60px] bg-[#ef426f] font-bold text-white text-2xl flex items-center justify-center">
-              Order/Payment/{orderID}
+              Order/Payment/{orderDetail?.order?.OrdersCode}
             </div>
             <div className="border-l border-r">
               <div className="w-full h-[60px] bg-[#f9f9f9]"></div>
@@ -110,9 +116,9 @@ export default function Payment({ orderID }: any) {
                       name="Zipcode"
                       placeholder="Zip code"
                     ></input>
-                    <button className="w-[200px] h-[50px] border border-[#757575] text-[#757575]">
+                    {/* <button className="w-[200px] h-[50px] border border-[#757575] text-[#757575]">
                       Address search
-                    </button>
+                    </button> */}
                   </div>
                   <div className="my-5 flex items-center">
                     <p className="min-w-[130px]"></p>
