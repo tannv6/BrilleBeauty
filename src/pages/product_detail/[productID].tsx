@@ -291,11 +291,13 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
     ReplyID: any;
     ReviewID: any;
     ProductID: any;
+    ComboID: any;
     ReplyDes: any;
   }>({
     ReplyID: reply?.ReplyID,
     ReviewID: reply?.ReviewID || "",
     ProductID: reply?.ProductID || "",
+    ComboID: reply?.ComboID || "",
     ReplyDes: reply?.ReplyDes || "",
   });
 
@@ -306,7 +308,7 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
   async function handleSubmitReply(event: FormEvent<HTMLFormElement>, reviewID: any){
     event.preventDefault();
 
-    const updatedReply = { ...replyDetail, ProductID: product.ProductID, ReviewID: reviewID};
+    const updatedReply = { ...replyDetail, ProductID: product.ProductID, ComboID: '', ReviewID: reviewID};
 
     let formData = new FormData();
 

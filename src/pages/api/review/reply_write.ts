@@ -17,6 +17,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     const {
         ReviewID,
         ProductID,
+        ComboID,
         ReplyDes
     } = fields;
 
@@ -24,7 +25,8 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
 
     let query = `INSERT INTO review_reply SET 
     ReviewID = '${ReviewID}',
-    ProductID = '${ProductID}',
+    ProductID = ${ProductID ? "'" + ProductID + "'" : "''"},
+    ComboID = ${ComboID ? "'" + ComboID + "'" : "''"},
     ReplyDes='${ReplyDes}',
     CreatedAt=NOW();`;
 

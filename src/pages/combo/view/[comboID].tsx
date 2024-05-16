@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from "react";
+import { FormEvent, useContext, useRef, useState } from "react";
 import Layout from "@/components/Layout";
 import SubNav from "@/components/SubNav";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -30,7 +30,7 @@ export const getServerSideProps = async (context: {
   req: any;
 }) => {
   const { params, query } = context;
-  const { comboID, page, reviewID } = params;
+  const { comboID, page, replyID } = params;
   const comboDetail = await axios.get(
     `http://localhost:3000/api/combo/detail`,
     {
@@ -56,6 +56,17 @@ export const getServerSideProps = async (context: {
     params: { session: JSON.stringify(session) },
   });
 
+  const replys = await axios.get(
+    `http://localhost:3000/api/review/reply_details`,
+    {
+      params: { replyID },
+    }
+  );
+
+  const result3 = await axios.get(
+    `http://localhost:3000/api/review/reply_list`,
+  );
+
   return {
     props: {
       comboDetail: comboDetail.data,
@@ -71,6 +82,8 @@ export const getServerSideProps = async (context: {
       review: reviewDetail.data,
       comboID: comboID,
       userInfo: response2.data,
+      reply: replys.data,
+      replyList: result3.data,
     },
   };
 };
@@ -101,8 +114,10 @@ type Props = {
   review: any,
   comboID: any,
   userInfo: any,
+  reply: any,
+  replyList: any,
 };
-export default function Face({ comboDetail, review, comboID, categoryList, seasonList, userInfo }: Props) {
+export default function Face({ comboDetail, review, comboID, reply, replyList, categoryList, seasonList, userInfo }: Props) {
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   const [isHeart, setIsHeart] = useState<boolean>(true);
   const [numProduct, setNumProduct] = useState<number>(1);
@@ -172,6 +187,49 @@ export default function Face({ comboDetail, review, comboID, categoryList, seaso
       window.location.reload();
     }
   };
+
+  const handleDeleteReply = async (id: number) => {
+    if (confirm("Are you sure delete this reply?")) {
+      await axios.put(`/api/review/reply_delete`, { ReplyID: id });
+      window.location.reload();
+    }
+  };
+
+  const [replyDetail, setReply] = useState<{
+    ReplyID: any;
+    ReviewID: any;
+    ProductID: any;
+    ComboID: any;
+    ReplyDes: any;
+  }>({
+    ReplyID: reply?.ReplyID,
+    ReviewID: reply?.ReviewID || "",
+    ProductID: reply?.ProductID || "",
+    ComboID: reply?.ComboID || "",
+    ReplyDes: reply?.ReplyDes || "",
+  });
+
+  function handleChangeReply(e: any) {
+    setReply({ ...replyDetail, [e.target.name]: e.target.value });
+    }
+
+  async function handleSubmitReply(event: FormEvent<HTMLFormElement>, reviewID: any){
+    event.preventDefault();
+
+    const updatedReply = { ...replyDetail, ComboID: comboDetail.ComboID, ProductID: '', ReviewID: reviewID};
+
+    let formData = new FormData();
+
+    for (let [key, value] of Object.entries(updatedReply)) {
+        formData.append(key, value);
+    }
+    let response;
+        response = await axios.post("/api/review/reply_write", formData);
+    if (response.status === 201) {
+        alert("Reply Sucess!");
+        window.location.reload();
+        }
+    }
 
   return (
     <Layout>
@@ -372,6 +430,48 @@ export default function Face({ comboDetail, review, comboID, categoryList, seaso
                         }
                       </div>
                     </div>
+                    {replyList.data
+                    .filter((e1: any) => e1.ReviewID === e.ReviewID) 
+                    .map((e1: any, key1:any) => (
+                      <div className="min-h-[104px] bg-[#fafafa] px-5 mb-8" key={key1}>
+                        <div className="py-[25px] flex justify-between">
+                          <p className="font-bold">
+                            Administrator Reply
+                            <span className="pl-6 text-[15px] text-[#999999] font-normal">
+                            {formatCreatedAt(e1.CreatedAt)}
+                            </span>
+                          </p>
+                          <div className="flex basis-[20%] items-start justify-end gap-[10px]">
+                            {userInfo && userInfo.CustomerID !== null && userInfo.UserName === 'thoai' &&
+                              <>
+                              <div
+                                className="flex items-center justify-center w-[100px] h-7 text-[15px] text-[#999999] border rounded"> EDIT
+                              </div>
+                              <button type="button" className="w-[100px] h-7 text-[15px] text-[#999999] border rounded" onClick={() => handleDeleteReply(e1.ReplyID)}>DELETE</button>
+                              </>
+                            }
+                          </div>
+                        </div>
+                          <p className="mt-2 text-[15px] pb-[15px] pr-[100px]">
+                            {e1.ReplyDes}
+                          </p>
+                      </div>
+                    ))}
+                    <form onSubmit={(event) => handleSubmitReply(event, e.ReviewID)}>
+                      {userInfo && userInfo.CustomerID !== null && userInfo.UserName === 'thoai' &&
+                        <div className="flex items-center justify-center h-[123px] bg-[#f9f9f9] border-b">
+                          <div className="flex w-[1131px] h-[82px]">
+                            <input 
+                                type="text" 
+                                name="ReplyDes"
+                                onChange={handleChangeReply}
+                                placeholder="Please enter your reply." 
+                                className="focus:outline-none placeholder:text-lg p-5 pt-3 border rounded-l-[5px] grow resize-none" />
+                            <button type="submit" className="w-[120px] rounded-r bg-[#ef426f] text-lg text-[#ffffff]">OK</button>
+                          </div>
+                        </div>
+                      }
+                    </form>
                   </div>
                   ))}
                 <hr />
