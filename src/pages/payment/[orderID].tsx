@@ -17,14 +17,23 @@ export const getServerSideProps = async (context: {
 }) => {
   const { params } = context;
   const { orderID } = params;
+  const session: any = await getSession(context);
+
+  const customerID = session?.user?.id;
   const res = await axios.get("http://localhost:3000/api/orders/detail", {
     params: { OrderID: orderID, mode: "code" },
   });
+  const customerDetail = await axios.get(
+    `http://localhost:3000/api/customers/detail`,
+    {
+      params: { customerID },
+    }
+  );
   return {
-    props: { orderDetail: res.data },
+    props: { orderDetail: res.data, customerDetail: customerDetail.data, },
   };
 };
-export default function Payment({ orderDetail }: any) {
+export default function Payment({ orderDetail, customerDetail }: any) {
   console.log(orderDetail);
   
   const [sdk, setSdk] = useState(false);
@@ -42,7 +51,23 @@ export default function Payment({ orderDetail }: any) {
   useEffect(() => {
     getConfig();
   }, []);
-  const [state, setState] = useState<any>(orderDetail?.order || {});
+  const [addressType, setAddressType] =useState(1);
+  const [state, setState] = useState<any>({
+    ...orderDetail?.order || {},
+    ZipCode: customerDetail?.ZipCode,
+    Recipient: `${customerDetail?.FirstName} ${customerDetail?.LastName}`,
+    BasicAddress: customerDetail?.BasicAddress,
+    DetailAddress: customerDetail?.DetailAddress,
+    RecipientPhone: customerDetail?.CustomerPhone,
+    RecipientEmail: customerDetail?.Email
+  });
+  const handleChange = (e:any) => {
+    const {name, value} =e.target;
+    setState({
+      ...state,
+      [name] : value
+    })
+  }
   return (
     <>
       <Layout>
@@ -63,10 +88,10 @@ export default function Payment({ orderDetail }: any) {
                   <div className="flex gap-[100px]">
                     <div className="flex items-center">
                       <input
-                        checked
+                        checked = {addressType === 1}
                         id="default-radio-1"
                         type="radio"
-                        value=""
+                        onChange={ ()=>setAddressType(1) }
                         name="default-radio"
                         className="w-[22px] h-[22px] rounded-full p-1 appearance-none checked:bg-[#ef426f] bg-clip-content border-2 border-[#dbdbdb] cursor-pointer"
                       ></input>
@@ -79,9 +104,10 @@ export default function Payment({ orderDetail }: any) {
                     </div>
                     <div className="flex items-center">
                       <input
+                      checked = {addressType === 2}
                         id="default-radio-2"
                         type="radio"
-                        value=""
+                        onChange={ ()=>setAddressType(2) }
                         name="default-radio"
                         className="w-[22px] h-[22px] rounded-full p-1 appearance-none checked:bg-[#ef426f] bg-clip-content border-2 border-[#dbdbdb] cursor-pointer"
                       ></input>
@@ -102,7 +128,9 @@ export default function Payment({ orderDetail }: any) {
                       type="text"
                       className="px-[10px] w-full h-[50px] border rounded-[2px]"
                       name="Recipient"
-                      placeholder="Huyen My"
+                      placeholder="Recipient"
+                      value={state.Recipient}
+                      onChange={handleChange}
                     ></input>
                   </div>
                   <div className="my-5 flex items-center">
@@ -113,8 +141,10 @@ export default function Payment({ orderDetail }: any) {
                     <input
                       type="text"
                       className="px-[10px] w-[256px] h-[50px] border rounded-[2px]"
-                      name="Zipcode"
+                      name="ZipCode"
                       placeholder="Zip code"
+                      value={state.ZipCode}
+                      onChange={handleChange}
                     ></input>
                     {/* <button className="w-[200px] h-[50px] border border-[#757575] text-[#757575]">
                       Address search
@@ -125,8 +155,10 @@ export default function Payment({ orderDetail }: any) {
                     <input
                       type="text"
                       className="px-[10px] w-full h-[50px] border rounded-[2px]"
-                      name="Basic address"
+                      name="BasicAddress"
                       placeholder="Basic address"
+                      value={state.BasicAddress}
+                      onChange={handleChange}
                     ></input>
                   </div>
                   <div className="my-5 flex items-center">
@@ -134,8 +166,10 @@ export default function Payment({ orderDetail }: any) {
                     <input
                       type="text"
                       className="px-[10px] w-full h-[50px] border rounded-[2px]"
-                      name="Opt address"
+                      name="DetailAddress"
                       placeholder="Remaining address (can be entered optionally)"
+                      value={state.DetailAddress}
+                      onChange={handleChange}
                     ></input>
                   </div>
                   <div className="my-5 flex items-center">
@@ -144,7 +178,7 @@ export default function Payment({ orderDetail }: any) {
                       <span className="text-[#ef426f]">*</span>
                     </p>
                     <div className="w-full flex items-center justify-between">
-                      <Dropdown
+                      {/* <Dropdown
                         options={[
                           { id: "010", name: "010" },
                           { id: "011", name: "011" },
@@ -160,11 +194,13 @@ export default function Payment({ orderDetail }: any) {
                         className="px-[10px] h-[50px] border rounded-[2px] basis-[290px] shrink-0"
                         name="tel2"
                       ></input>
-                      <span className="block w-[4px] h-[1px] bg-black"></span>
+                      <span className="block w-[4px] h-[1px] bg-black"></span> */}
                       <input
                         type="text"
                         className="px-[10px] h-[50px] border rounded-[2px] basis-[290px] shrink-0"
-                        name="tel3"
+                        name="RecipientPhone"
+                        value={state.RecipientPhone}
+                        onChange={handleChange}
                       ></input>
                     </div>
                   </div>
@@ -174,18 +210,20 @@ export default function Payment({ orderDetail }: any) {
                       <span className="text-[#ef426f]">*</span>
                     </p>
                     <div className="w-full flex items-center justify-center">
-                      <input
+                      {/* <input
                         type="text"
                         className="px-[10px] w-full h-[50px] border rounded-[2px]"
                         name="Recipient"
                         placeholder=""
                       ></input>
-                      <span className="mx-[10px]">@</span>
+                      <span className="mx-[10px]">@</span> */}
                       <input
                         type="text"
                         className="px-[10px] w-full h-[50px] border rounded-[2px]"
-                        name="Recipient"
-                        placeholder=""
+                        name="RecipientEmail"
+                        placeholder="Email"
+                        value={state.RecipientEmail}
+                        onChange={handleChange}
                       ></input>
                     </div>
                   </div>

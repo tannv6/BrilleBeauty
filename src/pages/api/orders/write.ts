@@ -23,29 +23,14 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     const [fields] = await form.parse(req);
     const session: any = await getSession({ req });
     if (session?.user?.id) {
-      const {
-        TotalAmount,
-        OrderPhone,
-        ProvinceID,
-        DistrictID,
-        CommuneID,
-        CountryID,
-        OrderAddress,
-        CartList,
-      } = fields;
+      const { TotalAmount, CartList } = fields;
       const connect = await connectDB();
       const OrdersCode = generateOrderId();
       const query = `insert into orders SET 
                     OrdersCode='${OrdersCode}',
                     CustomerID='${session?.user?.id}',
                     TotalAmount='${TotalAmount}',
-                    OrderPhone='${OrderPhone}',
-                    ProvinceID='${ProvinceID}',
-                    DistrictID='${DistrictID}',
-                    CommuneID='${CommuneID}',
-                    CountryID='${CountryID}',
                     StatusID = 1,
-                    OrderAddress='${OrderAddress}',
                     CreatedAt= now();`;
 
       const [results] = await connect.execute(query);
@@ -56,20 +41,44 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
         for (let index = 0; index < list.length; index++) {
           const element = list[index];
           const sql = `select * from cart where CartID = '${element}'`;
-          
+
           const [result]: any = await connect.execute(sql);
           const cart = result[0];
+          let InitPrice = 0;
+          let SalePrice = 0;
+          if (cart?.PoID) {
+            const [result1]: any = await connect.execute(
+              `select * from product_options where PoID = '${cart?.PoID}'`
+            );
+            const detail = result1[0];
+            InitPrice = detail?.PoInitPrice;
+            SalePrice = detail?.PoSellPrice;
+          } else if (cart?.ProductID) {
+            const [result1]: any = await connect.execute(
+              `select * from products where ProductID = '${cart?.ProductID}'`
+            );
+            const detail = result1[0];
+            InitPrice = detail?.InitPrice;
+            SalePrice = detail?.SellPrice;
+          } else if (cart?.ComboID) {
+            const [result1]: any = await connect.execute(
+              `select * from combo where ComboID = '${cart?.ComboID}'`
+            );
+            const detail = result1[0];
+            InitPrice = detail?.InitPrice;
+            SalePrice = detail?.SellPrice;
+          }
           const sql1 = `insert into orderdetails set 
                         OrderID='${lastInsertedId}',
                         ProductID=${cart?.ProductID},
                         ComboID=${cart?.ComboID},
                         Quantity='${cart?.Quantity}',
-                        Subtotal='${1}',
-                        InitPrice='${1}',
-                        SalePrice='${1}',
+                        Subtotal='${SalePrice * (cart?.Quantity || 1)}',
+                        InitPrice='${InitPrice}',
+                        SalePrice='${SalePrice}',
                         OptionID='${cart?.PoID}'
                         `;
-            await connect.execute(sql1);
+          await connect.execute(sql1);
         }
       }
 
