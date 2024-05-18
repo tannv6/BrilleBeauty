@@ -209,6 +209,8 @@ export default function Face({ comboDetail, review, comboID, reply, replyList, c
     ReplyDes: reply?.ReplyDes || "",
   });
 
+  const [isEditing, setIsEditing] = useState(false);
+
   function handleChangeReply(e: any) {
     setReply({ ...replyDetail, [e.target.name]: e.target.value });
     }
@@ -223,12 +225,18 @@ export default function Face({ comboDetail, review, comboID, reply, replyList, c
     for (let [key, value] of Object.entries(updatedReply)) {
         formData.append(key, value);
     }
-    let response;
-        response = await axios.post("/api/review/reply_write", formData);
+    const response = isEditing
+    ? await axios.post("/api/review/reply_update", formData)
+    : await axios.post("/api/review/reply_write", formData);
     if (response.status === 201) {
         alert("Reply Sucess!");
         window.location.reload();
         }
+    }
+
+    function handleEditReply(replyID: any, replyDes : any) {
+      setIsEditing(true);
+      setReply(prev => ({ ...prev,ReplyID: replyID, ReplyDes: replyDes }));
     }
 
   return (
@@ -444,9 +452,12 @@ export default function Face({ comboDetail, review, comboID, reply, replyList, c
                           <div className="flex basis-[20%] items-start justify-end gap-[10px]">
                             {userInfo && userInfo.CustomerID !== null && userInfo.UserName === 'thoai' &&
                               <>
-                              <div
-                                className="flex items-center justify-center w-[100px] h-7 text-[15px] text-[#999999] border rounded"> EDIT
-                              </div>
+                              <button type="button" 
+                                  className="flex items-center justify-center w-[100px] h-7 text-[15px] text-[#999999] border rounded" 
+                                  onClick={() => handleEditReply(e1.ReplyID, e1.ReplyDes)}
+                                >
+                                  EDIT
+                                </button>
                               <button type="button" className="w-[100px] h-7 text-[15px] text-[#999999] border rounded" onClick={() => handleDeleteReply(e1.ReplyID)}>DELETE</button>
                               </>
                             }
@@ -464,6 +475,7 @@ export default function Face({ comboDetail, review, comboID, reply, replyList, c
                             <input 
                                 type="text" 
                                 name="ReplyDes"
+                                value={replyDetail.ReplyDes}
                                 onChange={handleChangeReply}
                                 placeholder="Please enter your reply." 
                                 className="focus:outline-none placeholder:text-lg p-5 pt-3 border rounded-l-[5px] grow resize-none" />
