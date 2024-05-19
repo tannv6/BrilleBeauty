@@ -50,7 +50,7 @@ export const getServerSideProps = async (context: { params: any }) => {
       districtListInit: result2.data.data,
       communeListInit: result3.data.data,
       statusList: result4.data,
-      prdList: orderDetail.data.detail,
+      prdList: orderDetail.data.detailList,
       shippingFormList: result5.data,
       payMethodList: result6.data,
     },
@@ -503,7 +503,7 @@ function OrderWrite({
                     />
                   </Td>
                   <Td>{e.ProductName}</Td>
-                  <Td>{e.detailQuantity}</Td>
+                  <Td>{e.Quantity}</Td>
                   <Td>{e.Subtotal}</Td>
                 </Tr>
               );
