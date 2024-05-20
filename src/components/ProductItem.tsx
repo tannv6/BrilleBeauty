@@ -95,12 +95,12 @@ function ProductItem({ info }: Props) {
           <div className="flex items-center pt-3">
             <div className="flex">
               <i className="block h-[18px] w-[18px] bg-[url('/product_star_ico.png')] mr-2"></i>
-              <span className="mr-1 font-bold">{info?.BrandID}</span>
-              <span className="text-[#999999]">({info?.BrandID})</span>
+              <span className="mr-1 font-bold">{info?.reviewAvg}</span>
+              <span className="text-[#999999]">({info?.reviewCnt})</span>
             </div>
             <div className="flex ml-[31px]">
               <i className="block mt-1 h-[14px] w-[17px] bg-[url('/product_heart_ico.png')] mr-2"></i>
-              <span className="text-[#555555]">{info?.BrandID}</span>
+              <span className="text-[#555555]">{info?.like}</span>
             </div>
           </div>
         </div>

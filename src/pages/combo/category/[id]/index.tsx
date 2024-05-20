@@ -1,8 +1,6 @@
 import Dropdown from "@/components/Dropdown";
 import Layout from "@/components/Layout";
 import React, { useEffect, useState } from "react";
-import ProductItem from "@/components/ProductItem";
-import Pagination from "@/components/Pagi";
 import ComboItem from "@/components/ComboItem";
 import axios from "axios";
 import { useRouter } from "next/router";

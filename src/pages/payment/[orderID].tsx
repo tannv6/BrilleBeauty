@@ -89,7 +89,10 @@ export default function Payment({
     getConfig();
   }, []);
   const [addressType, setAddressType] = useState(1);
+  const [saveDefault, setsaveDefault] = useState(false);
   const [address, setAddress] = useState<any>({
+    ODID: 0,
+    IsDefault: 0,
     ZipCode: customerDetail?.ZipCode,
     Recipient: `${customerDetail?.FirstName} ${customerDetail?.LastName}`,
     BasicAddress: customerDetail?.BasicAddress,
@@ -124,6 +127,8 @@ export default function Payment({
     if (type === 4) {
       setAddressType(type);
       setAddress({
+        ODID: 0,
+        IsDefault: 0,
         ZipCode: "",
         Recipient: "",
         BasicAddress: "",
@@ -134,6 +139,8 @@ export default function Payment({
     } else if (type === 1) {
       setAddressType(type);
       setAddress({
+        ODID: 0,
+        IsDefault: 0,
         ZipCode: customerDetail?.ZipCode,
         Recipient: `${customerDetail?.FirstName} ${customerDetail?.LastName}`,
         BasicAddress: customerDetail?.BasicAddress,
@@ -147,6 +154,8 @@ export default function Payment({
         (e: any) => e.IsDefault == 1
       );
       setAddress({
+        ODID: 0,
+        IsDefault: 0,
         ZipCode: defaultAddress?.ZipCode || "",
         Recipient: `${defaultAddress?.FirstName || ""} ${
           defaultAddress?.LastName || ""
@@ -157,10 +166,12 @@ export default function Payment({
         RecipientEmail: defaultAddress?.Email || "",
       });
     } else if (type === 3) {
-      setAddressType(type);
       setIsOpenAddrList(true);
     } else if (type === 5) {
+      setAddressType(3);
       setAddress({
+        ODID: Number(address?.ODID),
+        IsDefault: Number(address?.IsDefault),
         ZipCode: address?.ZipCode,
         Recipient: `${address?.FirstName} ${address?.LastName}`,
         BasicAddress: address?.BasicAddress,
@@ -282,7 +293,7 @@ export default function Payment({
                         checked={addressType === 3}
                         id="default-radio-3"
                         type="radio"
-                        onChange={() => handleChangeAddressType(3)}
+                        onClick={() => handleChangeAddressType(3)}
                         name="default-radio"
                         className="w-[22px] h-[22px] rounded-full p-1 appearance-none checked:bg-[#ef426f] bg-clip-content border-2 border-[#dbdbdb] cursor-pointer"
                       ></input>
@@ -431,19 +442,25 @@ export default function Payment({
                         className="h-[50px] w-[898px]"
                         placeHolder="Select message (optional) "
                       />
-                      <div className="flex gap-2 items-center mt-5">
-                        <input
-                          className="w-[22px] h-[22px] rounded appearance-none border checked:bg-[url('/checkbox_customer.png')] checked:border-0 cursor-pointer"
-                          type="checkbox"
-                          id="save"
-                        />
-                        <label
-                          htmlFor="save"
-                          className="text-[16px] font-medium text-[#252525] cursor-pointer select-none"
-                        >
-                          Save as default shipping address
-                        </label>
-                      </div>
+                      {address?.ODID && !address?.IsDefault ? (
+                        <div className="flex gap-2 items-center mt-5">
+                          <input
+                            className="w-[22px] h-[22px] rounded appearance-none border checked:bg-[url('/checkbox_customer.png')] checked:border-0 cursor-pointer"
+                            type="checkbox"
+                            id="save"
+                            checked={saveDefault}
+                            onChange={(e) => setsaveDefault(e.target.checked)}
+                          />
+                          <label
+                            htmlFor="save"
+                            className="text-[16px] font-medium text-[#252525] cursor-pointer select-none"
+                          >
+                            Save as default shipping address
+                          </label>
+                        </div>
+                      ) : (
+                        ""
+                      )}
                     </div>
                   </div>
                 </div>

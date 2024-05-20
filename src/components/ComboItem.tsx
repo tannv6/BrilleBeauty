@@ -3,8 +3,43 @@ import { getDiscount } from "@/lib/functions";
 import { CDN_URL } from "@/utils/constants";
 import Image from "next/image";
 import Link from "next/link";
+import { useContext } from "react";
+import { DataDispatchContext, MyContext } from "@/pages/_app";
+import axios from "axios";
 
 export default function ComboItem({ info }: any) {
+  const dispatch: any = useContext(DataDispatchContext);
+
+  const value: any = useContext(MyContext);
+  const handleFavorite = async () => {
+    await axios.post("/api/interactions/write", {
+      ObjectType: "combo",
+      ObjectID: info?.ComboID,
+      InteractionType: "like",
+    });
+  };
+
+  const handleAddCart = async () => {
+    if (!value.isLogin) {
+      alert("Please login!");
+      return;
+    }
+
+    const response = await axios.get("/api/cart/write", {
+      params: { ComboID: info?.ComboID, Quantity: 1 },
+    });
+
+    if (response.status === 201) {
+      alert("Add to cart successfully!");
+      dispatch({
+        type: "UPDATE_CART_COUNT",
+        payload: 1,
+      });
+    } else {
+      alert("Add to cart failed");
+      return;
+    }
+  };
   return (
     <div className="relative group">
       <Link
@@ -53,8 +88,14 @@ export default function ComboItem({ info }: any) {
         </div>
       </Link>
       <div className="absolute hidden top-[108px] left-1/2 translate-x-[-50%] translate-y-[-50%] z-10 gap-x-2 group-hover:flex">
-        <button className="w-[60px] h-[60px] bg-[url('/product_button_heart.png')]"></button>
-        <button className="w-[60px] h-[60px] bg-[url('/product_button_cart.png')]"></button>
+        <button
+          onClick={handleFavorite}
+          className="w-[60px] h-[60px] bg-[url('/product_button_heart.png')]"
+        ></button>
+        <button
+          onClick={handleAddCart}
+          className="w-[60px] h-[60px] bg-[url('/product_button_cart.png')]"
+        ></button>
       </div>
     </div>
   );

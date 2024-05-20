@@ -63,7 +63,22 @@ export default async function handle(
     const query =
       totalQuery +
       ` limit ${(Number(page) - 1) * Number(pageSize)}, ${Number(pageSize)};`;
-    const [result] = await connect.execute(query);
+    let [result]: any = await connect.execute(query);
+    for (let index = 0; index < result.length; index++) {
+      const element = result[index];
+      const [res]: any =
+        await connect.execute(`select count(*) as cnt from interactions 
+            where ObjectType = 'product' and InteractionType = 'like' and ObjectID = '${element.ProductID}'`);
+            const [res1]: any =
+        await connect.execute(`select count(*) as cnt, avg(Start) as avg from review 
+            where ProductID = '${element.ProductID}'`);
+      const like = res[0]?.cnt || 0;
+      const reviewCnt = res1[0]?.cnt || 0;
+      const reviewAvg = (Math.round(res1[0]?.avg * 20) / 20) || 0;
+      element["like"] = like;
+      element["reviewCnt"] = reviewCnt;
+      element["reviewAvg"] = reviewAvg;
+    }
     connect.end();
     return res.status(200).json({
       data: result,

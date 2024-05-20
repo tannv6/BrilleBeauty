@@ -18,6 +18,9 @@ export type Product = {
   IsNew: number;
   PotID: number;
   BrandID: number;
+  like: number;
+  reviewAvg: number;
+  reviewCnt: number;
 };
 
 export type PrdPaging = {

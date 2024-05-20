@@ -8,7 +8,7 @@ export const getOrderByCustomer = async (params: any) => {
   const connect = await connectDB();
   const totalQuery = `select t1.*, sum(t2.Subtotal) as totalPrice from orders t1
                       left join orderdetails t2 on t1.OrderID = t2.OrderID
-                      where t1.DeletedAt is null
+                      where t1.DeletedAt is null and t1.StatusID != 1
                       and t1.CustomerID = '${user?.id}' group by t1.OrderID order by t1.OrderID desc`;
 
   const [resultTotal]: any = await connect.execute(totalQuery);
@@ -41,8 +41,10 @@ export const getOrderByCustomer = async (params: any) => {
               ProductImage: detail?.ProductImage,
               SalePrice: e.SalePrice,
               ProductName: detail?.ProductName,
-              Quantity: e.detailQuantity,
+              Quantity: e.Quantity,
               Subtotal: e.Subtotal,
+              ProductID: detail.ProductID,
+              type: "product"
             });
           } else if (e?.ProductID) {
             const [result1]: any = await connect.execute(
@@ -53,8 +55,10 @@ export const getOrderByCustomer = async (params: any) => {
               ProductImage: detail?.ProductImage,
               SalePrice: e.SalePrice,
               ProductName: detail?.ProductName,
-              Quantity: e.detailQuantity,
+              Quantity: e.Quantity,
               Subtotal: e.Subtotal,
+              ProductID: detail.ProductID,
+              type: "product"
             });
           } else if (e?.ComboID) {
             const [result1]: any = await connect.execute(
@@ -65,8 +69,10 @@ export const getOrderByCustomer = async (params: any) => {
               ProductImage: detail?.ComboImage,
               SalePrice: e.SalePrice,
               ProductName: detail?.ComboName,
-              Quantity: e.detailQuantity,
+              Quantity: e.Quantity,
               Subtotal: e.Subtotal,
+              ComboID: detail.ComboID,
+              type: "combo"
             });
           }
         }

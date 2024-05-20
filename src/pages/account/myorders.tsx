@@ -72,7 +72,7 @@ export default function MyOrders({ response, ...props }: any) {
                             <tr key={i} className="border-b">
                               <td className="py-5">
                                 <Link
-                                  href={`/product_detail/${e.ProductID}`}
+                                  href={e.type === "combo" ? `/combo/view/${e.ComboID}` : `/product_detail/${e.ProductID}`}
                                   className="flex items-center gap-[25px]"
                                 >
                                   <Image

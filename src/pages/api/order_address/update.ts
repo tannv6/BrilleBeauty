@@ -14,7 +14,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     const form = formidable({});
     const [fields] = await form.parse(req);
 
-    const {
+    const {ODID,
       FirstName,
       LastName,
       PhoneNumber,
@@ -34,8 +34,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     if (session?.user?.id) {
       const connect = await connectDB();
 
-      const query = `insert into orderaddress SET 
-        CustomerID='${session?.user?.id}',
+      const query = `update orderaddress SET
         FirstName='${FirstName}',
         LastName='${LastName}',
         PhoneNumber='${PhoneNumber}',
@@ -44,7 +43,8 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
         DetailAddress='${DetailAddress}',
         ComName='${ComName}',
         ZipCode='${ZipCode}',
-        CreatedAt= now();`;
+        UpdatedAt= now()
+        where ODID = '${ODID}';`;
 
       const [results] = await connect.execute(query);
       connect.end();

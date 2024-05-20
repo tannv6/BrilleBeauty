@@ -8,29 +8,60 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 export const getServerSideProps = (async (context: any) => {
+  const { params } = context;
+  const { ODID } = params;
+  const addressDetail = await axios.get(
+    `http://localhost:3000/api/order_address/detail`,
+    {
+      params: { ODID },
+    }
+  );
   const result1 = await axios.get(`http://localhost:3000/api/adress/countries`);
+  const result2 = await axios.get(`http://localhost:3000/api/adress/province`, {
+    params: { CountryID: addressDetail.data?.CountryID },
+  });
+  const result3 = await axios.get(`http://localhost:3000/api/adress/district`, {
+    params: { ProvinceID: addressDetail.data?.ProvinceID },
+  });
+  const result4 = await axios.get(`http://localhost:3000/api/adress/commune`, {
+    params: { DistrictID: addressDetail.data?.DistrictID },
+  });
   return {
     props: {
+      addressDetail: addressDetail.data,
       countryList: result1.data.data,
+      provinceListInit: result2.data.data,
+      districtListInit: result3.data.data,
+      communeListInit: result4.data.data,
     },
   };
 }) satisfies GetServerSideProps<{ countryList: any }>;
-export default function MyAddresses({ countryList, isNew }: any) {
+export default function MyAddresses({
+  addressDetail,
+  countryList,
+  isNew,
+  provinceListInit,
+  districtListInit,
+  communeListInit,
+}: any) {
   const router = useRouter();
-  const [provinceList, setProvinceList] = useState([]);
-  const [districtList, setDistrictList] = useState([]);
-  const [communeList, setCommuneList] = useState([]);
+  const [provinceList, setProvinceList] = useState(provinceListInit || []);
+  const [districtList, setDistrictList] = useState(districtListInit || []);
+  const [communeList, setCommuneList] = useState(communeListInit || []);
   const [address, setAddress] = useState({
-    FirstName: "",
-    LastName: "",
-    PhoneNumber: "",
-    CountryID: "",
-    ProvinceID: "",
-    DistrictID: "",
-    CommuneID: "",
-    DetailAddress: "",
-    ComName: "",
-    ZipCode: "",
+    ODID: addressDetail?.ODID || "",
+    FirstName: addressDetail?.FirstName || "",
+    LastName: addressDetail?.LastName || "",
+    PhoneNumber: addressDetail?.PhoneNumber || "",
+    CountryID: addressDetail?.CountryID || "",
+    ProvinceID: addressDetail?.ProvinceID || "",
+    DistrictID: addressDetail?.DistrictID || "",
+    CommuneID: addressDetail?.CommuneID || "",
+    BasicAddress: addressDetail?.BasicAddress || "",
+    DetailAddress: addressDetail?.DetailAddress || "",
+    Email: addressDetail?.Email || "",
+    ComName: addressDetail?.ComName || "",
+    ZipCode: addressDetail?.ZipCode || "",
   });
   const {
     FirstName,
@@ -43,6 +74,8 @@ export default function MyAddresses({ countryList, isNew }: any) {
     DetailAddress,
     ComName,
     ZipCode,
+    Email,
+    BasicAddress,
   } = address;
   function handleChange(e: any) {
     if (e.target.files) {
@@ -90,6 +123,14 @@ export default function MyAddresses({ countryList, isNew }: any) {
       router.push("/account/myaddresses");
     }
   }
+  const handleSetDefault = async () => {
+    const res = await axios.post("/api/order_address/set_default", {
+      ODID: addressDetail?.ODID || "",
+    });
+    if (res.data.result === "OK") {
+      alert("This address will become defaut!");
+    }
+  };
   return (
     <Layout>
       <div id="main">
@@ -98,9 +139,17 @@ export default function MyAddresses({ countryList, isNew }: any) {
           <div className="flex flex-row gap-[60px]">
             <MypageNav></MypageNav>
             <form onSubmit={handleSubmit} className="grow mt-[17px]">
-              <p className="text-2xl pb-4 border-b border-black">
-                My Addresses
-              </p>
+              <div className="flex justify-between items-center pb-4 border-b border-black">
+                <p className="text-2xl">
+                  My Addresses
+                </p>
+                {addressDetail?.ODID && <button
+                  onClick={handleSetDefault}
+                  className="w-[180px] h-[40px] rounded bg-[#f04b76] text-lg text-[#fff]"
+                >
+                  Set as default
+                </button>}
+              </div>
               <table className="table-auto min-w-full">
                 <colgroup>
                   <col width="25%" />
@@ -150,6 +199,19 @@ export default function MyAddresses({ countryList, isNew }: any) {
                           ></input>
                         </div>
                         <div className="py-5 pl-5 flex items-center justify-between border-b">
+                          <p>
+                            Email
+                            <span className="text-[#ef426f]">*</span>
+                          </p>
+                          <input
+                            type="text"
+                            className="px-[10px] w-[450px] h-[50px] border rounded-[2px]"
+                            name="Email"
+                            value={Email}
+                            onChange={handleChange}
+                          ></input>
+                        </div>
+                        <div className="py-5 pl-5 flex items-center justify-between border-b">
                           <p>Company Name</p>
                           <input
                             type="text"
@@ -169,7 +231,7 @@ export default function MyAddresses({ countryList, isNew }: any) {
                             onChange={handleChange}
                           ></input>
                         </div>
-                        <div className="py-5 pl-5 flex items-center justify-between border-b">
+                        {/* <div className="py-5 pl-5 flex items-center justify-between border-b">
                           <p>Country</p>
                           <Dropdown
                             containerClassName="w-[450px] h-[50px]"
@@ -246,6 +308,16 @@ export default function MyAddresses({ countryList, isNew }: any) {
                             activeItem={Number(CommuneID)}
                             placeHolder="--Village--"
                           />
+                        </div> */}
+                        <div className="py-5 pl-5 flex items-center justify-between border-b">
+                          <p>Basic Address</p>
+                          <input
+                            type="text"
+                            className="px-[10px] w-[450px] h-[50px] border rounded-[2px]"
+                            name="BasicAddress"
+                            value={BasicAddress}
+                            onChange={handleChange}
+                          ></input>
                         </div>
                         <div className="py-5 pl-5 flex items-center justify-between border-b">
                           <p>Detail Address</p>
@@ -273,7 +345,7 @@ export default function MyAddresses({ countryList, isNew }: any) {
                   type="submit"
                   className="w-[220px] h-[60px] rounded bg-[#f04b76] text-lg text-[#fff]"
                 >
-                  Add
+                  {isNew ? "Add" : "Save"}
                 </button>
               </div>
             </form>

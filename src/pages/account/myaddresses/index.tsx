@@ -87,7 +87,7 @@ export default function MyAddresses({ data, page, total, totalPage }: any) {
                           {moment(e.CreatedAt).format("yyyy-MM-DD")}
                         </td>
                         <td className="py-3 px-4 text-center">
-                          <Link href={`/`} className="flex justify-center">
+                          <Link href={`/account/myaddresses/write/${e.ODID}`} className="flex justify-center">
                             <Image src={abc} alt={""} width={30} height={30} />
                           </Link>
                         </td>

@@ -5,7 +5,6 @@ import Image from "next/image";
 import Pagination from "@/components/Pagi";
 import Link from "next/link";
 import SubNav from "@/components/SubNav";
-import ProductItem from "@/components/ReviewItem";
 import { parse } from "cookie";
 import { getWebSetting } from "@/lib/functions";
 import axios from "axios";

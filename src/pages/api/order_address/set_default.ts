@@ -14,39 +14,20 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     const form = formidable({});
     const [fields] = await form.parse(req);
 
-    const {
-      FirstName,
-      LastName,
-      PhoneNumber,
-      CountryID,
-      ProvinceID,
-      DistrictID,
-      CommuneID,
-      DetailAddress,
-      ComName,
-      ZipCode,
-      Email,
-      BasicAddress,
-    } = fields;
+    const { ODID } = fields;
 
     const session: any = await getSession({ req });
 
     if (session?.user?.id) {
       const connect = await connectDB();
+        await connect.execute(`update orderaddress SET 
+        IsDefault=0
+        where 1 = 1;`);
 
-      const query = `insert into orderaddress SET 
-        CustomerID='${session?.user?.id}',
-        FirstName='${FirstName}',
-        LastName='${LastName}',
-        PhoneNumber='${PhoneNumber}',
-        Email='${Email}',
-        BasicAddress='${BasicAddress}',
-        DetailAddress='${DetailAddress}',
-        ComName='${ComName}',
-        ZipCode='${ZipCode}',
-        CreatedAt= now();`;
-
-      const [results] = await connect.execute(query);
+      await connect.execute(`update orderaddress SET 
+      IsDefault=1,
+      UpdatedAt= now()
+      where ODID = '${ODID}';`);
       connect.end();
 
       return res.status(201).json({ result: "OK" });
