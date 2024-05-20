@@ -1,7 +1,7 @@
 import connectDB from "@/app/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import formidable from "formidable";
-
+import { saveFile } from "@/utils/function";
 export const config = {
   api: {
     bodyParser: false,
@@ -13,25 +13,21 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     const form = formidable({});
     const [fields, files] = await form.parse(req);
 
-
-    const {
-        ReviewID,
-        ProductID,
-        ComboID,
-        ReplyDes
-    } = fields;
+    const image = files.ImageUpload?.[0];
 
     const connect = await connectDB();
+    let CategoryImage = "";
 
-    let query = `INSERT INTO review_reply SET 
-    ReviewID = '${ReviewID}',
-    ProductID = ${ProductID ? "'" + ProductID + "'" : "''"},
-    ComboID = ${ComboID ? "'" + ComboID + "'" : "''"},
-    ReplyDes='${ReplyDes}',
-    CreatedAt=NOW();`;
+    if (image) {
+      CategoryImage = (await saveFile(image, "/banner")).ufile;
+    }
 
-    await connect.execute(query);
+    const query = `insert into categories SET 
+    CategoryImage=${CategoryImage ? `'${CategoryImage}'` : "CategoryImage"};`;
+
+    const [results] = await connect.execute(query);
     connect.end();
+
     return res.status(201).json({ result: "OK" });
   } catch (err) {
     return res.status(500).json({ error: err });

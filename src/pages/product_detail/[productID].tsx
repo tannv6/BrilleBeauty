@@ -97,8 +97,6 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
   
   
   const { data, total, currentPage, pageSize, totalPage } = review;
-
-  console.log(productRelate);
   
 
   const handleChangePage = (page: number) => {
@@ -271,7 +269,7 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
   };
 
   const handleDeleteReply = async (id: number) => {
-    if (confirm("Are you sure delete this review?")) {
+    if (confirm("Are you sure delete this reply?")) {
       await axios.put(`/api/review/reply_delete`, { ReplyID: id });
       window.location.reload();
     }
@@ -293,11 +291,13 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
     ReplyID: any;
     ReviewID: any;
     ProductID: any;
+    ComboID: any;
     ReplyDes: any;
   }>({
     ReplyID: reply?.ReplyID,
     ReviewID: reply?.ReviewID || "",
     ProductID: reply?.ProductID || "",
+    ComboID: reply?.ComboID || "",
     ReplyDes: reply?.ReplyDes || "",
   });
 
@@ -305,22 +305,30 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
     setReply({ ...replyDetail, [e.target.name]: e.target.value });
     }
 
+  const [isEditing, setIsEditing] = useState(false);
+
   async function handleSubmitReply(event: FormEvent<HTMLFormElement>, reviewID: any){
     event.preventDefault();
 
-    const updatedReply = { ...replyDetail, ProductID: product.ProductID, ReviewID: reviewID};
+    const updatedReply = { ...replyDetail, ProductID: product.ProductID, ComboID: '', ReviewID: reviewID};
 
     let formData = new FormData();
 
     for (let [key, value] of Object.entries(updatedReply)) {
         formData.append(key, value);
     }
-    let response;
-        response = await axios.post("/api/review/reply_write", formData);
+    const response = isEditing
+    ? await axios.post("/api/review/reply_update", formData)
+    : await axios.post("/api/review/reply_write", formData);
     if (response.status === 201) {
         alert("Reply Sucess!");
         window.location.reload();
         }
+    }
+
+    function handleEditReply(replyID: any, replyDes : any) {
+      setIsEditing(true);
+      setReply(prev => ({ ...prev,ReplyID: replyID, ReplyDes: replyDes }));
     }
 
     const [numSlides, setNumSlides] = useState(0);
@@ -507,7 +515,7 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                     {replyList.data
                     .filter((e1: any) => e1.ReviewID === e.ReviewID) 
                     .map((e1: any, key1:any) => (
-                      <div className="min-h-[104px] bg-[#fafafa] border-t border-b border-b-[#eeeeee] pl-5 my-8" key={key1}>
+                      <div className="min-h-[104px] bg-[#fafafa] px-5 mb-8" key={key1}>
                         <div className="py-[25px] flex justify-between">
                           <p className="font-bold">
                             Administrator Reply
@@ -517,13 +525,19 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                           </p>
                           <div className="flex basis-[20%] items-start justify-end gap-[10px]">
                             {userInfo && userInfo.CustomerID !== null && userInfo.UserName === 'thoai' &&
-                              <><Link href={`/write_review/${e.ReviewID}?ProductID=${product.ProductID}`}
-                                className="flex items-center justify-center w-[100px] h-7 text-[15px] text-[#999999] border rounded"> EDIT
-                              </Link><button type="button" className="w-[100px] h-7 text-[15px] text-[#999999] border rounded" onClick={() => handleDeleteReply(e.ReplyID)}>DELETE</button></>
+                              <>
+                              <button type="button" 
+                                  className="flex items-center justify-center w-[100px] h-7 text-[15px] text-[#999999] border rounded" 
+                                  onClick={() => handleEditReply(e1.ReplyID, e1.ReplyDes)}
+                                >
+                                  EDIT
+                                </button>
+                              <button type="button" className="w-[100px] h-7 text-[15px] text-[#999999] border rounded" onClick={() => handleDeleteReply(e1.ReplyID)}>DELETE</button>
+                              </>
                             }
                           </div>
                         </div>
-                          <p className="mt-2 text-[15px] pb-[15px]">
+                          <p className="mt-2 text-[15px] pb-[15px] pr-[100px]">
                             {e1.ReplyDes}
                           </p>
                       </div>
@@ -535,6 +549,7 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                             <input 
                                 type="text" 
                                 name="ReplyDes"
+                                value={replyDetail.ReplyDes}
                                 onChange={handleChangeReply}
                                 placeholder="Please enter your reply." 
                                 className="focus:outline-none placeholder:text-lg p-5 pt-3 border rounded-l-[5px] grow resize-none" />

@@ -54,13 +54,13 @@ export default function ReviewDetail({reviewDetail, reply, ...props } : any) {
   return (
       <Layout {...props}>
         <div id="main">
-          <SubNav title1="Product Review"></SubNav>
+          <SubNav title1={reviewDetail.ProductID ? "PRODUCT REVIEW" : "COMBO REVIEW"}></SubNav>
           <div className="inner-container mt-[50px] mb-[180px]">
-            <div className="text-[22px] font-bold mb-10">PRODUCT REVIEW</div>
+            <div className="text-[22px] font-bold mb-10">{reviewDetail.ProductID ? "PRODUCT REVIEW" : "COMBO REVIEW"}</div>
             <div className="border-[6px] border-[#e8e8e8] flex gap-5 px-5 py-[15px]">
               <div className="">
                 <Image
-                  src={`${CDN_URL}${reviewDetail.ProductImage}`}
+                   src={`${CDN_URL}${reviewDetail.ProductImage ? reviewDetail.ProductImage : reviewDetail.ComboImage}`}
                   alt=""
                   width="90"
                   height="90"
@@ -68,12 +68,16 @@ export default function ReviewDetail({reviewDetail, reply, ...props } : any) {
               </div>
               <div className="flex flex-col grow justify-end mt-5">
                 <p className="font-bold">
-                    {reviewDetail.ProductName}
+                  {reviewDetail.ProductName ? (
+                    <>{reviewDetail.ProductName}</>
+                  ) : (
+                    <>{reviewDetail.ComboName}</>
+                  )}
                 </p>
-                <p className="text-[#ef426f] font-bold mt-1 mb-2">A${reviewDetail.InitPrice}</p>
+                <p className="text-[#ef426f] font-bold mt-1 mb-2">A${reviewDetail.ProductID ? reviewDetail.InitPriceProduct : reviewDetail.InitPrice}</p>
                 <hr />
                 <Link
-                  href={`/product_detail/${reviewDetail.ProductID}`}
+                  href={reviewDetail.ProductID ? `/product_detail/${reviewDetail.ProductID}` : `/combo/view/${reviewDetail.ComboID}`}
                   className="flex items-center justify-center w-[150px] h-[30px] text-[15px] bg-[#84868b] rounded-md text-[#ffffff] mt-3"
                 >
                   View product details

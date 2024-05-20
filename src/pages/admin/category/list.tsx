@@ -13,6 +13,8 @@ import { pageSize } from "@/lib/constants";
 import Pagingnation from "../components/Pagingnation";
 import { useRouter } from "next/router";
 import { getApiUrl } from "@/lib/functions";
+import Image from "next/image";
+const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 
 export const getServerSideProps = (async (context: any) => {
   const { page } = context.query;
@@ -58,12 +60,13 @@ function List({ response }: any) {
         </Link>
       </div>
       <div className="flex items-center justify-center">
-          <Table colWidths={["10%", "40%", "20%", "20%", "10%"]}>
+          <Table colWidths={["10%", "30%", "10%", "20%", "10%", "10%"]}>
             <Thead>
               <Tr>
                 <Th>ID</Th>
                 <Th>Category Name</Th>
                 <Th>Total Products</Th>
+                <Th>Category Image</Th>
                 <Th>Created time</Th>
                 <Th center>Action</Th>
               </Tr>
@@ -75,6 +78,14 @@ function List({ response }: any) {
                     <Td>{total - (currentPage - 1) * pageSize - i}</Td>
                     <Td>{e.CategoryName}</Td>
                     <Td>{e.totalProducts}</Td>
+                    <Td center>
+                      <Image
+                        src={`${CDN_URL}/${e.CategoryImage}`}
+                        alt=""
+                        width={100}
+                        height={100}
+                      />
+                    </Td>
                     <Td>
                       {moment(e.CreatedAt).format("yyyy.MM.DD HH:mm:ss")}
                     </Td>

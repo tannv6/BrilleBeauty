@@ -5,6 +5,9 @@ import "./write.css";
 import { useRouter } from "next/router";
 import NotFound from "../../components/NotFound";
 import Link from "next/link";
+import { SRLWrapper } from "simple-react-lightbox";
+import Image from "next/image";
+const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 export async function getServerSideProps(context: { params: any }) {
   const { params } = context;
   const { idx } = params;
@@ -22,6 +25,21 @@ function Write({ data, idx }: any) {
   const [categories, setCategories] = useState(data || {});
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const router = useRouter();
+  
+
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [category, setCategory] = useState<{
+    CategoryID: any,
+    CategoryImage: any;
+  }>({
+    CategoryID: data?.CategoryID || "",
+    CategoryImage: data?.CategoryImage || "",
+  });
+
+  function handleChangeImg(e: any) {
+    setCategory({ ...category, [e.target.name]: e.target.files[0] });
+  }
 
   const handleChange = (
     e: any,
@@ -94,6 +112,21 @@ function Write({ data, idx }: any) {
       data,
     });
     window.location.reload();
+    if (category.CategoryImage) {
+      let formData = new FormData();
+      formData.append('ImageUpload', category.CategoryImage);
+
+      for (let [key, value] of Object.entries(category)) {
+        formData.append(key, value);
+      }
+  
+          let response;
+            response = await axios.post("/api/category/update_img", formData);
+  
+        if (response.status === 201) {
+          window.location.reload();
+        } 
+    }
   };
 
   const handleAddCategory = async (level: number, parentId?: number) => {
@@ -149,6 +182,10 @@ function Write({ data, idx }: any) {
     }
     setCategories(cateNew);
   };
+
+  const src = category.CategoryImage instanceof Blob
+  ? URL.createObjectURL(category.CategoryImage)
+  : `${CDN_URL}/${category.CategoryImage}`;
 
   return (
     <AdminLayout>
@@ -250,6 +287,49 @@ function Write({ data, idx }: any) {
           </button>
         </div>
       )}
+
+      
+      <div className="relative">
+        <table
+          style={{ tableLayout: "fixed" }}
+          className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+        >
+          <tbody>
+            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+              <th
+                scope="row"
+                className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
+              >
+                Category Image
+              </th>
+              <td className="px-6 py-2" colSpan={3}>
+                <input
+                  name="CategoryImage"
+                  onChange={handleChangeImg}
+                  className="relative m-0 block w-full min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
+                  type="file"
+                />
+                  <SRLWrapper
+                    options={{
+                      thumbnails: {
+                        showThumbnails: false,
+                      },
+                    }}
+                  >
+                    <Image
+                      className="mt-2"
+                      src={src}
+                      alt={""}
+                      width={100}
+                      height={100}
+                    />
+                  </SRLWrapper>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
       <div className="flex justify-center mt-5 gap-2">
         <Link
           href="/admin/category/list"

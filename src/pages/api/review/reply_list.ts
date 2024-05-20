@@ -7,7 +7,7 @@ export default async function handle(
 ) {
   try {
     const connect = await connectDB();
-    const query = `select * from review_reply`;
+    const query = `select * from review_reply where DeletedAt is NULL`;
     const [result] = await connect.execute(query);
     connect.end();
     return res.status(200).json({ data: result });

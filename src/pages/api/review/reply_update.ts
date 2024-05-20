@@ -15,6 +15,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
 
 
     const {
+        ReplyID,
         ReviewID,
         ProductID,
         ComboID,
@@ -23,12 +24,13 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
 
     const connect = await connectDB();
 
-    let query = `INSERT INTO review_reply SET 
+    let query = `UPDATE review_reply SET 
     ReviewID = '${ReviewID}',
     ProductID = ${ProductID ? "'" + ProductID + "'" : "''"},
     ComboID = ${ComboID ? "'" + ComboID + "'" : "''"},
     ReplyDes='${ReplyDes}',
-    CreatedAt=NOW();`;
+    UpdatedAt=NOW()
+    WHERE ReplyID = '${ReplyID}' ;`;
 
     await connect.execute(query);
     connect.end();
