@@ -63,7 +63,8 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     ProductImage = ${ProductImage ? `'${ProductImage}'` : "ProductImage"},
     CategoryID = ${CategoryID ? `'${CategoryID}'` : "CategoryID"},
     PotID = ${PotID?.[0] ? `'${PotID}'` : "PotID"},
-    BrandID = ${BrandID?.[0] ? `'${BrandID}'` : "BrandID"}`;
+    BrandID = ${BrandID?.[0] ? `'${BrandID}'` : "BrandID"},
+    CreatedAt = now()`;
 
     const [results] = await connect.execute(query);
     const lastInsertedId = (results as any).insertId;

@@ -26,11 +26,52 @@ export const getOrderByCustomer = async (params: any) => {
   if (Array.isArray(result)) {
     for (let index = 0; index < result.length; index++) {
       const element: any = result[index];
-      const queryProduct = `select t1.*, t2.ProductName, t2.ProductImage, t3.PoName, t3.PoID from orderdetails t1 
-      left join products t2 on t1.ProductID = t2.ProductID
-      left join product_options t3 on t1.OptionID = t3.PoID;`;
-      const [result1] = await connect.execute(queryProduct);
-      element["products"] = result1;
+      let detailList = [];
+      const queryDetails = `select * from orderdetails where OrderID = '${element?.OrderID}';`;
+      const [result2]: any = await connect.execute(queryDetails);
+      if (Array.isArray(result2) && result2.length > 0) {
+        for (let index = 0; index < result2.length; index++) {
+          const e = result2[index];
+          if (e?.PoID) {
+            const [result1]: any = await connect.execute(
+              `select t1.SalePrice, t2.ProductName, t2.ProductImage from product_options t1 join products t2 on t1.ProductID = t2.ProductID where t1.PoID = '${e?.PoID}'`
+            );
+            const detail = result1[0];
+            detailList.push({
+              ProductImage: detail?.ProductImage,
+              SalePrice: e.SalePrice,
+              ProductName: detail?.ProductName,
+              Quantity: e.detailQuantity,
+              Subtotal: e.Subtotal,
+            });
+          } else if (e?.ProductID) {
+            const [result1]: any = await connect.execute(
+              `select * from products where ProductID = '${e?.ProductID}'`
+            );
+            const detail = result1[0];
+            detailList.push({
+              ProductImage: detail?.ProductImage,
+              SalePrice: e.SalePrice,
+              ProductName: detail?.ProductName,
+              Quantity: e.detailQuantity,
+              Subtotal: e.Subtotal,
+            });
+          } else if (e?.ComboID) {
+            const [result1]: any = await connect.execute(
+              `select * from combo where ComboID = '${e?.ComboID}'`
+            );
+            const detail = result1[0];
+            detailList.push({
+              ProductImage: detail?.ComboImage,
+              SalePrice: e.SalePrice,
+              ProductName: detail?.ComboName,
+              Quantity: e.detailQuantity,
+              Subtotal: e.Subtotal,
+            });
+          }
+        }
+      }
+      element["products"] = detailList;
       orders.push(element);
     }
   }

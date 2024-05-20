@@ -19,7 +19,7 @@ export default async function handle(
     let detailList = [];
     if (Array.isArray(result) && result.length > 0) {
       const order: any = result[0];
-      const queryDetails = `select *, s1.Quantity as detailQuantity from orderdetails s1 inner join products s2 on s1.ProductID = s2.ProductID
+      const queryDetails = `select *, s1.Quantity as detailQuantity from orderdetails s1 left join products s2 on s1.ProductID = s2.ProductID
       where s1.OrderID = '${order.OrderID}'`;
 
       const [result2]: any = await connect.execute(queryDetails);

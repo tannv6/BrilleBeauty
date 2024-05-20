@@ -4,8 +4,13 @@ import axios from "axios";
 import { getSession } from "next-auth/react";
 import Image from "next/image";
 import { CDN_URL } from "@/utils/constants";
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Dropdown from "@/components/Dropdown";
+import {
+  PayPalButtons,
+  PayPalButtonsComponentProps,
+  PayPalScriptProvider,
+} from "@paypal/react-paypal-js";
 import { PayPalButton } from "react-paypal-button-v2";
 import Modal from "../admin/components/Modal";
 export const getServerSideProps = async (context: {
@@ -49,6 +54,23 @@ export const getServerSideProps = async (context: {
     },
   };
 };
+const CustomerNoteList = [
+  {
+    id: "0",
+    name: "Not have note",
+    value: "",
+  },
+  {
+    id: "1",
+    name: "Please contact us in advance before shipping.",
+    value: "Please contact us in advance before shipping.",
+  },
+  {
+    id: "2",
+    name: "If you are absent, please leave it at the security office.",
+    value: "If you are absent, please leave it at the security office.",
+  },
+];
 export default function Payment({
   orderDetail,
   customerDetail,
@@ -56,33 +78,17 @@ export default function Payment({
   payMethodList,
   addressList,
 }: any) {
-  const [sdk, setSdk] = useState(false);
-  const [payMethod, setPayMethod] = useState("cod");
+  const [sdk, setSdk] = useState("");
+  const [payMethod, setPayMethod] = useState(payMethodList?.[0] || {});
   const [deliveryType, setdeliveryType] = useState(shippingFormList?.[0] || {});
   const getConfig = async () => {
     const res = await axios.get("/api/payment/config");
-    const script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src = `https://www.paypal.com/sdk/js?client-id=${res.data.CLIENT_ID}`;
-    script.async = true;
-    script.onload = () => {
-      setSdk(true);
-    };
-    document.body.append(script);
+    setSdk(res.data.CLIENT_ID);
   };
   useEffect(() => {
     getConfig();
   }, []);
   const [addressType, setAddressType] = useState(1);
-  const [state, setState] = useState<any>({
-    ...(orderDetail?.order || {}),
-    ZipCode: customerDetail?.ZipCode,
-    Recipient: `${customerDetail?.FirstName} ${customerDetail?.LastName}`,
-    BasicAddress: customerDetail?.BasicAddress,
-    DetailAddress: customerDetail?.DetailAddress,
-    RecipientPhone: customerDetail?.CustomerPhone,
-    RecipientEmail: customerDetail?.Email,
-  });
   const [address, setAddress] = useState<any>({
     ZipCode: customerDetail?.ZipCode,
     Recipient: `${customerDetail?.FirstName} ${customerDetail?.LastName}`,
@@ -113,9 +119,7 @@ export default function Payment({
     );
   };
   const [isOpenAddrList, setIsOpenAddrList] = useState(false);
-  const defaultAddress = addressList?.data?.find(
-    (e: any) => e.IsDefault == 1
-  );
+  const defaultAddress = addressList?.data?.find((e: any) => e.IsDefault == 1);
   const handleChangeAddressType = (type: any, address?: any) => {
     if (type === 4) {
       setAddressType(type);
@@ -143,12 +147,14 @@ export default function Payment({
         (e: any) => e.IsDefault == 1
       );
       setAddress({
-        ZipCode: defaultAddress?.ZipCode||"",
-        Recipient: `${defaultAddress?.FirstName||""} ${defaultAddress?.LastName||""}`,
-        BasicAddress: defaultAddress?.BasicAddress||"",
-        DetailAddress: defaultAddress?.DetailAddress||"",
-        RecipientPhone: defaultAddress?.PhoneNumber||"",
-        RecipientEmail: defaultAddress?.Email||"",
+        ZipCode: defaultAddress?.ZipCode || "",
+        Recipient: `${defaultAddress?.FirstName || ""} ${
+          defaultAddress?.LastName || ""
+        }`,
+        BasicAddress: defaultAddress?.BasicAddress || "",
+        DetailAddress: defaultAddress?.DetailAddress || "",
+        RecipientPhone: defaultAddress?.PhoneNumber || "",
+        RecipientEmail: defaultAddress?.Email || "",
       });
     } else if (type === 3) {
       setAddressType(type);
@@ -165,6 +171,60 @@ export default function Payment({
       setIsOpenAddrList(false);
     }
   };
+  const handleComplete = async (StatusCode: any) => {
+    const res = await axios.post(`/api/orders/complete`, {
+      DeliveryFee: Number(deliveryType.ShippingFormPrice).toFixed(2),
+      TotalPayment: total,
+      OrdersCode: orderDetail?.order?.OrdersCode,
+      StatusCode,
+      OrderPhone: address.RecipientPhone,
+      OrderEmail: address.RecipientEmail,
+      OrderBasicAddress: address.BasicAddress,
+      OrderDetailAddress: address.DetailAddress,
+      RecieverName: address.Recipient,
+      PayMethodID: payMethod?.PayMethodID,
+      ShippingFormID: deliveryType?.ShippingFormID,
+      CustomerNote: CustomerNoteList.find((e) => e.id === CustomerNote)?.value,
+    });
+    alert("Order successfully!");
+  };
+  const [agree1, setAgree1] = useState(false);
+  const [agree2, setAgree2] = useState(false);
+  const paypalbuttonTransactionProps: any = {
+    disabled: !agree1 || !agree2,
+    style: { layout: "vertical" },
+    createOrder(data: any, actions: any) {
+      return actions.order.create({
+        purchase_units: [
+          {
+            amount: {
+              value: String(Math.round(Number(total) * 69.221) / 100),
+            },
+          },
+        ],
+      });
+    },
+    onApprove(data: any, actions: any) {
+      return actions.order.capture({}).then((details: any) => {
+        alert(
+          "Transaction completed by" +
+            (details?.payer.name.given_name ?? "No details")
+        );
+        handleComplete("PAYMENT");
+        // alert("Data details: " + JSON.stringify(data, null, 2));
+      });
+    },
+  };
+  const [CustomerNote, setCustomerNote] = useState("");
+  const handleCOD = () => {
+    const agree1 = (document.getElementById("agree1") as any)?.checked;
+    const agree2 = (document.getElementById("agree2") as any)?.checked;
+    if (!agree1 || !agree2) {
+      alert("Please check the term and condition!");
+      return false;
+    }
+    handleComplete("CONFIRMED");
+  };
   return (
     <>
       <Layout>
@@ -179,7 +239,7 @@ export default function Payment({
               <div className="p-[50px]">
                 <div className="flex items-center justify-between">
                   <p className="text-xl mb-[25px]">Delivery address</p>
-                  <i className="block w-5 h-3 bg-[url('/payment_dropdown_ico.png')]"></i>
+                  {/* <i className="block w-5 h-3 bg-[url('/payment_dropdown_ico.png')]"></i> */}
                 </div>
                 <div className="pr-[70px]">
                   <div className="flex gap-[10px]">
@@ -199,22 +259,24 @@ export default function Payment({
                         Same as member information
                       </label>
                     </div>
-                    {defaultAddress && <div className="flex items-center">
-                      <input
-                        checked={addressType === 2}
-                        id="default-radio-2"
-                        type="radio"
-                        onChange={() => handleChangeAddressType(2)}
-                        name="default-radio"
-                        className="w-[22px] h-[22px] rounded-full p-1 appearance-none checked:bg-[#ef426f] bg-clip-content border-2 border-[#dbdbdb] cursor-pointer"
-                      ></input>
-                      <label
-                        htmlFor="default-radio-2"
-                        className="ms-[10px] cursor-pointer select-none"
-                      >
-                        Default address
-                      </label>
-                    </div>}
+                    {defaultAddress && (
+                      <div className="flex items-center">
+                        <input
+                          checked={addressType === 2}
+                          id="default-radio-2"
+                          type="radio"
+                          onChange={() => handleChangeAddressType(2)}
+                          name="default-radio"
+                          className="w-[22px] h-[22px] rounded-full p-1 appearance-none checked:bg-[#ef426f] bg-clip-content border-2 border-[#dbdbdb] cursor-pointer"
+                        ></input>
+                        <label
+                          htmlFor="default-radio-2"
+                          className="ms-[10px] cursor-pointer select-none"
+                        >
+                          Default address
+                        </label>
+                      </div>
+                    )}
                     <div className="flex items-center">
                       <input
                         checked={addressType === 3}
@@ -361,18 +423,11 @@ export default function Payment({
                     <div className="w-full">
                       <hr className="mb-5 border-[#252525]" />
                       <Dropdown
-                        options={[
-                          {
-                            id: "1",
-                            name: "Please contact us in advance before shipping.",
-                          },
-                          {
-                            id: "2",
-                            name: "If you are absent, please leave it at the security office.",
-                          },
-                        ]}
-                        onChange={() => {}}
-                        activeItem=""
+                        options={CustomerNoteList}
+                        onChange={(e: any) => {
+                          setCustomerNote(e);
+                        }}
+                        activeItem={CustomerNote}
                         className="h-[50px] w-[898px]"
                         placeHolder="Select message (optional) "
                       />
@@ -397,7 +452,7 @@ export default function Payment({
               <div className="p-[50px]">
                 <div className="flex items-center justify-between">
                   <p className="text-xl mb-[25px]">Ordered product</p>
-                  <i className="block w-5 h-3 bg-[url('/payment_dropdown_ico.png')]"></i>
+                  {/* <i className="block w-5 h-3 bg-[url('/payment_dropdown_ico.png')]"></i> */}
                 </div>
                 <div className="pr-[70px]">
                   <hr />
@@ -454,7 +509,7 @@ export default function Payment({
               <div className="p-[50px]">
                 <div className="flex items-center justify-between">
                   <p className="text-xl mb-[25px]">Payment information</p>
-                  <i className="block w-5 h-3 bg-[url('/payment_dropdown_ico.png')]"></i>
+                  {/* <i className="block w-5 h-3 bg-[url('/payment_dropdown_ico.png')]"></i> */}
                 </div>
                 <div className="pr-[70px]">
                   <div className="flex justify-between mb-2">
@@ -481,31 +536,26 @@ export default function Payment({
               <div className="p-[50px]">
                 <div className="flex items-center justify-between">
                   <p className="text-xl mb-[25px]">Payment method</p>
-                  <i className="block w-5 h-3 bg-[url('/payment_dropdown_ico.png')]"></i>
+                  {/* <i className="block w-5 h-3 bg-[url('/payment_dropdown_ico.png')]"></i> */}
                 </div>
                 <div className="pr-[70px]">
                   <p>Select payment method</p>
                   <div className="flex justify-between gap-6 h-[50px] mt-5">
-                    <button
-                      onClick={() => setPayMethod("cod")}
-                      className={`grow ${
-                        payMethod === "cod"
-                          ? "bg-[#ef426f] text-white"
-                          : "border border-[#dbdbdb]"
-                      } rounded-sm text-lg`}
-                    >
-                      Ship COD
-                    </button>
-                    <button
-                      onClick={() => setPayMethod("paypal")}
-                      className={`grow ${
-                        payMethod === "paypal"
-                          ? "bg-[#ef426f] text-white"
-                          : "border border-[#dbdbdb]"
-                      } rounded-sm text-lg`}
-                    >
-                      Paypal
-                    </button>
+                    {payMethodList?.map((e: any, i: any) => {
+                      return (
+                        <button
+                          key={i}
+                          onClick={() => setPayMethod(e)}
+                          className={`grow ${
+                            payMethod?.PayMethodCode === e.PayMethodCode
+                              ? "bg-[#ef426f] text-white"
+                              : "border border-[#dbdbdb]"
+                          } rounded-sm text-lg`}
+                        >
+                          {e.PayMethodName}
+                        </button>
+                      );
+                    })}
                   </div>
                   {/* <div className="p-[40px] bg-[#f6f6f6] mt-[30px]">
                     <div className="flex items-center">
@@ -636,6 +686,8 @@ export default function Payment({
                     className="w-[22px] h-[22px] rounded appearance-none border checked:bg-[url('/checkbox_customer.png')] checked:border-0 cursor-pointer"
                     type="checkbox"
                     id="agree1"
+                    checked={agree1}
+                    onChange={(e) => setAgree1(e.target.checked)}
                   />
                   <label
                     htmlFor="agree1"
@@ -649,6 +701,8 @@ export default function Payment({
                     className="w-[22px] h-[22px] rounded appearance-none border checked:bg-[url('/checkbox_customer.png')] checked:border-0 cursor-pointer"
                     type="checkbox"
                     id="agree2"
+                    checked={agree2}
+                    onChange={(e) => setAgree2(e.target.checked)}
                   />
                   <label
                     htmlFor="agree2"
@@ -661,28 +715,43 @@ export default function Payment({
               </div>
               <div className="flex justify-center">
                 <div style={{ minWidth: 500, maxWidth: "100%" }}>
-                  {sdk && payMethod == "paypal" && (
-                    <PayPalButton
-                      amount={Math.round(Number(total) * 69.221) / 100}
-                      onSuccess={(details: any, data: any) => {
-                        alert(
-                          "Transaction completed by " +
-                            details.payer.name.given_name
-                        );
-                        return fetch("/paypal-transaction-complete", {
-                          method: "post",
-                          body: JSON.stringify({
-                            orderID: data.orderID,
-                          }),
-                        });
-                      }}
-                    />
+                  {sdk && payMethod?.PayMethodCode == "paypal" && (
+                    <PayPalScriptProvider options={{ clientId: sdk }}>
+                      {/* <PayPalButton
+                        amount={Math.round(Number(total) * 69.221) / 100}
+                        onSuccess={(details: any, data: any) => {
+                          alert(
+                            "Transaction completed by " +
+                              details.payer.name.given_name
+                          );
+                          return handleComplete();
+                        }}
+                      /> */}
+                      <PayPalButtons
+                        onClick={() => {
+                          const agree1 = (
+                            document.getElementById("agree1") as any
+                          )?.checked;
+                          const agree2 = (
+                            document.getElementById("agree2") as any
+                          )?.checked;
+                          if (!agree1 || !agree2) {
+                            alert("Please check the term and condition!");
+                            return false;
+                          }
+                        }}
+                        {...paypalbuttonTransactionProps}
+                      />
+                    </PayPalScriptProvider>
                   )}
                 </div>
               </div>
-              {payMethod === "cod" && (
-                <button className="w-full h-[70px] bg-[#ffe6e6] text-3xl text-[#f50e3f] font-bold">
-                  COMPLETE
+              {payMethod?.PayMethodCode === "cod" && (
+                <button
+                  onClick={handleCOD}
+                  className="w-full h-[70px] bg-[#ffe6e6] text-3xl text-[#f50e3f] font-bold"
+                >
+                  CONFIRM
                 </button>
               )}
             </div>

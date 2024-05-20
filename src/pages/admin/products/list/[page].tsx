@@ -92,8 +92,8 @@ function ProductList({ response, initPage, total, totalPage }: any) {
                       />
                     </Td>
                     <Td>{e.ProductName}</Td>
-                    <Td>{e.InitPrice}</Td>
-                    <Td>{e.SellPrice}</Td>
+                    <Td>A${e.InitPrice}</Td>
+                    <Td>A${e.SellPrice}</Td>
                     <Td>{e.CategoryName}</Td>
                     <Td center>
                       <Link

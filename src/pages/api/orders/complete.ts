@@ -2,6 +2,7 @@ import connectDB from "@/app/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import { NextRequest, NextResponse } from "next/server";
 import formidable from "formidable";
+import { getSession } from "next-auth/react";
 export const config = {
   api: {
     bodyParser: false,
@@ -14,50 +15,49 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     const [fields] = await form.parse(req);
 
     const {
-      OrderID,
       OrdersCode,
-      CustomerID,
-      OrderDate,
-      TotalAmount,
-      StatusID,
+      StatusCode,
       OrderPhone,
       OrderEmail,
-      OrderAddress,
+      OrderBasicAddress,
+      OrderDetailAddress,
+      RecieverName,
       PayMethodID,
       ShippingFormID,
-      Note,
       CustomerNote,
-      RecieverName,
-      ProvinceID,
-      DistrictID,
-      CommuneID,
+      DeliveryFee,
+      TotalPayment,
     } = fields;
+    const session: any = await getSession({ req });
+    if (session?.user?.id) {
+      const connect = await connectDB();
+      const [result1]: any = await connect.execute(
+        `SELECT * FROM brillebeauty.status where StatusCategory = 'order' and StatusCode = '${StatusCode}'`
+      );
+      const query = `update orders SET 
+                    CustomerID = '${session?.user?.id}',
+                    StatusID = '${result1?.[0]?.StatusID}',
+                    StatusCode = '${StatusCode}',
+                    DeliveryFee = '${DeliveryFee}',
+                    TotalPayment = '${TotalPayment}',
+                    ShippingFormID = '${ShippingFormID}',
+                    PayMethodID = '${PayMethodID}',
+                    OrderPhone = '${OrderPhone}',
+                    OrderEmail = '${OrderEmail}',
+                    OrderBasicAddress = '${OrderBasicAddress}',
+                    OrderDetailAddress = '${OrderDetailAddress}',
+                    CustomerNote = '${CustomerNote?.[0] ? CustomerNote : ""}',
+                    RecieverName = '${RecieverName}',
+                    OrderDate = now(),
+                    UpdatedAt = now() where OrdersCode='${OrdersCode}';`;
 
-    const connect = await connectDB();
+      const [results] = await connect.execute(query);
+      connect.end();
 
-    const query = `update orders SET 
-      OrderID = '${OrderID}',
-      OrdersCode = '${OrdersCode}',
-      CustomerID = '${CustomerID}',
-      StatusID = '${StatusID}',
-      ShippingFormID = '${ShippingFormID}',
-      PayMethodID = '${PayMethodID}',
-      TotalAmount = '${TotalAmount}',
-      OrderPhone = '${OrderPhone}',
-      OrderEmail = '${OrderEmail}',
-      OrderAddress = '${OrderAddress}',
-      Note = '${Note}',
-      CustomerNote = '${CustomerNote}',
-      RecieverName = '${RecieverName}',
-      ProvinceID = '${ProvinceID}',
-      DistrictID = '${DistrictID}',
-      CommuneID = '${CommuneID}',
-    UpdatedAt = now() where OrderID='${OrderID}';`;
-
-    const [results] = await connect.execute(query);
-    connect.end();
-
-    return res.status(201).json({ result: "OK" });
+      return res.status(201).json({ result: "OK" });
+    } else {
+      return res.status(401).json({ req });
+    }
   } catch (err) {
     return res.status(500).json({ error: err });
   }

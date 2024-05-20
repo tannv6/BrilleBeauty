@@ -8,6 +8,8 @@ import Pagination from "@/components/Pagi";
 import { pageSize } from "@/lib/constants";
 import moment from "moment";
 import Link from "next/link";
+import abc from "./icon_edit.svg";
+import Image from "next/image";
 
 export const getServerSideProps = (async (context: any) => {
   const session = await getSession(context);
@@ -48,10 +50,11 @@ export default function MyAddresses({ data, page, total, totalPage }: any) {
               <table className="table-auto min-w-full">
                 <colgroup>
                   <col width="10%" />
-                  <col width="30%" />
+                  <col width="20%" />
                   <col width="25%" />
                   <col width="15%" />
                   <col width="20%" />
+                  <col width="10%" />
                 </colgroup>
                 <thead>
                   <tr>
@@ -60,6 +63,7 @@ export default function MyAddresses({ data, page, total, totalPage }: any) {
                     <th className="py-3 px-4 text-left">PhoneNumber</th>
                     <th className="py-3 px-4 text-left">Default</th>
                     <th className="py-3 px-4 text-left">Reg Date</th>
+                    <th className="py-3 px-4 text-center">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -81,6 +85,11 @@ export default function MyAddresses({ data, page, total, totalPage }: any) {
                         </td>
                         <td className="py-3 px-4 text-left">
                           {moment(e.CreatedAt).format("yyyy-MM-DD")}
+                        </td>
+                        <td className="py-3 px-4 text-center">
+                          <Link href={`/`} className="flex justify-center">
+                            <Image src={abc} alt={""} width={30} height={30} />
+                          </Link>
                         </td>
                       </tr>
                     );
