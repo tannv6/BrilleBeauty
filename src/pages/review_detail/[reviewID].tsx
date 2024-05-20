@@ -74,7 +74,7 @@ export default function ReviewDetail({reviewDetail, reply, ...props } : any) {
                     <>{reviewDetail.ComboName}</>
                   )}
                 </p>
-                <p className="text-[#ef426f] font-bold mt-1 mb-2">A${reviewDetail.InitPrice}</p>
+                <p className="text-[#ef426f] font-bold mt-1 mb-2">A${reviewDetail.ProductID ? reviewDetail.InitPriceProduct : reviewDetail.InitPrice}</p>
                 <hr />
                 <Link
                   href={reviewDetail.ProductID ? `/product_detail/${reviewDetail.ProductID}` : `/combo/view/${reviewDetail.ComboID}`}

@@ -9,7 +9,7 @@ export default async function handle(
 
     const { reviewID } = req.query;
     const connect = await connectDB();
-    const query = `select s1.*, s2.ProductName, s2.InitPrice, s2.ProductImage,
+    const query = `select s1.*, s2.ProductName, s2.InitPrice as InitPriceProduct, s2.ProductImage,
     s3.ComboName, s3.InitPrice, s3.ComboImage  
     from review s1
     left join products s2 on s1.ProductID = s2.ProductID
