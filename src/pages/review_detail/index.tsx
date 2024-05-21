@@ -6,18 +6,16 @@ import Pagination from "@/components/Pagi";
 import Link from "next/link";
 import SubNav from "@/components/SubNav";
 import { parse } from "cookie";
-import { getWebSetting } from "@/lib/functions";
 export async function getServerSideProps({ params, query, req }: any) {
   const cookies = parse(req.headers.cookie || "");
   return {
     props: {
-      ...(await getWebSetting(cookies)),
     },
   };
 }
-export default function ReviewDetail({ ...props }) {
+export default function ReviewDetail() {
   return (
-      <Layout {...props}>
+      <Layout>
         <div id="main">
           <SubNav title1="Product Review"></SubNav>
           <div className="inner-container mt-[50px] mb-[180px]">

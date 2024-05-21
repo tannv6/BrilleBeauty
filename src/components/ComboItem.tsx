@@ -77,12 +77,12 @@ export default function ComboItem({ info }: any) {
           <div className="flex items-center pt-3">
             <div className="flex">
               <i className="block h-[18px] w-[18px] bg-[url('/product_star_ico.png')] mr-2"></i>
-              <span className="mr-1 font-bold">{0}</span>
-              <span className="text-[#999999]">({0})</span>
+              <span className="mr-1 font-bold">{info.reviewAvg || 0}</span>
+              <span className="text-[#999999]">({info.reviewCnt || 0})</span>
             </div>
             <div className="flex ml-[31px]">
               <i className="block mt-1 h-[14px] w-[17px] bg-[url('/product_heart_ico.png')] mr-2"></i>
-              <span className="text-[#555555]">{0}</span>
+              <span className="text-[#555555]">{info.like || 0}</span>
             </div>
           </div>
         </div>

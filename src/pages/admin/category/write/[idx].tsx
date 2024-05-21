@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useEffect, useState } from "react";
 import AdminLayout from "../../components/AdminLayout";
 import axios from "axios";
@@ -7,6 +8,7 @@ import NotFound from "../../components/NotFound";
 import Link from "next/link";
 import { SRLWrapper } from "simple-react-lightbox";
 import Image from "next/image";
+import Modal from "../../components/Modal";
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
 export async function getServerSideProps(context: { params: any }) {
   const { params } = context;
@@ -25,12 +27,10 @@ function Write({ data, idx }: any) {
   const [categories, setCategories] = useState(data || {});
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const router = useRouter();
-  
-
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [category, setCategory] = useState<{
-    CategoryID: any,
+    CategoryID: any;
     CategoryImage: any;
   }>({
     CategoryID: data?.CategoryID || "",
@@ -111,22 +111,22 @@ function Write({ data, idx }: any) {
     await axios.post(`/api/category/update`, {
       data,
     });
-    window.location.reload();
     if (category.CategoryImage) {
       let formData = new FormData();
-      formData.append('ImageUpload', category.CategoryImage);
+      formData.append("ImageUpload", category.CategoryImage);
 
       for (let [key, value] of Object.entries(category)) {
         formData.append(key, value);
       }
-  
-          let response;
-            response = await axios.post("/api/category/update_img", formData);
-  
-        if (response.status === 201) {
-          window.location.reload();
-        } 
+
+      let response;
+      response = await axios.post("/api/category/update_img", formData);
+
+      if (response.status === 201) {
+        window.location.reload();
+      }
     }
+    window.location.reload();
   };
 
   const handleAddCategory = async (level: number, parentId?: number) => {
@@ -182,15 +182,79 @@ function Write({ data, idx }: any) {
     }
     setCategories(cateNew);
   };
+  const [isOpenWrite, setIsOpenWrite] = useState(false);
+  const [detail, setDetail] = useState<{
+    CategoryID: string | undefined;
+    CategoryName: string;
+    ImageUpload: File | null;
+    CategoryImage: string;
+    IsHomepage: string;
+  }>({
+    CategoryID: "0",
+    CategoryName: "",
+    ImageUpload: null,
+    CategoryImage: "",
+    IsHomepage: "",
+  });
+  const handleChangeDetail = (e: any) => {
+    if (e.target.files) {
+      setDetail({ ...detail, [e.target.name]: e.target.files[0] });
+      e.target.value = "";
+    } else {
+      setDetail({ ...detail, [e.target.name]: e.target.value });
+    }
+  };
+  const handleOpenWrite = (category: any) => {
+    setDetail({
+      ...detail,
+      CategoryID: category?.CategoryID || "",
+      CategoryName: category?.CategoryName || "",
+      CategoryImage: category?.CategoryImage || "",
+      IsHomepage: category?.IsHomepage || "0",
+    });
+    setIsOpenWrite(true);
+  };
+  const handleSubmitElement = async () => {
+    let formData = new FormData();
 
-  const src = category.CategoryImage instanceof Blob
-  ? URL.createObjectURL(category.CategoryImage)
-  : `${CDN_URL}/${category.CategoryImage}`;
+    for (let [key, value] of Object.entries(detail)) {
+      formData.append(key, value || "");
+    }
+    if (detail.CategoryID) {
+      await axios.post("/api/category/update_one", formData);
+    } else {
+      // await axios.post("category/write", formData);
+    }
+    setDetail({
+      CategoryID: "0",
+      CategoryName: "",
+      ImageUpload: null,
+      CategoryImage: "",
+      IsHomepage: "",
+    });
+    const data = await axios.get(`/api/category/detail`, {
+      params: { idx },
+    });
+    setCategories(data.data || {});
+    setIsOpenWrite(false);
+  };
+  const src =
+    category.CategoryImage instanceof Blob
+      ? URL.createObjectURL(category.CategoryImage)
+      : `${CDN_URL}/${category.CategoryImage}`;
+
+  const src1 = detail.ImageUpload
+    ? URL.createObjectURL(detail.ImageUpload)
+    : `${CDN_URL}/${detail.CategoryImage}`;
 
   return (
     <AdminLayout>
       {categories.CategoryID ? (
-        <div className={`${categories?.isDel ? "opacity-25 pointer-events-none" : ""}`}>
+        <div
+          className={`${
+            categories?.isDel ? "opacity-25 pointer-events-none" : ""
+          }`}
+        >
           <div className="level1">
             <input
               type="text"
@@ -198,6 +262,12 @@ function Write({ data, idx }: any) {
               value={categories?.CategoryName}
               onChange={(e) => handleChange(e, 1)}
             />
+            <button
+              onClick={() => handleOpenWrite(categories)}
+              className="border rounded bg-cyan-400 text-white px-3 py-1 ms-1"
+            >
+              <i className="fas fa-edit"></i>
+            </button>
             <button
               onClick={() => handleAddCategory(2, categories?.CategoryID)}
               className="border rounded bg-cyan-400 text-white px-3 py-1 ms-1"
@@ -221,6 +291,12 @@ function Write({ data, idx }: any) {
                       value={el.CategoryName}
                       onChange={(e) => handleChange(e, 2, el.CategoryID)}
                     />
+                    <button
+                      onClick={() => handleOpenWrite(el)}
+                      className="border rounded bg-cyan-400 text-white px-3 py-1 ms-1"
+                    >
+                      <i className="fas fa-edit"></i>
+                    </button>
                     <button
                       onClick={() => handleAddCategory(3, el.CategoryID)}
                       className="border rounded bg-cyan-400 text-white px-3 py-1 ms-1"
@@ -257,6 +333,12 @@ function Write({ data, idx }: any) {
                                 }
                               />
                               <button
+                                onClick={() => handleOpenWrite(e1)}
+                                className="border rounded bg-cyan-400 text-white px-3 py-1 ms-1"
+                              >
+                                <i className="fas fa-edit"></i>
+                              </button>
+                              <button
                                 onClick={() =>
                                   hanldeDeleteCate(
                                     3,
@@ -288,8 +370,87 @@ function Write({ data, idx }: any) {
         </div>
       )}
 
-      
-      <div className="relative">
+      <Modal
+        isOpen={isOpenWrite}
+        onClose={() => {
+          setIsOpenWrite(false);
+          setDetail({
+            CategoryID: "0",
+            CategoryName: "",
+            ImageUpload: null,
+            CategoryImage: "",
+            IsHomepage: "",
+          });
+        }}
+      >
+        <form className="p-4 md:p-5">
+          <div className="grid gap-4 mb-4 grid-cols-2">
+            <div className="col-span-2">
+              <label
+                htmlFor="name"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Name
+              </label>
+              <input
+                type="text"
+                name="CategoryName"
+                id="CategoryName"
+                onChange={handleChangeDetail}
+                value={detail.CategoryName}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                placeholder="Type Category name"
+                required
+              />
+              <label
+                htmlFor="name"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white mt-1"
+              >
+                Show In Homepage
+              </label>
+              <select
+                name="IsHomepage"
+                id="IsHomepage"
+                value={detail.IsHomepage}
+                onChange={handleChangeDetail}
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              >
+                <option value="0">No</option>
+                <option value="1">Yes</option>
+              </select>
+              <label
+                htmlFor="name"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white mt-1"
+              >
+                Thumb Image
+              </label>
+              <input
+                name="ImageUpload"
+                onChange={handleChangeDetail}
+                className="relative m-0 block w-full min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
+                type="file"
+                id="ImageUpload"
+                accept="image/*"
+              />
+              <Image
+                className="mt-2"
+                src={src1}
+                alt={""}
+                width={100}
+                height={100}
+              />
+            </div>
+          </div>
+          <button
+            onClick={handleSubmitElement}
+            type="button"
+            className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >
+            {detail.CategoryID ? "Update Category" : "Add Category"}
+          </button>
+        </form>
+      </Modal>
+      {/* <div className="relative">
         <table
           style={{ tableLayout: "fixed" }}
           className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
@@ -309,26 +470,26 @@ function Write({ data, idx }: any) {
                   className="relative m-0 block w-full min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
                   type="file"
                 />
-                  <SRLWrapper
-                    options={{
-                      thumbnails: {
-                        showThumbnails: false,
-                      },
-                    }}
-                  >
-                    <Image
-                      className="mt-2"
-                      src={src}
-                      alt={""}
-                      width={100}
-                      height={100}
-                    />
-                  </SRLWrapper>
+                <SRLWrapper
+                  options={{
+                    thumbnails: {
+                      showThumbnails: false,
+                    },
+                  }}
+                >
+                  <Image
+                    className="mt-2"
+                    src={src}
+                    alt={""}
+                    width={100}
+                    height={100}
+                  />
+                </SRLWrapper>
               </td>
             </tr>
           </tbody>
         </table>
-      </div>
+      </div> */}
 
       <div className="flex justify-center mt-5 gap-2">
         <Link

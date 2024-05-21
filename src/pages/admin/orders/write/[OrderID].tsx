@@ -58,7 +58,8 @@ export const getServerSideProps = async (context: { params: any }) => {
 };
 function OrderWrite({
   orderDetail,
-  isNew,countryList,
+  isNew,
+  countryList,
   provinceListInit,
   districtListInit,
   communeListInit,
@@ -67,7 +68,6 @@ function OrderWrite({
   shippingFormList,
   payMethodList,
 }: any) {
-
   const [provinceList, setProvinceList] = useState(provinceListInit || []);
   const [districtList, setDistrictList] = useState(districtListInit || []);
   const [communeList, setCommuneList] = useState(communeListInit || []);
@@ -81,16 +81,17 @@ function OrderWrite({
     StatusID: any;
     OrderPhone: any;
     OrderEmail: any;
-    OrderAddress: any;
+    OrderBasicAddress: any;
+    OrderDetailAddress: any;
     PayMethodID: any;
     ShippingFormID: any;
     Note: any;
     CustomerNote: any;
     RecieverName: any;
-    CountryID:any;
-    ProvinceID: any;
-    DistrictID: any;
-    CommuneID: any;
+    // CountryID:any;
+    // ProvinceID: any;
+    // DistrictID: any;
+    // CommuneID: any;
   }>({
     OrderID: orderDetail?.OrderID,
     OrdersCode: orderDetail?.OrdersCode || "",
@@ -99,16 +100,17 @@ function OrderWrite({
     StatusID: orderDetail?.StatusID || "",
     OrderPhone: orderDetail?.OrderPhone || "",
     OrderEmail: orderDetail?.OrderEmail || "",
-    OrderAddress: orderDetail?.OrderAddress || "",
+    OrderBasicAddress: orderDetail?.OrderBasicAddress || "",
+    OrderDetailAddress: orderDetail?.OrderDetailAddress || "",
     PayMethodID: orderDetail?.PayMethodID || "",
     ShippingFormID: orderDetail?.ShippingFormID || "",
     Note: orderDetail?.Note || "",
     CustomerNote: orderDetail?.CustomerNote || "",
     RecieverName: orderDetail?.RecieverName || "",
-    CountryID: orderDetail?.CountryID || "",
-    ProvinceID: orderDetail?.ProvinceID || "",
-    DistrictID: orderDetail?.DistrictID || "",
-    CommuneID: orderDetail?.CommuneID || "",
+    // CountryID: orderDetail?.CountryID || "",
+    // ProvinceID: orderDetail?.ProvinceID || "",
+    // DistrictID: orderDetail?.DistrictID || "",
+    // CommuneID: orderDetail?.CommuneID || "",
   });
 
   const [detailImage, setDetailImage] = useState<any[]>([]);
@@ -284,10 +286,18 @@ function OrderWrite({
                   scope="row"
                   className="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white"
                 >
-                  Address
+                  Basic Address
                 </th>
                 <td className="px-6 py-2">
-                  <div className="flex gap-1">
+                  <input
+                    type="text"
+                    name="OrderDetailAddress"
+                    value={order.OrderDetailAddress}
+                    id="OrderDetailAddress"
+                    onChange={handleChange}
+                    className="h-[35px] outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  />
+                  {/* <div className="flex gap-1">
                     <Dropdown
                       containerClassName="w-[120px]"
                       className="w-full h-[35px] rounded-md"
@@ -351,7 +361,7 @@ function OrderWrite({
                       activeItem={Number(order.CommuneID)}
                       placeHolder="--Village--"
                     />
-                  </div>
+                  </div> */}
                 </td>
                 <th
                   scope="row"
@@ -362,9 +372,9 @@ function OrderWrite({
                 <td className="px-6 py-2">
                   <input
                     type="text"
-                    name="OrderAddress"
-                    value={order.OrderAddress}
-                    id="OrderAddress"
+                    name="OrderBasicAddress"
+                    value={order.OrderBasicAddress}
+                    id="OrderBasicAddress"
                     onChange={handleChange}
                     className="h-[35px] outline-none border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   />

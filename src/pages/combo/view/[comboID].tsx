@@ -13,7 +13,6 @@ import Pagi from "@/components/Pagi";
 import Link from "next/link";
 import axios from "axios";
 import { parse } from "cookie";
-import { getWebSetting } from "@/lib/functions";
 import { getSession } from "next-auth/react";
 import { log } from "console";
 import he from "he";

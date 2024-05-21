@@ -22,15 +22,16 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       StatusID,
       OrderPhone,
       OrderEmail,
-      OrderAddress,
+      OrderBasicAddress,
+      OrderDetailAddress,
       PayMethodID,
       ShippingFormID,
       Note,
       CustomerNote,
       RecieverName,
-      ProvinceID,
-      DistrictID,
-      CommuneID,
+      // ProvinceID,
+      // DistrictID,
+      // CommuneID,
     } = fields;
 
     const connect = await connectDB();
@@ -45,13 +46,11 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       TotalAmount = '${TotalAmount}',
       OrderPhone = '${OrderPhone}',
       OrderEmail = '${OrderEmail}',
-      OrderAddress = '${OrderAddress}',
+      OrderBasicAddress = '${OrderBasicAddress}',
+      OrderDetailAddress = '${OrderDetailAddress}',
       Note = '${Note}',
       CustomerNote = '${CustomerNote}',
       RecieverName = '${RecieverName}',
-      ProvinceID = '${ProvinceID}',
-      DistrictID = '${DistrictID}',
-      CommuneID = '${CommuneID}',
     UpdatedAt = now() where OrderID='${OrderID}';`;
 
     const [results] = await connect.execute(query);

@@ -13,9 +13,8 @@ import { CDN_URL } from "@/utils/constants";
 import axios from "axios";
 import he from "he";
 import { MyContext } from "@/pages/_app";
-import { Swiper as SwiperCore } from 'swiper/types';
+import { Swiper as SwiperCore } from "swiper/types";
 import ComboItem from "./ComboItem";
-
 
 export default function Main({
   main_visual,
@@ -27,8 +26,8 @@ export default function Main({
   sale_main,
   review,
   middle,
+  comboMain,categoryMain
 }: any) {
-
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   const [bestPrd, setBestPrd] = useState(best_main);
   const [comboPrd, setComboPrd] = useState(combo);
@@ -38,11 +37,9 @@ export default function Main({
   const value: any = useContext(MyContext);
   const categoryList = JSON.parse(value?.category)?.data || [];
 
-  
+  console.log(comboMain);
 
   const swiperRef = useRef<SwiperCore>();
-  
-
 
   const handleLoadMoreBest = async () => {
     const response3 = await axios.get(
@@ -97,7 +94,7 @@ export default function Main({
 
   const getReview = async () => {
     const reviewDetail = await axios.get(
-      "http://localhost:3000/api/review/list",
+      "http://localhost:3000/api/review/list"
     );
     setReviews({
       ...reviewDetail.data,
@@ -106,115 +103,126 @@ export default function Main({
   };
 
   const getCombo = async () => {
-    const response6 = await axios.get(
-      "http://localhost:3000/api/combo/list",
-    );
+    const response6 = await axios.get("http://localhost:3000/api/combo/list");
     setComboPrd({
       ...response6.data,
       data: [...comboPrd.data, ...response6.data.data],
     });
   };
 
-
-
-  const formatCreatedAt = (createdAt : any) => {
+  const formatCreatedAt = (createdAt: any) => {
     const date = new Date(createdAt);
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
     return `${year}.${month}.${day}`;
   };
 
   const renderTextOnly = (htmlContent: any) => {
     const decodedHtmlContent = he.decode(htmlContent);
-    const filteredHtmlContent = decodedHtmlContent.replace(/<img[^>]*>/g, '');
+    const filteredHtmlContent = decodedHtmlContent.replace(/<img[^>]*>/g, "");
     return (
-        <div
-            className="text-[16px] text-[#999] truncate overflow-hidden whitespace-pre-wrap line-clamp-2 min-h-[52px]"
-            dangerouslySetInnerHTML={{ __html: filteredHtmlContent }}
-        />
+      <div
+        className="text-[16px] text-[#999] truncate overflow-hidden whitespace-pre-wrap line-clamp-2 min-h-[52px]"
+        dangerouslySetInnerHTML={{ __html: filteredHtmlContent }}
+      />
     );
-};
-  
+  };
 
   return (
     <div className="container-main">
-       <div className="swiper-container relative overflow-hidden">
-      <Swiper
-        className=""
-        loop={true}
-        slidesPerView={1}
-        modules={[Thumbs, Autoplay]}
-        thumbs={{ swiper: thumbsSwiper }}
-        autoplay={{
-          delay: 5000,
-          disableOnInteraction: true,
-        }}
-        spaceBetween={20}
-        speed={800}
-      >
-      {main_visual?.map((e: any, i: any) => (
-          <SwiperSlide key={i}>
-          <Link
-            href={e?.BannerLink ? e?.BannerLink : ""}
-            target={e?.OpenNewTab == 1 ? "_blank" : ""}
-            className={`main_visual w-full h-[882px] overflow-hidden relative block`}
-          >
-            <Image
-              src={`${CDN_URL}${e?.BannerImg || ""}`}
-              alt=""
-              className="object-cover"
-              fill
-            />
-          </Link>
-          </SwiperSlide>
-            ))}
-      </Swiper>
-      </div>
-      <div className="inner-container-main">
-        <div className="flex mt-[70px] items-center gap-[120px]">
-          <div className="main_ttl min-w-[325px]">
-            <h2 className="text-[34px] tracking-wide leading-[1.3] uppercase text-gray-700 font-bold mb-2.5">
-            Need Mother's <br />
-            Day <br />
-            Inspiration?
-            </h2>
-          </div>
-            <Swiper
-                className="mt-[30px] relative"
-                loop={true}
-                slidesPerView={4}
-                modules={[Thumbs, Autoplay]}
-                thumbs={{ swiper: thumbsSwiper }}
-                spaceBetween={20}
-                onSwiper={(swiper) => {
-                  swiperRef.current = swiper;
-                }}
+      <div className="swiper-container relative overflow-hidden">
+        <Swiper
+          className=""
+          loop={true}
+          slidesPerView={1}
+          modules={[Thumbs, Autoplay]}
+          thumbs={{ swiper: thumbsSwiper }}
+          autoplay={{
+            delay: 5000,
+            disableOnInteraction: true,
+          }}
+          spaceBetween={20}
+          speed={800}
+        >
+          {main_visual?.map((e: any, i: any) => (
+            <SwiperSlide key={i}>
+              <Link
+                href={e?.BannerLink ? e?.BannerLink : ""}
+                target={e?.OpenNewTab == 1 ? "_blank" : ""}
+                className={`main_visual w-full h-[882px] overflow-hidden relative block`}
               >
-                {comboPrd.data?.map((elm: any, idx: number) => (
-                  <SwiperSlide key={idx}>
-                    <ComboItem info={elm} />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-              <button className="absolute top-1/4 left-[450px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_prev.png')]" onClick={() => swiperRef.current?.slidePrev()}></button>
-              <button className="absolute top-1/4 right-[-56px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_next.png')]" onClick={() => swiperRef.current?.slideNext()}></button>
-        </div>
+                <Image
+                  src={`${CDN_URL}${e?.BannerImg || ""}`}
+                  alt=""
+                  className="object-cover"
+                  fill
+                />
+              </Link>
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
+      {comboMain ? (
+        <div className="inner-container-main">
+          <div className="flex mt-[70px] items-center gap-[120px]">
+            <div className="main_ttl min-w-[325px]">
+              <h2
+                style={{ whiteSpace: "pre-wrap" }}
+                className="text-[34px] tracking-wide leading-[1.3] uppercase text-gray-700 font-bold mb-2.5"
+              >
+                {he.decode(comboMain?.detail?.Description || "")}
+              </h2>
+            </div>
+            {comboMain.data?.length > 0 && (
+              <>
+                <Swiper
+                  className="mt-[30px] relative"
+                  loop={true}
+                  slidesPerView={Math.min(comboMain.data?.length, 4)}
+                  modules={[Thumbs, Autoplay]}
+                  thumbs={{ swiper: thumbsSwiper }}
+                  spaceBetween={20}
+                  onSwiper={(swiper) => {
+                    swiperRef.current = swiper;
+                  }}
+                >
+                  {comboMain.data?.map((elm: any, idx: number) => (
+                    <SwiperSlide key={idx}>
+                      <ComboItem info={elm} />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+                <button
+                  className="absolute top-1/4 left-[450px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_prev.png')]"
+                  onClick={() => swiperRef.current?.slidePrev()}
+                ></button>
+                <button
+                  className="absolute top-1/4 right-[-56px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_next.png')]"
+                  onClick={() => swiperRef.current?.slideNext()}
+                ></button>
+              </>
+            )}
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
+
       <div className="inner-container-main">
-        <div className="main_banner flex my-6 relative">
+        <div className="main_banner flex my-6 relative gap-1">
           {after_main_visual?.map((e: any, i: number) => {
             return (
               <>
-              <div
-                  className={i === 0 ? "banner_img w-3/5 h-[725px] relative block" : "banner_img w-2/5 h-[725px] relative block"}
+                <div
+                  className={
+                    i === 0
+                      ? "banner_img w-3/5 h-[725px] relative block"
+                      : "banner_img w-2/5 h-[725px] relative block"
+                  }
                   key={i}
                 >
-                  <Image
-                    src={`${CDN_URL}${e?.BannerImg || ""}`}
-                    alt=""
-                    fill
-                  />
+                  <Image src={`${CDN_URL}${e?.BannerImg || ""}`} alt="" fill />
                   <div className="absolute bottom-[-160px]">
                     <p className="text-[22px] font-bold mb-[15px]">
                       {e.BannerTitle}
@@ -227,7 +235,7 @@ export default function Main({
                       target={e?.OpenNewTab == 1 ? "_blank" : ""}
                       key={i}
                       className="relative inline-block text-[14px] font-bold"
-                      >
+                    >
                       Shop now
                     </Link>
                     <div className="absolute bottom-[-3px] left-0 w-[68px] h-[1px] bg-black" />
@@ -245,38 +253,34 @@ export default function Main({
           </p>
         </div>
         <Swiper
-            className="mt-[30px]"
-            loop={true}
-            slidesPerView={4}
-            modules={[Thumbs, Autoplay]}
-            thumbs={{ swiper: thumbsSwiper }}
-            spaceBetween={4}
-            autoplay={{
-              delay: 4000,
-              disableOnInteraction: true,
-            }}
-            speed={800}
-          >
-            {categoryList?.map((e: any, i: any) => (
-              <SwiperSlide key={i}>
-                <Link
-                    href={`/products/category/${e.CategoryID}`}
-                    key={i}
-                    >
-                  <Image
-                    src={`${CDN_URL}${e?.CategoryImage || ""}`}
-                    alt=""
-                    width={482}
-                    height={640}
-                  />
-                  <p className="mt-[20px] text-[18px] text-center text-medium text-[#252525]">
-                    {e.CategoryName}
-                  </p>
-                  </Link>
-              </SwiperSlide>
-            ))}
-          </Swiper>
-
+          className="mt-[30px]"
+          loop={true}
+          slidesPerView={4}
+          modules={[Thumbs, Autoplay]}
+          thumbs={{ swiper: thumbsSwiper }}
+          spaceBetween={4}
+          autoplay={{
+            delay: 4000,
+            disableOnInteraction: true,
+          }}
+          speed={800}
+        >
+          {categoryMain?.data?.map((e: any, i: any) => (
+            <SwiperSlide key={i}>
+              <Link href={`/products/category/${e.CategoryID}`} key={i}>
+                <Image
+                  src={`${CDN_URL}${e?.CategoryImage || ""}`}
+                  alt=""
+                  width={482}
+                  height={640}
+                />
+                <p className="mt-[20px] text-[18px] text-center text-medium text-[#252525]">
+                  {e.CategoryName}
+                </p>
+              </Link>
+            </SwiperSlide>
+          ))}
+        </Swiper>
       </div>
       <div className="inner-container-main">
         <div className="flex mt-[70px] items-center gap-[120px]">
@@ -285,28 +289,35 @@ export default function Main({
               BEST <br /> PRODUCTS
             </h2>
             <p className="text-[18px] mt-[45px] text-[#252525] text-medium">
-              We've done the searching for you and handpicked the gifts she's guaranteed to love... 
+              We've done the searching for you and handpicked the gifts she's
+              guaranteed to love...
             </p>
           </div>
-            <Swiper
-                className="mt-[30px] relative"
-                loop={true}
-                slidesPerView={4}
-                modules={[Thumbs, Autoplay]}
-                thumbs={{ swiper: thumbsSwiper }}
-                spaceBetween={20}
-                onSwiper={(swiper) => {
-                  swiperRef.current = swiper;
-                }}
-              >
-                {bestPrd.list?.map((elm: any, idx: number) => (
-                  <SwiperSlide key={idx}>
-                    <ProductItem key={idx} info={elm} />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-              <button className="absolute top-1/4 left-[450px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_prev.png')]" onClick={() => swiperRef.current?.slidePrev()}></button>
-              <button className="absolute top-1/4 right-[-56px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_next.png')]" onClick={() => swiperRef.current?.slideNext()}></button>
+          <Swiper
+            className="mt-[30px] relative"
+            loop={true}
+            slidesPerView={4}
+            modules={[Thumbs, Autoplay]}
+            thumbs={{ swiper: thumbsSwiper }}
+            spaceBetween={20}
+            onSwiper={(swiper) => {
+              swiperRef.current = swiper;
+            }}
+          >
+            {bestPrd.list?.map((elm: any, idx: number) => (
+              <SwiperSlide key={idx}>
+                <ProductItem key={idx} info={elm} />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+          <button
+            className="absolute top-1/4 left-[450px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_prev.png')]"
+            onClick={() => swiperRef.current?.slidePrev()}
+          ></button>
+          <button
+            className="absolute top-1/4 right-[-56px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_next.png')]"
+            onClick={() => swiperRef.current?.slideNext()}
+          ></button>
         </div>
         {/* {bestPrd.currentPage < bestPrd.totalPage && (
           <div className="btn flex items-center justify-center mt-[45px]">
@@ -326,20 +337,20 @@ export default function Main({
         </div>
         <>
           <Swiper
-              className="mt-[30px]"
-              loop={true}
-              slidesPerView={6}
-              modules={[Thumbs, Autoplay]}
-              thumbs={{ swiper: thumbsSwiper }}
-              spaceBetween={20}
-            >
-              {newPrd.list?.map((elm: any, idx: number) => (
-                <SwiperSlide key={idx}>
-                  <ProductItem key={idx} info={elm} />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </>
+            className="mt-[30px]"
+            loop={true}
+            slidesPerView={6}
+            modules={[Thumbs, Autoplay]}
+            thumbs={{ swiper: thumbsSwiper }}
+            spaceBetween={20}
+          >
+            {newPrd.list?.map((elm: any, idx: number) => (
+              <SwiperSlide key={idx}>
+                <ProductItem key={idx} info={elm} />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </>
         {/* {newPrd.currentPage < newPrd.totalPage && (
           <div className="btn flex items-center justify-center mt-[45px]">
             <button
@@ -373,7 +384,8 @@ export default function Main({
               BIG <br /> SALES
             </h2>
             <p className="text-[18px] mt-[45px] text-[#252525] text-medium">
-              We've done the searching for you and handpicked the gifts she's guaranteed to love... 
+              We've done the searching for you and handpicked the gifts she's
+              guaranteed to love...
             </p>
           </div>
           <>
@@ -425,59 +437,76 @@ export default function Main({
             }}
             spaceBetween={20}
           >
-          {reviews.data?.map((e: any, i: any) => (
-            <SwiperSlide key={i}>
-              <Link
-                href={`/review_detail/${e?.ReviewID}`}
-                className="popular_product_element relative"
-              >
-                <div className="thumbnail relative">
-                {e.Img1 ? (
-                    <Image
-                      src={`${CDN_URL}${e.Img1}`}
-                      className="thumb_image w-[283px] h-[283px] object-cover border border-[#dbdbdb] rounded-t-2xl"
-                      alt=""
-                      width={283}
-                      height={283}
-                    />
-                  ) : (
-                    <Image
-                      src="no_img.png"
-                      className="thumb_image w-[283px] h-[283px] object-cover border border-[#dbdbdb] rounded-t-2xl"
-                      alt=""
-                      width={283}
-                      height={283}
-                    />
-                  )}
-                </div>
-                <div className="product_props flex flex-col gap-4 px-5 py-5 border-[#dbdbdb] border-[1px] border-t-0">
-                  <div className="flex items-center gap-2">
-                    {Array.from({ length: Math.min(Math.max(0, e.Start), 5) }).map((_, index) => (
-                      <i key={index} className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_on.png')]"></i>
-                    ))}
-                    {Array.from({ length: Math.max(0, 5 - Math.min(Math.max(0, e.Start), 5)) }).map((_, index) => (
-                      <i key={index + e.Start} className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_off.png')]"></i>
-                    ))}
+            {reviews.data?.map((e: any, i: any) => (
+              <SwiperSlide key={i}>
+                <Link
+                  href={`/review_detail/${e?.ReviewID}`}
+                  className="popular_product_element relative"
+                >
+                  <div className="thumbnail relative">
+                    {e.Img1 ? (
+                      <Image
+                        src={`${CDN_URL}${e.Img1}`}
+                        className="thumb_image w-[283px] h-[283px] object-cover border border-[#dbdbdb] rounded-t-2xl"
+                        alt=""
+                        width={283}
+                        height={283}
+                      />
+                    ) : (
+                      <Image
+                        src="no_img.png"
+                        className="thumb_image w-[283px] h-[283px] object-cover border border-[#dbdbdb] rounded-t-2xl"
+                        alt=""
+                        width={283}
+                        height={283}
+                      />
+                    )}
                   </div>
-                  <div className="text-[17px] color-25 font-bold white-space-nowrap overflow-hidden text-ellipsis line-height-21 line-clamp-1">
+                  <div className="product_props flex flex-col gap-4 px-5 py-5 border-[#dbdbdb] border-[1px] border-t-0">
+                    <div className="flex items-center gap-2">
+                      {Array.from({
+                        length: Math.min(Math.max(0, e.Start), 5),
+                      }).map((_, index) => (
+                        <i
+                          key={index}
+                          className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_on.png')]"
+                        ></i>
+                      ))}
+                      {Array.from({
+                        length: Math.max(
+                          0,
+                          5 - Math.min(Math.max(0, e.Start), 5)
+                        ),
+                      }).map((_, index) => (
+                        <i
+                          key={index + e.Start}
+                          className="w-[17px] h-[17px] bg-[url('/product_detail/comment_star_ico_off.png')]"
+                        ></i>
+                      ))}
+                    </div>
+                    <div className="text-[17px] color-25 font-bold white-space-nowrap overflow-hidden text-ellipsis line-height-21 line-clamp-1">
                       {e.Title}
+                    </div>
+                    <div className="text-[16px] text-[#999] truncate overflow-hidden whitespace-pre-wrap line-clamp-2 min-h-[52px]">
+                      {renderTextOnly(e.ReviewDes)}
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[15px] text-[#999]">
+                        {e.UserName && e.UserName}
+                      </span>
+                      <span className="text-[13] text-[#999]">
+                        {formatCreatedAt(e.CreatedAt)}
+                      </span>
+                    </div>
                   </div>
-                  <div className="text-[16px] text-[#999] truncate overflow-hidden whitespace-pre-wrap line-clamp-2 min-h-[52px]">
-                    {renderTextOnly(e.ReviewDes)}
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-[15px] text-[#999]">{e.UserName && e.UserName}</span>
-                    <span className="text-[13] text-[#999]">{formatCreatedAt(e.CreatedAt)}</span>
-                  </div>
-                </div>
-              </Link>
-            </SwiperSlide>
+                </Link>
+              </SwiperSlide>
             ))}
           </Swiper>
         </div>
       </div>
       {middle && middle.BannerImg && (
-      <>
+        <>
           <Link
             href={middle?.BannerLink ? middle?.BannerLink : ""}
             target={middle?.OpenNewTab == 1 ? "_blank" : ""}
@@ -491,7 +520,7 @@ export default function Main({
             />
           </Link>
         </>
-        )}
+      )}
     </div>
   );
 }

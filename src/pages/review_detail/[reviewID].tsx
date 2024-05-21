@@ -6,7 +6,6 @@ import Pagination from "@/components/Pagi";
 import Link from "next/link";
 import SubNav from "@/components/SubNav";
 import { parse } from "cookie";
-import { getWebSetting } from "@/lib/functions";
 import axios from "axios";
 import { CDN_URL } from "@/utils/constants";
 import he from "he";
@@ -37,11 +36,10 @@ export const getServerSideProps = async (context: { params: any, req : any }) =>
       props: {
         reply: reviewReplys.data,
         reviewDetail: reviewDetail.data,
-        ...(await getWebSetting(cookies)),
       },
     };
   };
-export default function ReviewDetail({reviewDetail, reply, ...props } : any) {
+export default function ReviewDetail({reviewDetail, reply } : any) {
     const formatCreatedAt = (createdAt : any) => {
         const date = new Date(createdAt);
         const year = date.getFullYear();
@@ -51,7 +49,7 @@ export default function ReviewDetail({reviewDetail, reply, ...props } : any) {
       };
       
   return (
-      <Layout {...props}>
+      <Layout>
         <div id="main">
           <SubNav title1={reviewDetail.ProductID ? "PRODUCT REVIEW" : "COMBO REVIEW"}></SubNav>
           <div className="inner-container mt-[50px] mb-[180px]">

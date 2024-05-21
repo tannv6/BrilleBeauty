@@ -2,7 +2,6 @@ import connectDB from "@/app/db";
 import { NextApiRequest, NextApiResponse } from "next";
 import formidable from "formidable";
 import { saveFile } from "@/utils/function";
-import he from "he";
 export const config = {
   api: {
     bodyParser: false,
@@ -19,17 +18,16 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
 
     const connect = await connectDB();
 
-    let ThumbImage = "";
+    let CategoryImage = "";
 
     if (image) {
-      ThumbImage = (await saveFile(image, "/combo_cat")).ufile;
+      CategoryImage = (await saveFile(image, "/combo_cat")).ufile;
     }
 
-    const query = `update combocategories SET
+    const query = `update categories SET
     CategoryName='${CategoryName}',
-    Description='${he.encode(Description?.[0] || "")}',
     IsHomepage='${IsHomepage}',
-    ThumbImage=${ThumbImage ? `'${ThumbImage}'` : "ThumbImage"},
+    CategoryImage=${CategoryImage ? `'${CategoryImage}'` : "CategoryImage"},
     UpdatedAt = now() where CategoryID='${CategoryID}';`;
 
     await connect.execute(query);

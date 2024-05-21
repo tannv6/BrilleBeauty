@@ -13,7 +13,6 @@ import Pagi from "@/components/Pagi";
 import Link from "next/link";
 import axios from "axios";
 import { parse } from "cookie";
-import { getWebSetting } from "@/lib/functions";
 import { getSession } from "next-auth/react";
 import he from "he";
 import { Swiper as SwiperCore } from 'swiper/types';
@@ -84,10 +83,7 @@ export const getServerSideProps = async (context: { params: any, query : any, re
     userInfo: response2.data,
     productRelate: response.data,
       ...response.data,
-      ...(await getWebSetting(cookies)),
     productID : productID,
-    ...response.data,
-    ...(await getWebSetting(cookies)),
     },
   };
 };

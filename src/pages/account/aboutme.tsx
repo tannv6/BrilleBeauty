@@ -1,7 +1,6 @@
 import Layout from "@/components/Layout";
 import MypageNav from "@/components/MypageNav";
 import SubNav from "@/components/SubNav";
-import { getWebSetting } from "@/lib/functions";
 import axios from "axios";
 import { parse } from "cookie";
 import moment from "moment";

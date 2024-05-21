@@ -4,7 +4,6 @@ import Image from "next/image";
 import Pagination from "@/components/Pagi";
 import Link from "next/link";
 import SubNav from "@/components/SubNav";
-import { getWebSetting } from "@/lib/functions";
 import { parse } from "cookie";
 import axios from "axios";
 import { CDN_URL } from "@/utils/constants";
@@ -23,11 +22,10 @@ export async function getServerSideProps({ params, query, req }: any) {
   return {
     props: {
       review: reviewDetail.data,
-      ...(await getWebSetting(cookies)),
     },
   };
 }
-export default function ReviewList({review, ...props } : any) {
+export default function ReviewList({review } : any) {
 
   const { data, total, currentPage, pageSize, totalPage } = review;
 
@@ -54,7 +52,7 @@ export default function ReviewList({review, ...props } : any) {
     );
 };
   return (
-      <Layout {...props}>
+      <Layout>
         <div id="main">
           <SubNav title1="Review Board"></SubNav>
           <div className="inner-container mt-[50px]">

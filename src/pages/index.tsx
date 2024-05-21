@@ -1,18 +1,13 @@
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
-import Link from "next/link";
 import Layout from "@/components/Layout";
 import Main from "@/components/Main";
 import axios from "axios";
-import { getWebSetting } from "@/lib/functions";
-import { parse } from "cookie";
-import { getSession } from "next-auth/react";
 export const getServerSideProps: GetServerSideProps<{
   main_visual: any[];
   after_main_visual: any[];
   main_middle: any;
 }> = async (context: any) => {
   const { req } = context;
-  const cookies = parse(req.headers.cookie || "");
 
   const response = await axios.get(
     "http://localhost:3000/api/banners/get_by_position",
@@ -58,15 +53,21 @@ export const getServerSideProps: GetServerSideProps<{
     }
   );
 
-  const response7 = await axios.get(
-    "http://localhost:3000/api/combo/list",
-  );
+  const response7 = await axios.get("http://localhost:3000/api/combo/list");
 
   const reviewDetail = await axios.get(
     `http://localhost:3000/api/review/list`,
     {
-      params: { page: 1, pageSize: 12, },
+      params: { page: 1, pageSize: 12 },
     }
+  );
+
+  const response8 = await axios.get(
+    "http://localhost:3000/api/combo/main_page_display"
+  );
+
+  const response9 = await axios.get(
+    "http://localhost:3000/api/category/main_page_display"
   );
 
   return {
@@ -80,7 +81,8 @@ export const getServerSideProps: GetServerSideProps<{
       sale_main: response5.data,
       combo: response7.data,
       review: reviewDetail.data,
-      ...(await getWebSetting(cookies)),
+      comboMain: response8.data,
+      categoryMain: response9.data,
     },
   };
 };
@@ -95,10 +97,11 @@ export default function Page({
   sale_main,
   review,
   middle,
-  ...props
+  comboMain,
+  categoryMain,
 }: any) {
   return (
-    <Layout {...props}>
+    <Layout>
       <Main
         main_visual={main_visual}
         combo={combo}
@@ -109,6 +112,8 @@ export default function Page({
         sale_main={sale_main}
         review={review}
         middle={middle}
+        comboMain={comboMain}
+        categoryMain={categoryMain}
       />
     </Layout>
   );
