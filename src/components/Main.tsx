@@ -26,7 +26,8 @@ export default function Main({
   sale_main,
   review,
   middle,
-  comboMain,categoryMain
+  comboMain,
+  categoryMain,
 }: any) {
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   const [bestPrd, setBestPrd] = useState(best_main);

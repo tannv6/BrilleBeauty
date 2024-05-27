@@ -1,5 +1,7 @@
 import connectDB from "@/app/db";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handle(
   req: NextApiRequest,
@@ -7,6 +9,8 @@ export default async function handle(
 ) {
   try {
     const params = req.query;
+    const session: any = await getServerSession(req, res, authOptions);
+    const CustomerID = session?.user?.id;
 
     const { page = 1, pageSize = 1000, type = "" } = params;
 
@@ -36,13 +40,38 @@ export default async function handle(
     const query =
       totalQuery +
       ` limit ${(Number(page) - 1) * Number(pageSize)}, ${Number(pageSize)};`;
-    const [result] = await connect.execute(query);
+    const [result]: any = await connect.execute(query);
+    for (let index = 0; index < result.length; index++) {
+      const element = result[index];
+      const [res]: any =
+        await connect.execute(`select count(*) as cnt from interactions 
+            where ObjectType = 'product' and InteractionType = 'like' and ObjectID = '${element.ProductID}' and DeletedAt is null`);
+      const [res1]: any =
+        await connect.execute(`select count(*) as cnt, avg(Start) as avg from review 
+            where ProductID = '${element.ProductID}' and DeletedAt is null`);
+      const like = res[0]?.cnt || 0;
+      const reviewCnt = res1[0]?.cnt || 0;
+      const reviewAvg = Math.round(res1[0]?.avg * 20) / 20 || 0;
+      if (CustomerID) {
+        const [result3]: any =
+          await connect.execute(`select count(*) as cnt from interactions 
+        where ObjectType = 'product' and InteractionType = 'like' and ObjectID = '${element.ProductID}' and CustomerID = '${CustomerID}'`);
+        if (Number(result3?.[0]?.["cnt"]) > 0) {
+          element["liked"] = true;
+        } else {
+          element["liked"] = false;
+        }
+      }
+      element["like"] = like;
+      element["reviewCnt"] = reviewCnt;
+      element["reviewAvg"] = reviewAvg;
+    }
     connect.end();
     return res.status(200).json({
       list: result,
       total,
       currentPage: Number(page),
-      pageSize:Number(pageSize),
+      pageSize: Number(pageSize),
       totalPage: Math.ceil(total / Number(pageSize)),
     });
   } catch (error) {
