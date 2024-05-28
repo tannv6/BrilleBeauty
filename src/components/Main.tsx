@@ -174,6 +174,9 @@ export default function Main({
               >
                 {he.decode(comboMain?.detail?.Description || "")}
               </h2>
+              <p className="text-[18px] mt-[45px] text-[#252525] text-medium">
+                {he.decode(comboMain?.detail?.SubDescription || "")}
+              </p>
             </div>
             {comboMain.data?.length > 0 && (
               <>

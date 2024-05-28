@@ -141,7 +141,7 @@ export default function Face({ comboDetail, review, comboID, reply, replyList, c
   };
 
   async function handleAddCart() {
-    const response = await axios.get("http://localhost:3000/api/cart/write", {
+    const response = await axios.get("/api/cart/write", {
       params: { ComboID: comboDetail?.ComboID },
     });
 

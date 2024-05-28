@@ -32,6 +32,7 @@ function List({ list }: any) {
     ImageUpload: File | null;
     ThumbImage: string;
     Description: string;
+    SubDescription: string;
     IsHomepage: string;
   }>({
     CategoryID: "0",
@@ -39,6 +40,7 @@ function List({ list }: any) {
     ImageUpload: null,
     ThumbImage: "",
     Description: "",
+    SubDescription: "",
     IsHomepage: "",
   });
   const handleOpenWrite = (category: any) => {
@@ -48,6 +50,7 @@ function List({ list }: any) {
       CategoryName: category?.CategoryName || "",
       ThumbImage: category?.ThumbImage || "",
       Description: he.decode(category?.Description || ""),
+      SubDescription: he.decode(category?.SubDescription || ""),
       IsHomepage: category?.IsHomepage || "0",
     });
     setIsOpenWrite(true);
@@ -154,6 +157,19 @@ function List({ list }: any) {
                 id="Description"
                 onChange={handleChange}
                 value={detail.Description}
+              ></textarea>
+              <label
+                htmlFor="name"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white mt-1"
+              >
+                Sub Description
+              </label>
+              <textarea
+                className="min-h-[100px] bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                name="SubDescription"
+                id="SubDescription"
+                onChange={handleChange}
+                value={detail.SubDescription}
               ></textarea>
               <label
                 htmlFor="name"

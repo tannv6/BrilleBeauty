@@ -12,7 +12,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   try {
     const form = formidable({});
     const [fields, files] = await form.parse(req);
-    const { CategoryName, Description,IsHomepage } = fields;
+    const { CategoryName, Description, SubDescription, IsHomepage } = fields;
 
     const image = files.ImageUpload?.[0];
 
@@ -27,6 +27,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
     const query = `insert into combocategories SET
     CategoryName='${CategoryName}',
     Description='${Description}',
+    SubDescription='${SubDescription}',
     IsHomepage='${IsHomepage}',
     ThumbImage='${ThumbImage}',
     CreatedAt= now();`;
