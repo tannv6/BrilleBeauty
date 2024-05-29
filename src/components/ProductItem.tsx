@@ -13,8 +13,7 @@ type Props = {
 };
 
 function ProductItem({ info }: Props) {
-
-  const dispatch:any = useContext(DataDispatchContext);
+  const dispatch: any = useContext(DataDispatchContext);
 
   const value: any = useContext(MyContext);
 
@@ -27,15 +26,17 @@ function ProductItem({ info }: Props) {
   };
 
   const handleAddCart = async () => {
-    if(!value.isLogin){
+    if (!value.isLogin) {
       alert("Please login!");
       return;
     }
 
-    let options = JSON.stringify([{
-      "PoID" : 0,
-      "PoNum" : 1
-    }]);
+    let options = JSON.stringify([
+      {
+        PoID: 0,
+        PoNum: 1,
+      },
+    ]);
 
     const response = await axios.get("/api/cart/write", {
       params: { options: options, productID: info?.ProductID },
@@ -45,13 +46,13 @@ function ProductItem({ info }: Props) {
       alert("Add to cart successfully!");
       dispatch({
         type: "UPDATE_CART_COUNT",
-        payload: 1
+        payload: 1,
       });
-    }else{
+    } else {
       alert("Add to cart failed");
       return;
     }
-  }
+  };
 
   return (
     <div className="relative product group">
@@ -80,7 +81,9 @@ function ProductItem({ info }: Props) {
           <div className="absolute hidden top-0 w-full h-full bg-gray-400/50 z-9 rounded-t-2xl items-center justify-center gap-x-5 group-hover:flex"></div>
         </div>
         <div className="2xl:p-5 xl:pt-5 xl:px-3 pb-10 border border-t-0 border-[#dbdbdb]">
-          <span className="font-bold text-[18px] truncate overflow-hidden whitespace-pre-wrap line-clamp-2 min-h-[54px]">{info?.ProductName}</span>
+          <span className="font-bold text-[18px] truncate overflow-hidden whitespace-pre-wrap line-clamp-2 min-h-[54px]">
+            {info?.ProductName}
+          </span>
           <p className="pt-2">
             <span className="line-through text-[#bbbbbb]">
               A${info?.InitPrice}
@@ -94,12 +97,21 @@ function ProductItem({ info }: Props) {
           </p>
           <div className="flex items-center pt-3">
             <div className="flex">
-              <i className="block h-[18px] w-[18px] bg-[url('/product_star_ico.png')] mr-2"></i>
+              <i
+                className={`block h-[18px] w-[18px] bg-[url('/product_star_ico.png')] mr-2`}
+              ></i>
               <span className="mr-1 font-bold">{info?.reviewAvg}</span>
               <span className="text-[#999999]">({info?.reviewCnt})</span>
             </div>
             <div className="flex ml-[31px]">
-              <i className="block mt-1 h-[14px] w-[17px] bg-[url('/product_heart_ico.png')] mr-2"></i>
+              <i
+                className={`block mt-1 h-[14px] w-[17px] mr-2`}
+                style={{
+                  backgroundImage: `${CDN_URL}/${
+                    info?.liked ? "heart_active.svg" : "heart.svg"
+                  }`,
+                }}
+              ></i>
               <span className="text-[#555555]">{info?.like}</span>
             </div>
           </div>
@@ -110,7 +122,10 @@ function ProductItem({ info }: Props) {
           onClick={handleFavorite}
           className="w-[60px] h-[60px] bg-[url('/product_button_heart.png')]"
         ></button>
-        <button onClick={handleAddCart} className="w-[60px] h-[60px] bg-[url('/product_button_cart.png')]"></button>
+        <button
+          onClick={handleAddCart}
+          className="w-[60px] h-[60px] bg-[url('/product_button_cart.png')]"
+        ></button>
       </div>
     </div>
   );

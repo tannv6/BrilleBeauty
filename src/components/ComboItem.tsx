@@ -71,7 +71,7 @@ export default function ComboItem({ info }: any) {
               A${info.SellPrice || "0"}
             </span>
             <span className="pl-[15px] text-[22px] text-[#fe3a40] font-bold">
-              {getDiscount(info.InitPrice, info.SellPrice)}
+              {getDiscount(info.InitPrice, info.SellPrice)}%
             </span>
           </p>
           <div className="flex items-center pt-3">
@@ -81,7 +81,14 @@ export default function ComboItem({ info }: any) {
               <span className="text-[#999999]">({info.reviewCnt || 0})</span>
             </div>
             <div className="flex ml-[31px]">
-              <i className="block mt-1 h-[14px] w-[17px] bg-[url('/product_heart_ico.png')] mr-2"></i>
+              <i
+                className="block mt-1 h-[14px] w-[17px] mr-2"
+                style={{
+                  backgroundImage: `${CDN_URL}/${
+                    info?.liked ? "heart_active.svg" : "heart.svg"
+                  }`,
+                }}
+              ></i>
               <span className="text-[#555555]">{info.like || 0}</span>
             </div>
           </div>

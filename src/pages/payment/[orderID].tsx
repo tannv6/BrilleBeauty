@@ -13,6 +13,7 @@ import {
 } from "@paypal/react-paypal-js";
 import { PayPalButton } from "react-paypal-button-v2";
 import Modal from "../admin/components/Modal";
+import { useRouter } from "next/router";
 export const getServerSideProps = async (context: {
   params: any;
   query: any;
@@ -78,6 +79,7 @@ export default function Payment({
   payMethodList,
   addressList,
 }: any) {
+  const router = useRouter();
   const [sdk, setSdk] = useState("");
   const [payMethod, setPayMethod] = useState(payMethodList?.[0] || {});
   const [deliveryType, setdeliveryType] = useState(shippingFormList?.[0] || {});
@@ -198,6 +200,7 @@ export default function Payment({
       CustomerNote: CustomerNoteList.find((e) => e.id === CustomerNote)?.value,
     });
     alert("Order successfully!");
+    router.replace("/account/myorders");
   };
   const [agree1, setAgree1] = useState(false);
   const [agree2, setAgree2] = useState(false);

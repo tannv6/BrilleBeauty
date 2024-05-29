@@ -1,5 +1,7 @@
 import connectDB from "@/app/db";
 import { NextApiRequest, NextApiResponse } from "next";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]";
 
 export default async function handle(
   req: NextApiRequest,
@@ -7,6 +9,8 @@ export default async function handle(
 ) {
   try {
     const { productID } = req.query;
+    const session: any = await getServerSession(req, res, authOptions);
+    const CustomerID = session?.user?.id;
     const connect = await connectDB();
     const query = `select a.*,b.Level as CategoryLevel, b.ParentID, c.ParentID as ppID from products a 
     left join categories b on a.CategoryID = b.CategoryID 
@@ -19,13 +23,23 @@ export default async function handle(
     const [result2] = await connect.execute(queryImage);
     connect.end();
     if (Array.isArray(result) && result.length > 0) {
-        const product: any = result[0];
-        product['Options'] = result1;
-        product['Images'] = result2;
-        return res.status(200).json(product);
-      } else {
-        return res.status(200).json(null);
+      const product: any = result[0];
+      product["Options"] = result1;
+      product["Images"] = result2;
+      if (CustomerID) {
+        const [result3]: any =
+          await connect.execute(`select count(*) as cnt from interactions 
+            where ObjectType = 'product' and InteractionType = 'like' and ObjectID = '${productID}' and CustomerID = '${CustomerID}'`);
+        if (Number(result3?.[0]?.["cnt"]) > 0) {
+          product["liked"] = true;
+        } else {
+          product["liked"] = false;
+        }
       }
+      return res.status(200).json(product);
+    } else {
+      return res.status(200).json(null);
+    }
   } catch (error) {
     return res.status(500).json({ error });
   }

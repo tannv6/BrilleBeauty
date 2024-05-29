@@ -8,6 +8,7 @@ import { ChangeEvent, Fragment, useContext, useEffect, useState } from "react";
 import { CDN_URL } from "@/utils/constants";
 import { signOut } from "next-auth/react";
 import { DataDispatchContext, MyContext } from "@/pages/_app";
+import SearchIcon from "./SearchIcon";
 type Props = {
   brandListRecommended?: any[];
 };
@@ -102,30 +103,29 @@ export default function Header({ brandListRecommended }: Props) {
               type="text"
               className="peer h-[35px] w-[615px] 2xl:w-[430px] rounded-full bg-gray-50 px-4 font-thin outline-none drop-shadow-sm transition-all duration-200 ease-in-out focus:bg-white focus:ring-2 focus:ring-f04b76"
             />
-            <Image
-              src="/search_ico.png"
-              alt="Search"
-              width={20}
-              height={20}
-              className="absolute right-0 top-1 mt-1 mb-1 mr-5 h-[20px] w-[20px]"
+            <SearchIcon
+              onClick={() => {
+                router.push(`/search?search_txt=${searchTxt}`);
+              }}
+              className="absolute right-0 top-1 mt-1 mb-1 mr-5 h-[20px] w-[20px] cursor-pointer"
             />
           </div>
           {banner_top && banner_top.BannerImg && (
-              <div className="img_sale ml-5">
-                <Link
-                  href={banner_top.BannerLink}
-                  target={banner_top.OpenNewTab === 1 ? "_blank" : ""}
-                  className="w-[218px] h-[64px] relative inline-block"
-                >
-                  <Image
-                    src={`${CDN_URL}${banner_top.BannerImg}`}
-                    alt=""
-                    fill
-                    className="object-cover"
-                  />
-                </Link>
-              </div>
-            )}
+            <div className="img_sale ml-5">
+              <Link
+                href={banner_top.BannerLink}
+                target={banner_top.OpenNewTab === 1 ? "_blank" : ""}
+                className="w-[218px] h-[64px] relative inline-block"
+              >
+                <Image
+                  src={`${CDN_URL}${banner_top.BannerImg}`}
+                  alt=""
+                  fill
+                  className="object-cover"
+                />
+              </Link>
+            </div>
+          )}
         </div>
         <div className="header_right flex items-center">
           {isLogin ? (
@@ -304,15 +304,15 @@ export default function Header({ brandListRecommended }: Props) {
                           {e.CategoryName}
                         </h3>
                         <div className="h-[247px]">
-                        <Link href={`/combo/category/${e.CategoryID}`}>
-                          <Image
-                            src={`${CDN_URL}/${e.ThumbImage}`}
-                            alt=""
-                            width={250}
-                            height={250}
-                            style={{ height: '247px !important' }}
-                          />
-                        </Link>
+                          <Link href={`/combo/category/${e.CategoryID}`}>
+                            <Image
+                              src={`${CDN_URL}/${e.ThumbImage}`}
+                              alt=""
+                              width={250}
+                              height={250}
+                              style={{ height: "247px !important" }}
+                            />
+                          </Link>
                         </div>
                       </div>
                     </Fragment>

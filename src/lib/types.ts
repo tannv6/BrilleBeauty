@@ -19,6 +19,7 @@ export type Product = {
   PotID: number;
   BrandID: number;
   like: number;
+  liked: boolean;
   reviewAvg: number;
   reviewCnt: number;
 };
