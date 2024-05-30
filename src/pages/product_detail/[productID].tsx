@@ -190,7 +190,6 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
 
   
   async function handleAddCart() {
-
     let options = JSON.stringify(addCartOption);
    
     if(!value.isLogin){
@@ -199,27 +198,47 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
     }
 
     if(addCartOption.length <= 0 ){
-      alert("Please choose option!");
-      return;
-    }
+      options = JSON.stringify([
+        {
+          PoID: 0,
+          PoNum: 1,
+        },
+      ]);
 
-    const response = await axios.get("/api/cart/write", {
-      params: { options: options, productID: productID,  },
-    });
-
-    if (response.status === 201) {
-
-      alert("Add to cart successfully!");
-      setSelectedOptions([]);
-      dispatch({
-        type: "UPDATE_CART_COUNT",
-        payload: addCartOption.length
-      })
+      const response = await axios.get("/api/cart/write", {
+        params: { options: options, productID: productID,  },
+      });
+  
+      if (response.status === 201) {
+  
+        alert("Add to cart successfully!");
+        setSelectedOptions([]);
+        dispatch({
+          type: "UPDATE_CART_COUNT",
+          payload: 1
+        })
+      }else{
+        alert("Add to cart failed");
+        return;
+      }
     }else{
-      alert("Add to cart failed");
-      return;
+      const response = await axios.get("/api/cart/write", {
+        params: { options: options, productID: productID,  },
+      });
+  
+      if (response.status === 201) {
+  
+        alert("Add to cart successfully!");
+        setSelectedOptions([]);
+        dispatch({
+          type: "UPDATE_CART_COUNT",
+          payload: addCartOption.length
+        })
+      }else{
+        alert("Add to cart failed");
+        return;
+      }
     }
-
   }
 
   const optionElements = optionTypes2

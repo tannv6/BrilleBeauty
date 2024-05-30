@@ -19,7 +19,7 @@ import he from "he";
 import { Swiper as SwiperCore } from "swiper/types";
 import ReviewDetail from "../../review_detail";
 import { useRouter } from "next/router";
-import { MyContext } from "@/pages/_app";
+import { DataDispatchContext, MyContext } from "@/pages/_app";
 import Paginew from "@/components/Paginew";
 
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
@@ -133,6 +133,8 @@ export default function Face({
 
   const { data, total, currentPage, pageSize, totalPage } = review;
 
+  const dispatch: any = useContext(DataDispatchContext);
+
   const handleChangePage = (page: number) => {
     router.query.page = page.toString();
     router.push(router, undefined, { scroll: false });
@@ -152,11 +154,15 @@ export default function Face({
 
   async function handleAddCart() {
     const response = await axios.get("/api/cart/write", {
-      params: { ComboID: comboDetail?.ComboID },
+      params: { ComboID: comboDetail?.ComboID, Quantity: 1 },
     });
 
     if (response.status === 201) {
       alert("Add to cart successfully!");
+      dispatch({
+        type: "UPDATE_CART_COUNT",
+        payload: 1,
+      });
     } else {
       alert("Add to cart failed");
       return;
