@@ -188,6 +188,36 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
     }
   });
 
+  const paymentProduct = async () => {
+    let options = JSON.stringify(addCartOption);
+   
+    if(!value.isLogin){
+      alert("Please login!");
+      return;
+    }
+
+    if(addCartOption.length <= 0 ){
+      options = JSON.stringify([
+        {
+          PoID: 0,
+          PoNum: 1,
+        },
+      ]);
+
+      const res = await axios.post("/api/orders/write_order", {
+         options: options, productID: productID, TotalAmount: totalOptionPrice
+      });
+      router.push(`/payment/${res.data?.OrdersCode}`);
+
+    }else{
+      const res = await axios.post("/api/orders/write_order", {
+        options: options, productID: productID, TotalAmount: product.SellPrice
+      });
+      router.push(`/payment/${res.data?.OrdersCode}`);
+    }
+
+    
+  };
   
   async function handleAddCart() {
     let options = JSON.stringify(addCartOption);
@@ -206,7 +236,7 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
       ]);
 
       const response = await axios.get("/api/cart/write", {
-        params: { options: options, productID: productID,  },
+        params: { options: options, productID: productID },
       });
   
       if (response.status === 201) {
@@ -461,7 +491,7 @@ export default function Face({ product, optionTypes, optionTypes2, productRelate
                     >
                     </button>                 
                     <button type="button" onClick={() => handleAddCart()} className="basis-full rounded border border-[#252525]">Add To Cart</button>
-                    <button className="basis-full rounded bg-[#ef426f] text-[#ffffff]">Buy Now</button>
+                    <button type="button" onClick={() => paymentProduct()} className="basis-full rounded bg-[#ef426f] text-[#ffffff]">Buy Now</button>
                   </div>
                 </div>
               </div>

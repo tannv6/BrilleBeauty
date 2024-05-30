@@ -128,6 +128,7 @@ export default function EyesLips({ cartList }: any) {
       alert("Please select at least 1 product!");
       return;
     }
+
     const res = await axios.post("/api/orders/write", {
       TotalAmount: totalPrice,
       CartList: Object.entries(checkboxes)
