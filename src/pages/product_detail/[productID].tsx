@@ -21,17 +21,13 @@ import { useRouter } from "next/router";
 import Paginew from "@/components/Paginew";
 
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
-export const getServerSideProps = async (context: {
-  params: any;
-  query: any;
-  req: any;
-}) => {
+export const getServerSideProps = async (context: any) => {
   const cookies = parse(context.req.headers.cookie || "");
   const { params, query } = context;
   const session = await getSession(context);
   const { productID, page, replyID } = params;
   const productDetail = await axios.get(
-    `http://localhost:3000/api/products/detail`,
+    `http://localhost:3000/api/products/detail`,  
     {
       params: { productID, query, session: JSON.stringify(session) },
     }
@@ -190,7 +186,7 @@ export default function Face({
           (option: any) => option.PoID === parseInt(optionId)
         );
         const optionPrice = option
-          ? calculateNewPrice(option.PoInitPrice, NumProduct[option.PoID] || 1)
+          ? calculateNewPrice(option.PoSellPrice, NumProduct[option.PoID] || 1)
           : 0;
         return total + optionPrice;
       }
@@ -229,13 +225,13 @@ export default function Face({
       ]);
 
       const res = await axios.post("/api/orders/write_order", {
-         options: options, productID: productID, TotalAmount: totalOptionPrice
+         options: options, productID: productID, TotalAmount: product.SellPrice
       });
       router.push(`/payment/${res.data?.OrdersCode}`);
 
     }else{
       const res = await axios.post("/api/orders/write_order", {
-        options: options, productID: productID, TotalAmount: product.SellPrice
+        options: options, productID: productID, TotalAmount: totalOptionPrice
       });
       router.push(`/payment/${res.data?.OrdersCode}`);
     }
@@ -336,7 +332,7 @@ export default function Face({
               <div className="flex flex-row items-center gap-2">
                 <p className="text-xl font-bold">
                   {calculateNewPrice(
-                    option.PoInitPrice,
+                    option.PoSellPrice,
                     NumProduct[option.PoID] || 1
                   )}
                 </p>
@@ -583,35 +579,10 @@ export default function Face({
                   >
                     Add To Cart
                   </button>
-                  <button className="basis-full rounded bg-[#ef426f] text-[#ffffff]">
+                  <button className="basis-full rounded bg-[#ef426f] text-[#ffffff]" onClick={paymentProduct}>
                     Buy Now
                   </button>
                   </div>
-                <hr />
-                <>
-                {optionElements}
-                </>
-                <hr />
-                <div className="pt-5">
-                  <div className="flex justify-between items-center">
-                    <p>
-                      <span className="text-lg">Total</span>
-                      <span className="text-[#757575] pl-1">(Quantity)</span>
-                    </p>
-                    <p className="text-[28px] font-bold text-[#ef426f]">
-                      {Object.keys(selectedOptions).length === 0 ? `A$${product.InitPrice}` : ` A$${totalOptionPrice}`}
-                    </p>
-                  </div>
-                  <div className="flex gap-3 pt-5">
-                    <button
-                      className={`w-14 h-14 shrink-0 rounded ${isHeart ? "bg-[url('/product_detail/product_heart_on_btn.png')]" : "bg-[url('/product_detail/product_heart_btn.png')]"}`}
-                      onClick={() => { setIsHeart(!isHeart) }}
-                    >
-                    </button>                 
-                    <button type="button" onClick={() => handleAddCart()} className="basis-full rounded border border-[#252525]">Add To Cart</button>
-                    <button type="button" onClick={() => paymentProduct()} className="basis-full rounded bg-[#ef426f] text-[#ffffff]">Buy Now</button>
-                  </div>
-                </div>
               </div>
             </div>
           </div>

@@ -158,7 +158,7 @@ export default function Face({
     }
 
     const res = await axios.post("/api/orders/write_order", {
-      ComboID: comboDetail?.ComboID, Quantity: numProduct, TotalAmount: comboDetail?.SellPrice
+      ComboID: comboDetail?.ComboID, Quantity: numProduct, TotalAmount: Number(comboDetail?.SellPrice) * Number(numProduct)
     });
     router.push(`/payment/${res.data?.OrdersCode}`);
     

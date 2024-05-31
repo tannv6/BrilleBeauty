@@ -491,7 +491,7 @@ export default function Payment({
                             <p className="text-[15px] text-[#999999]">
                               Quantity: {e.Quantity}
                             </p>
-                            <p className="text-lg">A${e.SalePrice}</p>
+                            <p className="text-lg">A${e.Subtotal}</p>
                           </div>
                           {/* <button className="w-[32px] h-[32px] border border-[#dbdbdb] rounded bg-[url('/payment_product_remove_ico.png')] bg-center bg-no-repeat ml-auto"></button> */}
                         </div>

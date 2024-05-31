@@ -12,6 +12,8 @@ export default async function handle(
 
     const sessionObject = JSON.parse((session as any) || "{}");
     const CustomerID = sessionObject?.user?.id;
+    console.log(CustomerID);
+    
     const connect = await connectDB();
     const query = `select a.*,b.Level as CategoryLevel, b.ParentID, c.ParentID as ppID from products a 
     left join categories b on a.CategoryID = b.CategoryID 
@@ -22,7 +24,6 @@ export default async function handle(
     const [result] = await connect.execute(query);
     const [result1] = await connect.execute(queryOption);
     const [result2] = await connect.execute(queryImage);
-    connect.end();
     if (Array.isArray(result) && result.length > 0) {
       const product: any = result[0];
       product["Options"] = result1;
@@ -30,15 +31,17 @@ export default async function handle(
       if (CustomerID) {
         const [result3]: any =
           await connect.execute(`select count(*) as cnt from interactions 
-            where ObjectType = 'product' and InteractionType = 'like' and ObjectID = '${productID}' and CustomerID = '${CustomerID}'`);
+            where ObjectType = 'product' and InteractionType = 'like' and ObjectID = '${productID}' and CustomerID = '${CustomerID}' and DeletedAt is NULL`);
         if (Number(result3?.[0]?.["cnt"]) > 0) {
           product["liked"] = true;
         } else {
           product["liked"] = false;
         }
       }
+      connect.end();
       return res.status(200).json(product);
     } else {
+      connect.end();
       return res.status(200).json(null);
     }
   } catch (error) {
