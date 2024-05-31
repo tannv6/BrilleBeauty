@@ -212,7 +212,7 @@ export default function Face({
     }
   });
 
-  async function handleAddCart() {
+  const paymentProduct = async () => {
     let options = JSON.stringify(addCartOption);
 
     if (!value.isLogin) {
@@ -220,25 +220,78 @@ export default function Face({
       return;
     }
 
-    if (addCartOption.length <= 0) {
-      alert("Please choose option!");
+    if(addCartOption.length <= 0 ){
+      options = JSON.stringify([
+        {
+          PoID: 0,
+          PoNum: 1,
+        },
+      ]);
+
+      const res = await axios.post("/api/orders/write_order", {
+         options: options, productID: productID, TotalAmount: totalOptionPrice
+      });
+      router.push(`/payment/${res.data?.OrdersCode}`);
+
+    }else{
+      const res = await axios.post("/api/orders/write_order", {
+        options: options, productID: productID, TotalAmount: product.SellPrice
+      });
+      router.push(`/payment/${res.data?.OrdersCode}`);
+    }
+
+    
+  };
+  
+  async function handleAddCart() {
+    let options = JSON.stringify(addCartOption);
+   
+    if(!value.isLogin){
+      alert("Please login!");
       return;
     }
 
-    const response = await axios.get("/api/cart/write", {
-      params: { options: options, productID: productID },
-    });
+    if(addCartOption.length <= 0 ){
+      options = JSON.stringify([
+        {
+          PoID: 0,
+          PoNum: 1,
+        },
+      ]);
 
-    if (response.status === 201) {
-      alert("Add to cart successfully!");
-      setSelectedOptions([]);
-      dispatch({
-        type: "UPDATE_CART_COUNT",
-        payload: addCartOption.length,
+      const response = await axios.get("/api/cart/write", {
+        params: { options: options, productID: productID },
       });
-    } else {
-      alert("Add to cart failed");
-      return;
+  
+      if (response.status === 201) {
+  
+        alert("Add to cart successfully!");
+        setSelectedOptions([]);
+        dispatch({
+          type: "UPDATE_CART_COUNT",
+          payload: 1
+        })
+      }else{
+        alert("Add to cart failed");
+        return;
+      }
+    }else{
+      const response = await axios.get("/api/cart/write", {
+        params: { options: options, productID: productID,  },
+      });
+  
+      if (response.status === 201) {
+  
+        alert("Add to cart successfully!");
+        setSelectedOptions([]);
+        dispatch({
+          type: "UPDATE_CART_COUNT",
+          payload: addCartOption.length
+        })
+      }else{
+        alert("Add to cart failed");
+        return;
+      }
     }
   }
 
@@ -533,6 +586,31 @@ export default function Face({
                   <button className="basis-full rounded bg-[#ef426f] text-[#ffffff]">
                     Buy Now
                   </button>
+                  </div>
+                <hr />
+                <>
+                {optionElements}
+                </>
+                <hr />
+                <div className="pt-5">
+                  <div className="flex justify-between items-center">
+                    <p>
+                      <span className="text-lg">Total</span>
+                      <span className="text-[#757575] pl-1">(Quantity)</span>
+                    </p>
+                    <p className="text-[28px] font-bold text-[#ef426f]">
+                      {Object.keys(selectedOptions).length === 0 ? `A$${product.InitPrice}` : ` A$${totalOptionPrice}`}
+                    </p>
+                  </div>
+                  <div className="flex gap-3 pt-5">
+                    <button
+                      className={`w-14 h-14 shrink-0 rounded ${isHeart ? "bg-[url('/product_detail/product_heart_on_btn.png')]" : "bg-[url('/product_detail/product_heart_btn.png')]"}`}
+                      onClick={() => { setIsHeart(!isHeart) }}
+                    >
+                    </button>                 
+                    <button type="button" onClick={() => handleAddCart()} className="basis-full rounded border border-[#252525]">Add To Cart</button>
+                    <button type="button" onClick={() => paymentProduct()} className="basis-full rounded bg-[#ef426f] text-[#ffffff]">Buy Now</button>
+                  </div>
                 </div>
               </div>
             </div>

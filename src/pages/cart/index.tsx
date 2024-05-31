@@ -105,7 +105,7 @@ export default function EyesLips({ cartList }: any) {
         changeCheckboxes(
           cart?.CartID,
           false,
-          Number(cart?.PoSellPrice || cart?.SellPrice) *
+          Number(cart?.PoSellPrice || cart?.PriceProduct || cart?.PriceCombo) *
             NumProduct[cart?.CartID]
         );
       });
@@ -114,7 +114,7 @@ export default function EyesLips({ cartList }: any) {
         changeCheckboxes(
           cart?.CartID,
           true,
-          Number(cart?.PoSellPrice || cart?.SellPrice) *
+          Number(cart?.PoSellPrice || cart?.PriceProduct || cart?.PriceCombo) *
             NumProduct[cart?.CartID]
         );
       });
@@ -128,6 +128,7 @@ export default function EyesLips({ cartList }: any) {
       alert("Please select at least 1 product!");
       return;
     }
+
     const res = await axios.post("/api/orders/write", {
       TotalAmount: totalPrice,
       CartList: Object.entries(checkboxes)
@@ -179,7 +180,7 @@ export default function EyesLips({ cartList }: any) {
             changeCheckboxes(
               cart?.CartID,
               !checkboxes[cart?.CartID],
-              (cart?.PoSellPrice || cart?.SellPrice) * NumProduct[cart?.CartID]
+              (cart?.PoSellPrice || cart?.PriceProduct || cart?.PriceCombo) * NumProduct[cart?.CartID]
             );
           }}
           checked={checkboxes[cart?.CartID]}
@@ -191,13 +192,13 @@ export default function EyesLips({ cartList }: any) {
         <div className="flex items-center gap-[25px]">
           <Image
             className="rounded"
-            src={`${CDN_URL}${cart?.ProductImage || ""}`}
+            src={`${CDN_URL}${cart?.ProductImage || cart?.ComboImage}` || ""}
             width={100}
             height={100}
             alt=""
           ></Image>
           <div className="flex flex-col pr-8">
-            <p>{cart?.ProductName}</p>
+            <p>{cart?.ComboName || cart?.ProductName}</p>
             <p className="text-[15px] text-[#999999]">- [{cart?.PotName}]</p>
           </div>
         </div>
@@ -212,7 +213,7 @@ export default function EyesLips({ cartList }: any) {
                 Math.max((NumProduct[cart?.CartID] || 1) - 1, 1),
                 checkboxes[cart?.CartID],
                 "-",
-                Number(cart?.PoSellPrice || cart?.SellPrice)
+                Number(cart?.PoSellPrice || cart?.PriceProduct || cart?.PriceCombo)
               );
             }}
             className="rounded-l w-[33px] h-[33px] bg-[url('/product_detail/product_number_desc_btn.png')]"
@@ -226,7 +227,7 @@ export default function EyesLips({ cartList }: any) {
                 Number(e.target.value) || 1,
                 checkboxes[cart?.CartID],
                 "",
-                Number(cart?.PoSellPrice || cart?.SellPrice)
+                Number(cart?.PoSellPrice || cart?.PriceProduct || cart?.PriceCombo)
               );
             }}
             className="pt-1 border border-x-0 text-center min-w-[46px] max-w-[46px] h-[33px] outline-0"
@@ -238,7 +239,7 @@ export default function EyesLips({ cartList }: any) {
                 (NumProduct[cart?.CartID] || 1) + 1,
                 checkboxes[cart?.CartID],
                 "+",
-                Number(cart?.PoSellPrice || cart?.SellPrice)
+                Number(cart?.PoSellPrice || cart?.PriceProduct || cart?.PriceCombo)
               );
             }}
             className="rounded-r w-[33px] h-[33px] bg-[url('/product_detail/product_number_asc_btn.png')]"
@@ -246,7 +247,7 @@ export default function EyesLips({ cartList }: any) {
         </div>
       </td>
       <td className="py-5 text-xl font-bold text-center">
-        A${(cart?.PoSellPrice || cart?.SellPrice) * NumProduct[cart?.CartID]}
+        A${(cart?.PoSellPrice || cart?.PriceProduct || cart?.PriceCombo) * NumProduct[cart?.CartID]}
       </td>
       <td className="py-5 text-right">
         <button
@@ -254,7 +255,7 @@ export default function EyesLips({ cartList }: any) {
             handleDeleteCart(
               cart?.CartID,
               checkboxes[cart?.CartID],
-              Number(cart?.PoSellPrice || cart?.SellPrice)
+              Number(cart?.PoSellPrice || cart?.PriceProduct || cart?.PriceCombo)
             );
           }}
           className="w-[33px] h-[33px] rounded bg-[url('/cart/product_delete_btn.png')]"

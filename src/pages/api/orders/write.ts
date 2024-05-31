@@ -76,7 +76,7 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
                         Subtotal='${SalePrice * (cart?.Quantity || 1)}',
                         InitPrice='${InitPrice}',
                         SalePrice='${SalePrice}',
-                        OptionID='${cart?.PoID}'
+                        OptionID='${cart?.PoID || 0}'
                         `;
           await connect.execute(sql1);
         }

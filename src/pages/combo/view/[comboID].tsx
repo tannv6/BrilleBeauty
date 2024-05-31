@@ -19,7 +19,7 @@ import he from "he";
 import { Swiper as SwiperCore } from "swiper/types";
 import ReviewDetail from "../../review_detail";
 import { useRouter } from "next/router";
-import { MyContext } from "@/pages/_app";
+import { DataDispatchContext, MyContext } from "@/pages/_app";
 import Paginew from "@/components/Paginew";
 
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
@@ -128,6 +128,10 @@ export default function Face({
   const [numProduct, setNumProduct] = useState<number>(1);
 
   const { data, total, currentPage, pageSize, totalPage } = review;
+  const value: any = useContext(MyContext);
+
+
+  const dispatch: any = useContext(DataDispatchContext);
 
   const handleChangePage = (page: number) => {
     router.query.page = page.toString();
@@ -142,17 +146,40 @@ export default function Face({
     if (type === "plus") {
       setNumProduct(numProduct + 1);
     } else {
-      setNumProduct(numProduct - 1);
+      setNumProduct( Math.max(numProduct - 1, 1) );
     }
   };
 
+  const paymentCombo = async () => {
+   
+    if(!value.isLogin){
+      alert("Please login!");
+      return;
+    }
+
+    const res = await axios.post("/api/orders/write_order", {
+      ComboID: comboDetail?.ComboID, Quantity: numProduct, TotalAmount: comboDetail?.SellPrice
+    });
+    router.push(`/payment/${res.data?.OrdersCode}`);
+    
+  };
+
   async function handleAddCart() {
+    if(!value.isLogin){
+      alert("Please login!");
+      return;
+    }
+
     const response = await axios.get("/api/cart/write", {
-      params: { ComboID: comboDetail?.ComboID },
+      params: { ComboID: comboDetail?.ComboID, Quantity: numProduct },
     });
 
     if (response.status === 201) {
       alert("Add to cart successfully!");
+      dispatch({
+        type: "UPDATE_CART_COUNT",
+        payload: 1,
+      });
     } else {
       alert("Add to cart failed");
       return;
@@ -160,8 +187,6 @@ export default function Face({
   }
 
   const comboImages = comboDetail?.Images;
-
-  const value: any = useContext(MyContext);
 
   const router = useRouter();
 
@@ -386,7 +411,8 @@ export default function Face({
                   >
                     Add To Cart
                   </button>
-                  <button className="basis-full rounded bg-[#ef426f] text-[#ffffff]">
+                  <button type="button"
+                    onClick={() => paymentCombo()} className="basis-full rounded bg-[#ef426f] text-[#ffffff]">
                     Buy Now
                   </button>
                 </div>
