@@ -23,17 +23,14 @@ import { MyContext } from "@/pages/_app";
 import Paginew from "@/components/Paginew";
 
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
-export const getServerSideProps = async (context: {
-  params: any;
-  query: any;
-  req: any;
-}) => {
+export const getServerSideProps = async (context: any) => {
   const { params, query } = context;
+  const session = await getSession(context);
   const { comboID, page, replyID } = params;
   const comboDetail = await axios.get(
     `http://localhost:3000/api/combo/detail`,
     {
-      params: { comboID },
+      params: { comboID, session: JSON.stringify(session) },
     }
   );
 
@@ -50,7 +47,6 @@ export const getServerSideProps = async (context: {
     }
   );
 
-  const session = await getSession(context);
   const response2 = await axios.get("http://localhost:3000/api/account/info", {
     params: { session: JSON.stringify(session) },
   });

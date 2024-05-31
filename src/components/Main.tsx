@@ -15,6 +15,7 @@ import he from "he";
 import { MyContext } from "@/pages/_app";
 import { Swiper as SwiperCore } from "swiper/types";
 import ComboItem from "./ComboItem";
+import { useSession } from "next-auth/react";
 
 export default function Main({
   main_visual,
@@ -33,11 +34,13 @@ export default function Main({
   const [bestPrd, setBestPrd] = useState(best_main);
   const [comboPrd, setComboPrd] = useState(combo);
   const [newPrd, setNewPrd] = useState(new_main);
+  console.log(newPrd);
+  
   const [salePrd, setSalePrd] = useState(sale_main);
   const [reviews, setReviews] = useState(review);
   const value: any = useContext(MyContext);
   const categoryList = JSON.parse(value?.category)?.data || [];
-
+  const session = useSession();
   console.log(comboMain);
 
   const swiperRef = useRef<SwiperCore>();
@@ -50,6 +53,7 @@ export default function Main({
           page: Number(bestPrd.currentPage) + 1,
           pageSize: 8,
           type: "IsBest",
+          session,
         },
       }
     );
@@ -67,6 +71,7 @@ export default function Main({
           page: Number(newPrd.currentPage) + 1,
           pageSize: 8,
           type: "IsNew",
+          session,
         },
       }
     );
@@ -84,6 +89,7 @@ export default function Main({
           page: Number(salePrd.currentPage) + 1,
           pageSize: 8,
           type: "IsBigSale",
+          session,
         },
       }
     );

@@ -5,9 +5,12 @@ import Pagination from "@/components/Pagi";
 import axios from "axios";
 import { pageSize } from "@/lib/constants";
 import { useRouter } from "next/router";
-export async function getServerSideProps({
-  query: { BrandID, sort = "", page },
-}: any) {
+import { getSession } from "next-auth/react";
+export async function getServerSideProps(context: any) {
+  const session = await getSession(context);
+  const {
+    query: { BrandID, sort = "", page },
+  } = context;
   const brandDetail = await axios.get(
     `http://localhost:3000/api/brand/detail`,
     {
@@ -15,7 +18,7 @@ export async function getServerSideProps({
     }
   );
   const response = await axios.get("http://localhost:3000/api/products/list", {
-    params: { page, pageSize: pageSize, brand: BrandID, sort },
+    params: { page, pageSize: pageSize, brand: BrandID, sort, session: JSON.stringify(session) },
   });
   return {
     props: {
@@ -30,7 +33,7 @@ export default function BrandSearch({ brand, products, sort }: any) {
   const router = useRouter();
   const { data, total, currentPage, pageSize, totalPage } = products;
   console.log(total, currentPage, pageSize, totalPage);
-  
+
   const handleChangePage = (page: number) => {
     router.query.page = page.toString();
     router.push(router, undefined, { scroll: false });

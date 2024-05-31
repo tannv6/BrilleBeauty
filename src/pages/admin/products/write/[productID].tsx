@@ -14,6 +14,7 @@ import dynamic from "next/dynamic";
 import he from "he";
 import SearchDropdown from "@/components/SearchDropdown";
 import { debounce } from "@/lib/functions";
+import { getSession } from "next-auth/react";
 
 const CustomEditor = dynamic(
   () => {
@@ -22,13 +23,14 @@ const CustomEditor = dynamic(
   { ssr: false }
 );
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
-export const getServerSideProps = async (context: { params: any }) => {
+export const getServerSideProps = async (context: any) => {
   const { params } = context;
   const { productID } = params;
+  const session = await getSession(context);
   const productDetail = await axios.get(
     `http://localhost:3000/api/products/detail`,
     {
-      params: { productID },
+      params: { productID, session: JSON.stringify(session) },
     }
   );
   const result = await axios.get("http://localhost:3000/api/category/all");

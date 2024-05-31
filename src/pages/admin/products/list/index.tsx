@@ -3,10 +3,12 @@ import { GetServerSideProps } from "next";
 import React from "react";
 import ProductList from "./[page]";
 import { pageSize } from "@/lib/constants";
+import { getSession } from "next-auth/react";
 
-export const getServerSideProps = (async () => {
+export const getServerSideProps = (async (context) => {
+  const session = await getSession(context);
   const response = await axios.get("http://localhost:3000/api/products/list", {
-    params: { page: 1, pageSize },
+    params: { page: 1, pageSize, session: JSON.stringify(session) },
   });
   return {
     props: {

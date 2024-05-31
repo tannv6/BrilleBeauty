@@ -9,10 +9,10 @@ export default async function handle(
 ) {
   try {
     const params = req.query;
-    const session: any = await getServerSession(req, res, authOptions);
-    const CustomerID = session?.user?.id;
 
-    const { page = 1, pageSize = 1000 } = params;
+    const { page = 1, pageSize = 1000, session }: any = params;
+    const sessionObject = JSON.parse((session as any) || "{}");
+    const CustomerID = sessionObject?.user?.id;
 
     const connect = await connectDB();
 
@@ -41,7 +41,7 @@ export default async function handle(
       if (CustomerID) {
         const [result3]: any =
           await connect.execute(`select count(*) as cnt from interactions 
-        where ObjectType = 'combo' and InteractionType = 'like' and ObjectID = '${element.ComboID}' and CustomerID = '${CustomerID}'`);
+        where ObjectType = 'combo' and InteractionType = 'like' and ObjectID = '${element.ComboID}' and CustomerID = '${CustomerID}' and DeletedAt is null`);
         if (Number(result3?.[0]?.["cnt"]) > 0) {
           element["liked"] = true;
         } else {

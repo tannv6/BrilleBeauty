@@ -6,7 +6,12 @@ import { pageSize } from "@/lib/constants";
 import { GetServerSideProps } from "next";
 import Paginew from "@/components/Paginew";
 import { useRouter } from "next/router";
-export const getServerSideProps: GetServerSideProps<{}> = async ({ query }) => {
+import { getSession } from "next-auth/react";
+export const getServerSideProps: GetServerSideProps<{}> = async (
+  context: any
+) => {
+  const session = await getSession(context);
+  const { query } = context;
   const { search_txt = "", page = 1 } = query;
   const response = await axios.get("http://localhost:3000/api/products/list", {
     params: {
@@ -15,6 +20,7 @@ export const getServerSideProps: GetServerSideProps<{}> = async ({ query }) => {
       search_txt,
       search_mode: "all",
       isForceSearch: true,
+      session: JSON.stringify(session),
     },
   });
   return {

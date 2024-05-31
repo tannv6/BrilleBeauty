@@ -105,12 +105,7 @@ function ProductItem({ info }: Props) {
             </div>
             <div className="flex ml-[31px]">
               <i
-                className={`block mt-1 h-[14px] w-[17px] mr-2`}
-                style={{
-                  backgroundImage: `${CDN_URL}/${
-                    info?.liked ? "heart_active.svg" : "heart.svg"
-                  }`,
-                }}
+                className={`block mt-1 h-[14px] w-[17px] bg-[url('/product_heart_ico.png')] mr-2`}
               ></i>
               <span className="text-[#555555]">{info?.like}</span>
             </div>
@@ -120,7 +115,12 @@ function ProductItem({ info }: Props) {
       <div className="absolute hidden top-[147px] left-1/2 translate-x-[-50%] translate-y-[-50%] group-hover:flex gap-2">
         <button
           onClick={handleFavorite}
-          className="w-[60px] h-[60px] bg-[url('/product_button_heart.png')]"
+          className="w-[60px] h-[60px]"
+          style={{
+            backgroundImage: `url(${CDN_URL}/${
+              info?.liked ? "icon/heart_active.svg" : "icon/heart.svg"
+            })`,
+          }}
         ></button>
         <button
           onClick={handleAddCart}

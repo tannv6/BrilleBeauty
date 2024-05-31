@@ -14,6 +14,7 @@ import { SRLWrapper } from "simple-react-lightbox";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import he from "he";
+import { getSession } from "next-auth/react";
 const CustomEditor = dynamic(
   () => {
     return import("@/components/CkEditor");
@@ -21,13 +22,14 @@ const CustomEditor = dynamic(
   { ssr: false }
 );
 const CDN_URL = process.env.NEXT_PUBLIC_CDN_URL;
-export const getServerSideProps = async (context: { params: any }) => {
+export const getServerSideProps = async (context: any) => {
   const { params } = context;
+  const session = await getSession(context);
   const { comboID } = params;
   const comboDetail = await axios.get(
     `http://localhost:3000/api/combo/detail`,
     {
-      params: { comboID },
+      params: { comboID, session: JSON.stringify(session) },
     }
   );
 

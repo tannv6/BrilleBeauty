@@ -2,12 +2,14 @@ import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 import Layout from "@/components/Layout";
 import Main from "@/components/Main";
 import axios from "axios";
+import { getSession } from "next-auth/react";
 export const getServerSideProps: GetServerSideProps<{
   main_visual: any[];
   after_main_visual: any[];
   main_middle: any;
 }> = async (context: any) => {
   const { req } = context;
+  const session = await getSession(context);
 
   const response = await axios.get(
     "http://localhost:3000/api/banners/get_by_position",
@@ -30,19 +32,34 @@ export const getServerSideProps: GetServerSideProps<{
   const response3 = await axios.get(
     "http://localhost:3000/api/products/main_product",
     {
-      params: { page: 1, pageSize: 8, type: "IsBest" },
+      params: {
+        page: 1,
+        pageSize: 8,
+        type: "IsBest",
+        session: JSON.stringify(session),
+      },
     }
   );
   const response4 = await axios.get(
     "http://localhost:3000/api/products/main_product",
     {
-      params: { page: 1, pageSize: 8, type: "IsNew" },
+      params: {
+        page: 1,
+        pageSize: 8,
+        type: "IsNew",
+        session: JSON.stringify(session),
+      },
     }
   );
   const response5 = await axios.get(
     "http://localhost:3000/api/products/main_product",
     {
-      params: { page: 1, pageSize: 8, type: "IsBigSale" },
+      params: {
+        page: 1,
+        pageSize: 8,
+        type: "IsBigSale",
+        session: JSON.stringify(session),
+      },
     }
   );
 

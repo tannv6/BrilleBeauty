@@ -8,9 +8,10 @@ export default async function handle(
   res: NextApiResponse
 ) {
   try {
-    const { productID } = req.query;
-    const session: any = await getServerSession(req, res, authOptions);
-    const CustomerID = session?.user?.id;
+    const { productID, session } = req.query;
+
+    const sessionObject = JSON.parse((session as any) || "{}");
+    const CustomerID = sessionObject?.user?.id;
     const connect = await connectDB();
     const query = `select a.*,b.Level as CategoryLevel, b.ParentID, c.ParentID as ppID from products a 
     left join categories b on a.CategoryID = b.CategoryID 

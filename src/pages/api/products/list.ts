@@ -9,8 +9,8 @@ export default async function handle(
 ) {
   try {
     const params = req.query;
-    const session: any = await getServerSession(req, res, authOptions);
-    const CustomerID = session?.user?.id;
+    // const session: any = await getServerSession(req, res, authOptions);
+    // const CustomerID = session?.user?.id;
 
     const {
       page = 1,
@@ -21,7 +21,11 @@ export default async function handle(
       search_txt,
       search_mode,
       isForceSearch,
+      session,
     } = params;
+
+    const sessionObject = JSON.parse((session as any) || "{}");
+    const CustomerID = sessionObject?.user?.id;
 
     if (isForceSearch && !search_txt) {
       return res.status(200).json({
@@ -83,16 +87,16 @@ export default async function handle(
       const [res1]: any =
         await connect.execute(`select count(*) as cnt, avg(Start) as avg from review 
             where ProductID = '${element.ProductID}' and DeletedAt is null`);
-            if (CustomerID) {
-              const [result3]: any =
-                await connect.execute(`select count(*) as cnt from interactions 
-              where ObjectType = 'product' and InteractionType = 'like' and ObjectID = '${element.ProductID}' and CustomerID = '${CustomerID}'`);
-              if (Number(result3?.[0]?.["cnt"]) > 0) {
-                element["liked"] = true;
-              } else {
-                element["liked"] = false;
-              }
-            }
+      if (CustomerID) {
+        const [result3]: any =
+          await connect.execute(`select count(*) as cnt from interactions 
+              where ObjectType = 'product' and InteractionType = 'like' and ObjectID = '${element.ProductID}' and CustomerID = '${CustomerID}' and DeletedAt is null`);
+        if (Number(result3?.[0]?.["cnt"]) > 0) {
+          element["liked"] = true;
+        } else {
+          element["liked"] = false;
+        }
+      }
       const like = res[0]?.cnt || 0;
       const reviewCnt = res1[0]?.cnt || 0;
       const reviewAvg = Math.round(res1[0]?.avg * 20) / 20 || 0;

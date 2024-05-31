@@ -7,8 +7,11 @@ import SubVisual from "@/components/SubVisual";
 import Dropdown from "@/components/Dropdown";
 import ProductItem from "@/components/ProductItem";
 import Paginew from "@/components/Paginew";
-export async function getServerSideProps({ params, query, req }: any) {
+import { getSession } from "next-auth/react";
+export async function getServerSideProps(context: any) {
+  const { params, query, req } = context;
   const { page, sort = "", brand = "" } = query;
+  const session = await getSession(context);
   const response = await axios.get(
     "http://localhost:3000/api/products/get_by_category",
     {
@@ -19,6 +22,7 @@ export async function getServerSideProps({ params, query, req }: any) {
         depth: 2,
         sort,
         brand,
+        session: JSON.stringify(session),
       },
     }
   );

@@ -8,9 +8,9 @@ export default async function handle(
   res: NextApiResponse
 ) {
   try {
-    const { comboID } = req.query;
-    const session: any = await getServerSession(req, res, authOptions);
-    const CustomerID = session?.user?.id;
+    const { comboID, session } = req.query;
+    const sessionObject = JSON.parse((session as any) || "{}");
+    const CustomerID = sessionObject?.user?.id;
     const connect = await connectDB();
     const query = `select s1.*, s2.IsSeasonal from combo s1 left join combocategories s2 on
     s1.CategoryID = s2.CategoryID where ComboID = '${comboID}' AND s1.DeletedAt IS NULL;`;
