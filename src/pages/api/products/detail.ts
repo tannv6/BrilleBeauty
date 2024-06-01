@@ -12,7 +12,6 @@ export default async function handle(
 
     const sessionObject = JSON.parse((session as any) || "{}");
     const CustomerID = sessionObject?.user?.id;
-    console.log(CustomerID);
     
     const connect = await connectDB();
     const query = `select a.*,b.Level as CategoryLevel, b.ParentID, c.ParentID as ppID from products a 

@@ -34,14 +34,12 @@ export default function Main({
   const [bestPrd, setBestPrd] = useState(best_main);
   const [comboPrd, setComboPrd] = useState(combo);
   const [newPrd, setNewPrd] = useState(new_main);
-  console.log(newPrd);
   
   const [salePrd, setSalePrd] = useState(sale_main);
   const [reviews, setReviews] = useState(review);
   const value: any = useContext(MyContext);
   const categoryList = JSON.parse(value?.category)?.data || [];
   const session = useSession();
-  console.log(comboMain);
 
   const swiperRef = useRef<SwiperCore>();
 

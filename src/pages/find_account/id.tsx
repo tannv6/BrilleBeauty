@@ -11,7 +11,6 @@ export default function Find() {
     email2: "gmail.com",
     verify_code: "",
   });
-  console.log(email.verify_code);
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;

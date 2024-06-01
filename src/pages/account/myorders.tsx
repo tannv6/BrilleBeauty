@@ -21,7 +21,6 @@ export const getServerSideProps = (async (context: any) => {
 }) satisfies GetServerSideProps<{ response: any }>;
 export default function MyOrders({ response, ...props }: any) {
   const router = useRouter();
-  console.log(response);
   const handleDel = async (OrderID: any) => {
     if (confirm("Did you sure to delete this order?")) {
       const res = await axios.post("/api/orders/del", {

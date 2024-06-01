@@ -735,33 +735,25 @@ export default function Payment({
               </div>
               <div className="flex justify-center">
                 <div style={{ minWidth: 500, maxWidth: "100%" }}>
-                  {sdk && payMethod?.PayMethodCode == "paypal" && (
+                  {sdk && (
                     <PayPalScriptProvider options={{ clientId: sdk }}>
-                      {/* <PayPalButton
-                        amount={Math.round(Number(total) * 69.221) / 100}
-                        onSuccess={(details: any, data: any) => {
-                          alert(
-                            "Transaction completed by " +
-                              details.payer.name.given_name
-                          );
-                          return handleComplete();
-                        }}
-                      /> */}
-                      <PayPalButtons
-                        onClick={() => {
-                          const agree1 = (
-                            document.getElementById("agree1") as any
-                          )?.checked;
-                          const agree2 = (
-                            document.getElementById("agree2") as any
-                          )?.checked;
-                          if (!agree1 || !agree2) {
-                            alert("Please check the term and condition!");
-                            return false;
-                          }
-                        }}
-                        {...paypalbuttonTransactionProps}
-                      />
+                      {payMethod?.PayMethodCode == "paypal" && (
+                        <PayPalButtons
+                          onClick={() => {
+                            const agree1 = (
+                              document.getElementById("agree1") as any
+                            )?.checked;
+                            const agree2 = (
+                              document.getElementById("agree2") as any
+                            )?.checked;
+                            if (!agree1 || !agree2) {
+                              alert("Please check the term and condition!");
+                              return false;
+                            }
+                          }}
+                          {...paypalbuttonTransactionProps}
+                        />
+                      )}
                     </PayPalScriptProvider>
                   )}
                 </div>

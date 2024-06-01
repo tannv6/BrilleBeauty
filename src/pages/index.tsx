@@ -80,7 +80,10 @@ export const getServerSideProps: GetServerSideProps<{
   );
 
   const response8 = await axios.get(
-    "http://localhost:3000/api/combo/main_page_display"
+    "http://localhost:3000/api/combo/main_page_display",
+    {
+      params: { session: JSON.stringify(session) },
+    }
   );
 
   const response9 = await axios.get(

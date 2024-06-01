@@ -9,7 +9,6 @@ export default async function handle(
 ) {
   try {
     const params = req.query;
-    console.log(params);
     // const session: any = await getServerSession(req, res, authOptions);
     // const CustomerID = session?.user?.id;
 

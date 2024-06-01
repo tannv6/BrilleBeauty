@@ -32,7 +32,6 @@ export async function getServerSideProps(context: any) {
 export default function BrandSearch({ brand, products, sort }: any) {
   const router = useRouter();
   const { data, total, currentPage, pageSize, totalPage } = products;
-  console.log(total, currentPage, pageSize, totalPage);
 
   const handleChangePage = (page: number) => {
     router.query.page = page.toString();

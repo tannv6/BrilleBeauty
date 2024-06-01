@@ -17,12 +17,21 @@ function ProductItem({ info }: Props) {
 
   const value: any = useContext(MyContext);
 
+  const [liked, setLiked] = useState(Boolean(info?.liked));
+  const [likeCnt, setLikeCnt] = useState(Number(info?.like));
+
   const handleFavorite = async () => {
     await axios.post("/api/interactions/write", {
       ObjectType: "product",
       ObjectID: info?.ProductID,
       InteractionType: "like",
     });
+    if (liked) {
+      setLikeCnt(likeCnt - 1);
+    } else {
+      setLikeCnt(likeCnt + 1);
+    }
+    setLiked(!liked);
   };
 
   const handleAddCart = async () => {
@@ -107,7 +116,7 @@ function ProductItem({ info }: Props) {
               <i
                 className={`block mt-1 h-[14px] w-[17px] bg-[url('/product_heart_ico.png')] mr-2`}
               ></i>
-              <span className="text-[#555555]">{info?.like}</span>
+              <span className="text-[#555555]">{likeCnt}</span>
             </div>
           </div>
         </div>
@@ -118,7 +127,7 @@ function ProductItem({ info }: Props) {
           className="w-[60px] h-[60px]"
           style={{
             backgroundImage: `url(${CDN_URL}/${
-              info?.liked ? "icon/heart_active.svg" : "icon/heart.svg"
+              liked ? "icon/heart_active.svg" : "icon/heart.svg"
             })`,
           }}
         ></button>

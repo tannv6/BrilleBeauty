@@ -3,13 +3,14 @@ import { getDiscount } from "@/lib/functions";
 import { CDN_URL } from "@/utils/constants";
 import Image from "next/image";
 import Link from "next/link";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { DataDispatchContext, MyContext } from "@/pages/_app";
 import axios from "axios";
 
 export default function ComboItem({ info }: any) {
   const dispatch: any = useContext(DataDispatchContext);
-
+  const [liked, setLiked] = useState(Boolean(info?.liked));
+  const [likeCnt, setLikeCnt] = useState(Number(info?.like));
   const value: any = useContext(MyContext);
   const handleFavorite = async () => {
     await axios.post("/api/interactions/write", {
@@ -17,6 +18,12 @@ export default function ComboItem({ info }: any) {
       ObjectID: info?.ComboID,
       InteractionType: "like",
     });
+    if (liked) {
+      setLikeCnt(likeCnt - 1);
+    } else {
+      setLikeCnt(likeCnt + 1);
+    }
+    setLiked(!liked);
   };
 
   const handleAddCart = async () => {
@@ -81,15 +88,8 @@ export default function ComboItem({ info }: any) {
               <span className="text-[#999999]">({info.reviewCnt || 0})</span>
             </div>
             <div className="flex ml-[31px]">
-              <i
-                className="block mt-1 h-[14px] w-[17px] mr-2"
-                style={{
-                  backgroundImage: `${CDN_URL}/${
-                    info?.liked ? "heart_active.svg" : "heart.svg"
-                  }`,
-                }}
-              ></i>
-              <span className="text-[#555555]">{info.like || 0}</span>
+              <i className="block mt-1 h-[14px] w-[17px] bg-[url('/product_heart_ico.png')] mr-2"></i>
+              <span className="text-[#555555]">{likeCnt || 0}</span>
             </div>
           </div>
         </div>
@@ -97,7 +97,12 @@ export default function ComboItem({ info }: any) {
       <div className="absolute hidden top-[108px] left-1/2 translate-x-[-50%] translate-y-[-50%] z-10 gap-x-2 group-hover:flex">
         <button
           onClick={handleFavorite}
-          className="w-[60px] h-[60px] bg-[url('/product_button_heart.png')]"
+          className="w-[60px] h-[60px]"
+          style={{
+            backgroundImage: `url(${CDN_URL}/${
+              liked ? "icon/heart_active.svg" : "icon/heart.svg"
+            })`,
+          }}
         ></button>
         <button
           onClick={handleAddCart}

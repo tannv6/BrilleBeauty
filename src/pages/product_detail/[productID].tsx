@@ -117,7 +117,7 @@ export default function Face({
   const dispatch: any = useContext(DataDispatchContext);
 
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
-  const [isHeart, setIsHeart] = useState<boolean>(true);
+  const [isHeart, setIsHeart] = useState<boolean>(Boolean(product?.liked));
   const [NumProduct, setNumProduct] = useState<{ [key: number]: number }>({});
 
   const selectedOptionType = optionTypes.find(
@@ -406,6 +406,15 @@ export default function Face({
 
   const [isEditing, setIsEditing] = useState(false);
 
+  const handleFavorite = async () => {
+    await axios.post("/api/interactions/write", {
+      ObjectType: "product",
+      ObjectID: product?.ProductID,
+      InteractionType: "like",
+    });
+    setIsHeart(!isHeart);
+  };
+
   async function handleSubmitReply(
     event: FormEvent<HTMLFormElement>,
     reviewID: any
@@ -568,9 +577,7 @@ export default function Face({
                         ? "bg-[url('/product_detail/product_heart_on_btn.png')]"
                         : "bg-[url('/product_detail/product_heart_btn.png')]"
                     }`}
-                    onClick={() => {
-                      setIsHeart(!isHeart);
-                    }}
+                    onClick={handleFavorite}
                   ></button>
                   <button
                     type="button"
