@@ -34,7 +34,7 @@ export default function Main({
   const [bestPrd, setBestPrd] = useState(best_main);
   const [comboPrd, setComboPrd] = useState(combo);
   const [newPrd, setNewPrd] = useState(new_main);
-  
+
   const [salePrd, setSalePrd] = useState(sale_main);
   const [reviews, setReviews] = useState(review);
   const value: any = useContext(MyContext);
@@ -170,8 +170,8 @@ export default function Main({
       </div>
       {comboMain ? (
         <div className="inner-container-main">
-          <div className="flex mt-[70px] items-center gap-[120px]">
-            <div className="main_ttl min-w-[325px]">
+          <div className="flex mt-[70px] items-center gap-[100px]">
+            <div className="main_ttl w-[325px]">
               <h2
                 style={{ whiteSpace: "pre-wrap" }}
                 className="text-[34px] tracking-wide leading-[1.3] uppercase text-gray-700 font-bold mb-2.5"
@@ -183,7 +183,7 @@ export default function Main({
               </p>
             </div>
             {comboMain.data?.length > 0 && (
-              <>
+              <div className="relative" style={{ width: `calc(100% - 425px)` }}>
                 <Swiper
                   className="mt-[30px] relative"
                   loop={true}
@@ -202,21 +202,20 @@ export default function Main({
                   ))}
                 </Swiper>
                 <button
-                  className="absolute top-1/4 left-[380px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_prev.png')]"
+                  className="absolute top-1/2 translate-y-[-50%] left-[-56px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_prev.png')]"
                   onClick={() => swiperRef.current?.slidePrev()}
                 ></button>
                 <button
-                  className="absolute top-1/4 right-[-56px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_next.png')]"
+                  className="absolute top-1/2 translate-y-[-50%] right-[-56px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_next.png')]"
                   onClick={() => swiperRef.current?.slideNext()}
                 ></button>
-              </>
+              </div>
             )}
           </div>
         </div>
       ) : (
         ""
       )}
-
       <div className="inner-container-main">
         <div className="main_banner flex my-6 relative gap-1">
           {after_main_visual?.map((e: any, i: number) => {
@@ -302,36 +301,38 @@ export default function Main({
               guaranteed to love...
             </p>
           </div>
-          <Swiper
-            className="mt-[30px] relative w-full px-[40px] max-w-[1120px]"
-            loop={true}
-            slidesPerView={3}
-            breakpoints={{
-              1535: {
-                slidesPerView: 4,
-              },
-            }}
-            modules={[Thumbs, Autoplay]}
-            thumbs={{ swiper: thumbsSwiper }}
-            spaceBetween={20}
-            onSwiper={(swiper) => {
-              swiperRef.current = swiper;
-            }}
-          >
-            {bestPrd.list?.map((elm: any, idx: number) => (
-              <SwiperSlide key={idx}>
-                <ProductItem key={idx} info={elm} />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-          <button
-            className="absolute z-50 top-1/4 left-[500px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_prev.png')]"
-            onClick={() => swiperRef.current?.slidePrev()}
-          ></button>
-          <button
-            className="absolute z-50 top-1/4 right-[-56px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_next.png')]"
-            onClick={() => swiperRef.current?.slideNext()}
-          ></button>
+          <div className="relative">
+            <Swiper
+              className="mt-[30px] relative w-full px-[40px] max-w-[1120px]"
+              loop={true}
+              slidesPerView={3}
+              breakpoints={{
+                1535: {
+                  slidesPerView: 4,
+                },
+              }}
+              modules={[Thumbs, Autoplay]}
+              thumbs={{ swiper: thumbsSwiper }}
+              spaceBetween={20}
+              onSwiper={(swiper) => {
+                swiperRef.current = swiper;
+              }}
+            >
+              {bestPrd.list?.map((elm: any, idx: number) => (
+                <SwiperSlide key={idx}>
+                  <ProductItem key={idx} info={elm} />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+            <button
+              className="absolute z-50 top-1/2 left-[-56px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_prev.png')]"
+              onClick={() => swiperRef.current?.slidePrev()}
+            ></button>
+            <button
+              className="absolute z-50 top-1/2 right-[-56px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_next.png')]"
+              onClick={() => swiperRef.current?.slideNext()}
+            ></button>
+          </div>
         </div>
         {/* {bestPrd.currentPage < bestPrd.totalPage && (
           <div className="btn flex items-center justify-center mt-[45px]">
