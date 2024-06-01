@@ -121,6 +121,10 @@ body {
   color: #f1547c;
 }
 
+.img_spe {
+  height: revert-layer;
+}
+
 .inner-container {
   position: relative;
   margin-inline: auto;

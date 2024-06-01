@@ -202,7 +202,7 @@ export default function Main({
                   ))}
                 </Swiper>
                 <button
-                  className="absolute top-1/4 left-[450px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_prev.png')]"
+                  className="absolute top-1/4 left-[380px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_prev.png')]"
                   onClick={() => swiperRef.current?.slidePrev()}
                 ></button>
                 <button
@@ -277,6 +277,7 @@ export default function Main({
             <SwiperSlide key={i}>
               <Link href={`/products/category/${e.CategoryID}`} key={i}>
                 <Image
+                  className="img_spe"
                   src={`${CDN_URL}${e?.CategoryImage || ""}`}
                   alt=""
                   width={482}
@@ -291,8 +292,8 @@ export default function Main({
         </Swiper>
       </div>
       <div className="inner-container-main">
-        <div className="flex mt-[70px] items-center gap-[120px]">
-          <div className="main_ttl min-w-[325px]">
+        <div className="flex mt-[70px] items-center gap-[40px] 2xl:gap-[120px]">
+          <div className="main_ttl min-w-[280px] 2xl:min-w-[325px]">
             <h2 className="text-[34px] tracking-wide leading-[1.3] uppercase text-gray-700 font-bold mb-2.5">
               BEST <br /> PRODUCTS
             </h2>
@@ -302,9 +303,14 @@ export default function Main({
             </p>
           </div>
           <Swiper
-            className="mt-[30px] relative"
+            className="mt-[30px] relative w-full px-[40px] max-w-[1120px]"
             loop={true}
-            slidesPerView={4}
+            slidesPerView={3}
+            breakpoints={{
+              1535: {
+                slidesPerView: 4,
+              },
+            }}
             modules={[Thumbs, Autoplay]}
             thumbs={{ swiper: thumbsSwiper }}
             spaceBetween={20}
@@ -319,11 +325,11 @@ export default function Main({
             ))}
           </Swiper>
           <button
-            className="absolute top-1/4 left-[450px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_prev.png')]"
+            className="absolute z-50 top-1/4 left-[500px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_prev.png')]"
             onClick={() => swiperRef.current?.slidePrev()}
           ></button>
           <button
-            className="absolute top-1/4 right-[-56px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_next.png')]"
+            className="absolute z-50 top-1/4 right-[-56px] w-[36px] h-[37px] bg-[url('/product_rlt_arrow_next.png')]"
             onClick={() => swiperRef.current?.slideNext()}
           ></button>
         </div>
